@@ -1,0 +1,28 @@
+{
+  "terrain_types": [
+    {
+      "id": "grass",
+      "name": "Grama",
+      "walkable": true,
+      "color": "#4f7d3a"
+    },
+    {
+      "id": "dirt",
+      "name": "Terra",
+      "walkable": true,
+      "color": "#7a5733"
+    },
+    {
+      "id": "water",
+      "name": "Água",
+      "walkable": false,
+      "color": "#2f6f9f"
+    },
+    {
+      "id": "mountain",
+      "name": "Montanha",
+      "walkable": false,
+      "color": "#6b6b5f"
+    }
+  ]
+}
