@@ -1,0 +1,112 @@
+{
+  "biomes": [
+    {
+      "id": "atlantic_forest",
+      "name": "Mata Atlântica",
+      "temperature": "temperate",
+      "humidity": 0.95,
+      "terrain": [
+        "grass",
+        "dirt"
+      ],
+      "vegetation": [
+        "native_tree",
+        "bush",
+        "fern"
+      ]
+    },
+    {
+      "id": "pine_forest",
+      "name": "Floresta de Pinus",
+      "temperature": "temperate",
+      "humidity": 0.75,
+      "terrain": [
+        "grass",
+        "dirt"
+      ],
+      "vegetation": [
+        "pine_tree",
+        "pine_sapling",
+        "fallen_log"
+      ]
+    },
+    {
+      "id": "grasslands",
+      "name": "Campos",
+      "temperature": "temperate",
+      "humidity": 0.55,
+      "terrain": [
+        "grass"
+      ],
+      "vegetation": [
+        "tall_grass",
+        "small_bush"
+      ]
+    },
+    {
+      "id": "wetlands",
+      "name": "Área Alagada",
+      "temperature": "temperate",
+      "humidity": 1.0,
+      "terrain": [
+        "water",
+        "grass"
+      ],
+      "vegetation": [
+        "reed",
+        "marsh_tree"
+      ]
+    },
+    {
+      "id": "mountains",
+      "name": "Montanhas",
+      "temperature": "cold",
+      "humidity": 0.40,
+      "terrain": [
+        "mountain",
+        "grass"
+      ],
+      "vegetation": [
+        "rock",
+        "pine_tree"
+      ]
+    },
+    {
+      "id": "rural_area",
+      "name": "Área Rural",
+      "temperature": "temperate",
+      "humidity": 0.65,
+      "terrain": [
+        "grass",
+        "dirt"
+      ],
+      "vegetation": [
+        "crop_field",
+        "fruit_tree",
+        "bush"
+      ]
+    },
+    {
+      "id": "urban_area",
+      "name": "Zona Urbana",
+      "temperature": "temperate",
+      "humidity": 0.30,
+      "terrain": [
+        "dirt"
+      ],
+      "vegetation": [
+        "street_tree"
+      ]
+    },
+    {
+      "id": "industrial_area",
+      "name": "Zona Industrial",
+      "temperature": "temperate",
+      "humidity": 0.20,
+      "terrain": [
+        "dirt"
+      ],
+      "vegetation": []
+    }
+  ]
+}
