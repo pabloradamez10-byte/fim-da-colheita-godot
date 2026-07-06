@@ -1,0 +1,64 @@
+{
+  "objects": [
+    {
+      "id": "native_tree",
+      "name": "Árvore Nativa",
+      "category": "vegetation",
+      "walkable": false,
+      "blocks_vision": true,
+      "can_be_cut": true,
+      "resources": ["wood", "branches", "leaves"],
+      "biomes": ["atlantic_forest", "rural_area"]
+    },
+    {
+      "id": "pine_tree",
+      "name": "Pinheiro",
+      "category": "vegetation",
+      "walkable": false,
+      "blocks_vision": true,
+      "can_be_cut": true,
+      "resources": ["wood", "branches", "pine_needles"],
+      "biomes": ["pine_forest", "mountains"]
+    },
+    {
+      "id": "fallen_log",
+      "name": "Tronco Caído",
+      "category": "nature",
+      "walkable": false,
+      "blocks_vision": false,
+      "can_be_cut": true,
+      "resources": ["wood", "branches"],
+      "biomes": ["pine_forest", "atlantic_forest"]
+    },
+    {
+      "id": "rock",
+      "name": "Rocha",
+      "category": "nature",
+      "walkable": false,
+      "blocks_vision": false,
+      "can_be_mined": true,
+      "resources": ["stone"],
+      "biomes": ["mountains", "grasslands", "rural_area"]
+    },
+    {
+      "id": "bush",
+      "name": "Arbusto",
+      "category": "vegetation",
+      "walkable": true,
+      "blocks_vision": false,
+      "can_be_cut": true,
+      "resources": ["branches", "leaves"],
+      "biomes": ["atlantic_forest", "rural_area", "grasslands"]
+    },
+    {
+      "id": "crop_field",
+      "name": "Plantação",
+      "category": "agriculture",
+      "walkable": true,
+      "blocks_vision": false,
+      "can_be_harvested": true,
+      "resources": ["food", "seeds"],
+      "biomes": ["rural_area"]
+    }
+  ]
+}
