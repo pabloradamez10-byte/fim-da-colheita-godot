@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="theme-color" content="#101712" />
+  <title>Fim da Colheita — AWE Preview 0.1</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <strong>Fim da Colheita</strong>
+        <span>AWE Preview 0.1</span>
+      </div>
+      <button id="newWorld">Nova seed</button>
+    </header>
+
+    <section class="game-shell">
+      <canvas id="game" aria-label="Mundo procedural isométrico"></canvas>
+      <div id="status" class="status"></div>
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </section>
+
+    <section class="hud">
+      <div class="inventory">
+        <span>🪵 <b id="wood">0</b></span>
+        <span>🪨 <b id="stone">0</b></span>
+        <span>🔥 <b id="campfire">0</b></span>
+      </div>
+      <button id="interact" class="action">COLETAR</button>
+    </section>
+
+    <section class="controls" aria-label="Controles móveis">
+      <button data-dir="up">▲</button>
+      <div>
+        <button data-dir="left">◀</button>
+        <button data-dir="down">▼</button>
+        <button data-dir="right">▶</button>
+      </div>
+    </section>
+
+    <footer>Ande até árvores ou pedras e toque em <b>COLETAR</b>. Com 3 madeiras e 2 pedras, a fogueira é criada automaticamente.</footer>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
