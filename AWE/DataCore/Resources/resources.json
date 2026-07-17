@@ -1,0 +1,14 @@
+{
+  "resources": [
+    {"id":"wood","name":"Madeira","category":"raw_material","weight":1.0,"renewable":true},
+    {"id":"branches","name":"Galhos","category":"raw_material","weight":0.3,"renewable":true},
+    {"id":"leaves","name":"Folhas","category":"organic","weight":0.05,"renewable":true},
+    {"id":"stone","name":"Pedra","category":"raw_material","weight":1.5,"renewable":false},
+    {"id":"iron_scrap","name":"Sucata de Ferro","category":"metal","weight":1.2,"renewable":false},
+    {"id":"water_clean","name":"Água Potável","category":"survival","weight":1.0,"renewable":true},
+    {"id":"food","name":"Alimento","category":"survival","weight":0.5,"renewable":true},
+    {"id":"seeds","name":"Sementes","category":"agriculture","weight":0.05,"renewable":true},
+    {"id":"fuel_gasoline","name":"Gasolina","category":"fuel","weight":0.75,"renewable":false},
+    {"id":"fuel_diesel","name":"Diesel","category":"fuel","weight":0.83,"renewable":false}
+  ]
+}
