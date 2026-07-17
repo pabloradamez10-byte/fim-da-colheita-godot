@@ -28,7 +28,7 @@ func _ready() -> void:
 	_generate_world()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("regenerate_world"):
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
 		world_seed += 1
 		_generate_world()
 
