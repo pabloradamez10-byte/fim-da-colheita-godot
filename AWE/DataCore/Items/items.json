@@ -1,0 +1,12 @@
+{
+  "items": [
+    {"id":"knife","name":"Faca","category":"tool_weapon","weight":0.4,"volume":0.3,"durability":100,"equippable":true},
+    {"id":"stone_shard","name":"Pedra Lascada","category":"tool","weight":0.25,"volume":0.2,"durability":25,"equippable":true},
+    {"id":"rope","name":"Corda","category":"material","weight":0.5,"volume":0.6,"durability":80},
+    {"id":"wooden_handle","name":"Cabo de Madeira","category":"component","weight":0.8,"volume":1.2,"durability":60},
+    {"id":"improvised_spear","name":"Lança Improvisada","category":"melee_weapon","weight":1.8,"volume":2.5,"durability":45,"equippable":true},
+    {"id":"axe","name":"Machado","category":"tool_weapon","weight":2.2,"volume":1.8,"durability":120,"equippable":true},
+    {"id":"backpack_small","name":"Mochila Pequena","category":"container","weight":0.8,"volume":1.0,"capacity_weight":12,"capacity_volume":18,"equippable":true},
+    {"id":"radio_short_range","name":"Rádio de Curto Alcance","category":"communication","weight":0.7,"volume":0.5,"durability":80,"range_blocks":5}
+  ]
+}
