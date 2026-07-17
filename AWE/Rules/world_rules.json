@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "world_rules": {
+    "trees_require_walkable_ground": true,
+    "roads_cannot_cross_deep_water": true,
+    "bridges_may_cross_rivers": true,
+    "buildings_require_stable_ground": true,
+    "farms_prefer_fertile_flat_land": true,
+    "hydroelectric_plants_require_compatible_river": true,
+    "military_structures_prefer_strategic_positions": true,
+    "pine_trees_prefer_pine_forest": true,
+    "native_trees_prefer_atlantic_forest": true,
+    "urban_structures_cluster_near_roads": true,
+    "resources_are_regionally_distributed": true,
+    "energy_is_never_infinite": true,
+    "all_operational_systems_require_maintenance": true,
+    "distant_regions_use_simplified_simulation": true,
+    "player_is_not_world_center": true
+  }
+}
