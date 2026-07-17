@@ -1,0 +1,11 @@
+{
+  "vehicles": [
+    {"id":"bicycle","name":"Bicicleta","class":"human_powered","fuel":null,"capacity_people":1,"capacity_cargo":12,"speed":18,"maintenance":1,"rarity":"common"},
+    {"id":"pickup","name":"Caminhonete Rural","class":"light_vehicle","fuel":"fuel_diesel","capacity_people":5,"capacity_cargo":600,"speed":110,"maintenance":8,"rarity":"rare"},
+    {"id":"truck","name":"Caminhão","class":"heavy_vehicle","fuel":"fuel_diesel","capacity_people":3,"capacity_cargo":8000,"speed":90,"maintenance":18,"rarity":"very_rare"},
+    {"id":"motorhome","name":"Motorhome","class":"mobile_base","fuel":"fuel_diesel","capacity_people":6,"capacity_cargo":1200,"speed":85,"maintenance":20,"rarity":"very_rare","features":["sleep","cook","storage","temporary_outpost"]},
+    {"id":"military_truck","name":"Caminhão Militar","class":"military","fuel":"fuel_diesel","capacity_people":12,"capacity_cargo":4000,"speed":80,"maintenance":28,"rarity":"extremely_rare"},
+    {"id":"armored_vehicle","name":"Blindado Militar","class":"military_armored","fuel":"fuel_diesel","capacity_people":8,"capacity_cargo":900,"speed":70,"maintenance":45,"rarity":"unique_region"},
+    {"id":"boat_small","name":"Barco Pequeno","class":"watercraft","fuel":"fuel_gasoline","capacity_people":4,"capacity_cargo":250,"speed":35,"maintenance":7,"rarity":"rare"}
+  ]
+}
