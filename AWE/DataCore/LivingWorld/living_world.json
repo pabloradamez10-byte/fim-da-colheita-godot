@@ -1,0 +1,35 @@
+{
+  "animals": [
+    {"id":"dog","name":"Cão","type":"domestic","biomes":["rural_area","urban_area"],"roles":["companion","guard","tracking"],"domesticable":true},
+    {"id":"horse","name":"Cavalo","type":"domestic","biomes":["rural_area","grasslands"],"roles":["transport","cargo"],"domesticable":true},
+    {"id":"cattle","name":"Gado","type":"livestock","biomes":["rural_area","grasslands"],"products":["milk","meat","leather"],"domesticable":true},
+    {"id":"capybara","name":"Capivara","type":"wild","biomes":["wetlands","rural_area"],"behavior":"herbivore"},
+    {"id":"graxaim","name":"Graxaim","type":"wild","biomes":["grasslands","atlantic_forest"],"behavior":"opportunistic_predator"}
+  ],
+  "plants": [
+    {"id":"corn","name":"Milho","biomes":["rural_area"],"seasons":["spring","summer"],"water_need":0.65,"fertility_need":0.6,"products":["food","seeds"]},
+    {"id":"wheat","name":"Trigo","biomes":["rural_area"],"seasons":["autumn","winter"],"water_need":0.5,"fertility_need":0.55,"products":["food","seeds"]},
+    {"id":"pine","name":"Pinus","biomes":["pine_forest","mountains"],"growth":"slow","products":["wood","branches"]},
+    {"id":"native_tree","name":"Árvore Nativa","biomes":["atlantic_forest","rural_area"],"growth":"slow","products":["wood","branches","leaves"]}
+  ],
+  "diseases": [
+    {"id":"flu","name":"Gripe","transmission":"airborne","severity":"low","treatments":["rest","hydration"]},
+    {"id":"pneumonia","name":"Pneumonia","transmission":"complication","severity":"high","treatments":["antibiotics","medical_care"]},
+    {"id":"wound_infection","name":"Infecção de Ferimento","transmission":"wound","severity":"variable","treatments":["cleaning","antibiotics"]}
+  ],
+  "faction_archetypes": [
+    {"id":"regional_militia","name":"Milícia Regional","culture":["discipline","order","hierarchy"],"goals":["territorial_control","security"]},
+    {"id":"united_farmers","name":"Agricultores Unidos","culture":["family","work","cooperation"],"goals":["food_security","reconstruction"]},
+    {"id":"free_merchants","name":"Mercadores Livres","culture":["profit","negotiation","knowledge"],"goals":["trade_routes","economic_influence"]},
+    {"id":"iron_black","name":"Ferro Negro","culture":["strength","expansion","domination"],"goals":["power","resource_control"]},
+    {"id":"pilgrims","name":"Peregrinos","culture":["freedom","adaptation","exploration"],"goals":["mobility","survival"]}
+  ],
+  "community_stages": [
+    {"id":"isolated_survivor","name":"Sobrevivente Solitário","population_min":1,"population_max":1},
+    {"id":"camp","name":"Acampamento","population_min":2,"population_max":8},
+    {"id":"shelter","name":"Refúgio","population_min":8,"population_max":20},
+    {"id":"village","name":"Vila","population_min":20,"population_max":50},
+    {"id":"community","name":"Comunidade","population_min":50,"population_max":120},
+    {"id":"large_community","name":"Grande Comunidade","population_min":120,"population_max":250,"extremely_rare":true}
+  ]
+}
