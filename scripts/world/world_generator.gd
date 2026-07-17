@@ -41,8 +41,11 @@ func _generate_world() -> void:
 	noise.frequency = 0.055
 	rng.seed = world_seed
 
-	for y in range(-map_height / 2, map_height / 2):
-		for x in range(-map_width / 2, map_width / 2):
+	var half_width := int(floor(map_width / 2.0))
+	var half_height := int(floor(map_height / 2.0))
+
+	for y in range(-half_height, half_height):
+		for x in range(-half_width, half_width):
 			var value := noise.get_noise_2d(float(x), float(y))
 			var terrain_id := _terrain_for_value(value)
 			terrain_cells.append({
@@ -102,10 +105,11 @@ func _grid_to_iso(grid: Vector2i) -> Vector2:
 
 func _draw() -> void:
 	for cell in terrain_cells:
-		_draw_iso_tile(cell.screen, TERRAIN_COLORS.get(cell.terrain, Color.MAGENTA))
+		var terrain_color: Color = TERRAIN_COLORS.get(cell["terrain"], Color.MAGENTA)
+		_draw_iso_tile(cell["screen"], terrain_color)
 
 	for object_data in world_objects:
-		_draw_world_object(object_data.id, object_data.screen)
+		_draw_world_object(object_data["id"], object_data["screen"])
 
 func _draw_iso_tile(center: Vector2, color: Color) -> void:
 	var points := PackedVector2Array([
