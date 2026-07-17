@@ -1,0 +1,32 @@
+{
+  "recipes": [
+    {
+      "id":"improvised_spear",
+      "name":"Lança Improvisada",
+      "inputs":[{"item":"wooden_handle","quantity":1},{"item":"rope","quantity":1}],
+      "alternative_tools":["knife","stone_shard"],
+      "skills":{"survival":5},
+      "workstation":null,
+      "time_minutes":5,
+      "output":{"item":"improvised_spear","quantity":1},
+      "quality_from":["survival","materials","tool_quality"]
+    },
+    {
+      "id":"wooden_wall",
+      "name":"Parede de Madeira",
+      "inputs":[{"resource":"wood","quantity":8}],
+      "required_tools":["axe"],
+      "skills":{"construction":5},
+      "time_minutes":30,
+      "output":{"structure_piece":"wooden_wall","quantity":1}
+    },
+    {
+      "id":"campfire",
+      "name":"Fogueira",
+      "inputs":[{"resource":"wood","quantity":3},{"resource":"branches","quantity":5}],
+      "skills":{"survival":1},
+      "time_minutes":10,
+      "output":{"structure_piece":"campfire","quantity":1}
+    }
+  ]
+}
