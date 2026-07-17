@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {"id":"campfire","name":"Fogueira","type":"utility","stage":"camp","energy_required":0,"water_required":0,"maintenance":1},
+    {"id":"medical_volunteer_station","name":"Atendimento Médico Voluntário","type":"health","stage":"camp","capacity":1,"maintenance":1},
+    {"id":"improvised_hospital","name":"Hospital Improvisado","type":"health","stage":"shelter","capacity":4,"maintenance":3,"evolves_to":"health_post"},
+    {"id":"health_post","name":"Posto de Saúde","type":"health","stage":"village","capacity":10,"maintenance":6,"evolves_to":"hospital"},
+    {"id":"hospital","name":"Hospital","type":"health","stage":"community","capacity":25,"energy_required":8,"water_required":8,"maintenance":12,"evolves_to":"regional_hospital"},
+    {"id":"regional_hospital","name":"Hospital Regional","type":"health","stage":"large_community","capacity":60,"energy_required":20,"water_required":18,"maintenance":25},
+    {"id":"radio_local","name":"Rádio Local","type":"communication","stage":"shelter","range_blocks":5,"energy_required":1,"maintenance":1},
+    {"id":"radio_repeater","name":"Torre Repetidora","type":"communication","stage":"village","range_blocks":30,"energy_required":4,"maintenance":5},
+    {"id":"generator_basic","name":"Gerador Básico","type":"energy","stage":"shelter","fuel":"fuel_gasoline","output":5,"maintenance":3},
+    {"id":"hydroelectric_plant","name":"Hidrelétrica","type":"energy","stage":"regional","output_variable":true,"distribution_limited":true,"maintenance":100}
+  ]
+}
