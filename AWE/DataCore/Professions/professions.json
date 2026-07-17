@@ -1,0 +1,13 @@
+{
+  "professions": [
+    {"id":"farmer","name":"Agricultor","starting_skills":{"agriculture":20,"animal_care":10,"survival":5},"roles":["food_production","seed_management"]},
+    {"id":"doctor","name":"Médico","starting_skills":{"medicine":25,"anatomy":20,"leadership":5},"roles":["diagnosis","treatment","training"]},
+    {"id":"mechanic","name":"Mecânico","starting_skills":{"mechanics":25,"tools":15,"electricity":5},"roles":["vehicle_repair","machine_maintenance"]},
+    {"id":"carpenter","name":"Carpinteiro","starting_skills":{"carpentry":25,"construction":15},"roles":["wood_building","furniture","repairs"]},
+    {"id":"electrician","name":"Eletricista","starting_skills":{"electricity":25,"maintenance":15},"roles":["power_grid","generator_repair"]},
+    {"id":"truck_driver","name":"Caminhoneiro","starting_skills":{"driving":25,"navigation":15,"mechanics":5},"roles":["logistics","long_expitions"]},
+    {"id":"soldier","name":"Soldado","starting_skills":{"firearms":25,"tactics":20,"fitness":15},"roles":["defense","patrol","combat"]},
+    {"id":"teacher","name":"Professor","starting_skills":{"teaching":25,"memory":10,"leadership":10},"roles":["education","knowledge_preservation"]},
+    {"id":"merchant","name":"Comerciante","starting_skills":{"trade":25,"negotiation":20,"appraisal":15},"roles":["commerce","currency_exchange"]}
+  ]
+}
