@@ -13,21 +13,31 @@
   const TILE_H = 32;
   const MAP_W = 32;
   const MAP_H = 32;
+  const CHARACTER_SHEET = './assets/characters/CHR_M_SURVIVOR_0001_IDLE_4DIR.png';
+  const CHARACTER_FRAME_COUNT = 4;
+  const FRAME_BY_DIRECTION = { down: 0, right: 1, up: 2, left: 3 };
   const colors = {
-    water: '#245d72',
-    wetland: '#4f7055',
-    grass: '#668b4f',
-    soil: '#816b48',
-    dry: '#927b58',
-    rock: '#71746e'
+    water: '#245d72', wetland: '#4f7055', grass: '#668b4f',
+    soil: '#816b48', dry: '#927b58', rock: '#71746e'
   };
+
+  const characterImage = new Image();
+  let characterReady = false;
+  characterImage.src = CHARACTER_SHEET;
+  characterImage.addEventListener('load', () => {
+    characterReady = characterImage.width >= CHARACTER_FRAME_COUNT && characterImage.height > 0;
+    if (characterReady) showToast('Personagem em 4 direções carregado.');
+  });
+  characterImage.addEventListener('error', () => {
+    characterReady = false;
+    console.warn('PNG do personagem ainda não foi enviado:', CHARACTER_SHEET);
+  });
 
   let seed = Number(localStorage.getItem('awe_seed')) || 104729;
   let world = [];
   let objects = [];
   let camera = { x: 0, y: 0 };
-  let player = { x: 0, y: 0, wood: 0, stone: 0, campfire: 0 };
-  const held = new Set();
+  let player = { x: 0, y: 0, wood: 0, stone: 0, campfire: 0, direction: 'down' };
 
   function mulberry32(a) {
     return function() {
@@ -44,10 +54,7 @@
   }
 
   function smoothNoise(x, y) {
-    let total = 0;
-    let amp = 1;
-    let freq = 0.08;
-    let norm = 0;
+    let total = 0, amp = 1, freq = 0.08, norm = 0;
     for (let o = 0; o < 4; o++) {
       total += hashNoise(x * freq, y * freq, seed + o * 971) * amp;
       norm += amp;
@@ -84,6 +91,7 @@
     }
     player.x = Math.floor(MAP_W / 2);
     player.y = Math.floor(MAP_H / 2);
+    player.direction = player.direction || 'down';
     while (world[player.y][player.x] === 'water') player.x++;
     save();
     showToast('Mundo gerado: seed ' + seed);
@@ -117,28 +125,45 @@
   function drawObject(o, sx, sy) {
     if (!o.alive) return;
     if (o.type === 'tree') {
-      ctx.fillStyle = '#5e422d';
-      ctx.fillRect(sx - 3, sy - 24, 6, 24);
-      ctx.fillStyle = '#2e5634';
-      ctx.beginPath(); ctx.arc(sx, sy - 31, 14, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#3f6940';
-      ctx.beginPath(); ctx.arc(sx - 8, sy - 25, 9, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#5e422d'; ctx.fillRect(sx - 3, sy - 24, 6, 24);
+      ctx.fillStyle = '#2e5634'; ctx.beginPath(); ctx.arc(sx, sy - 31, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#3f6940'; ctx.beginPath(); ctx.arc(sx - 8, sy - 25, 9, 0, Math.PI * 2); ctx.fill();
     } else if (o.type === 'stone') {
-      ctx.fillStyle = '#5d625e';
-      ctx.beginPath(); ctx.ellipse(sx, sy - 7, 11, 8, -0.2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#5d625e'; ctx.beginPath(); ctx.ellipse(sx, sy - 7, 11, 8, -0.2, 0, Math.PI * 2); ctx.fill();
     } else {
-      ctx.fillStyle = '#466f43';
-      ctx.beginPath(); ctx.arc(sx, sy - 7, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#466f43'; ctx.beginPath(); ctx.arc(sx, sy - 7, 8, 0, Math.PI * 2); ctx.fill();
     }
   }
 
-  function drawPlayer(sx, sy) {
+  function drawFallbackPlayer(sx, sy) {
     ctx.fillStyle = '#e6c49b';
     ctx.beginPath(); ctx.arc(sx, sy - 20, 8, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#365f42';
-    ctx.fillRect(sx - 7, sy - 12, 14, 19);
+    ctx.fillStyle = '#365f42'; ctx.fillRect(sx - 7, sy - 12, 14, 19);
     ctx.strokeStyle = '#232923'; ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.moveTo(sx - 4, sy + 7); ctx.lineTo(sx - 5, sy + 17); ctx.moveTo(sx + 4, sy + 7); ctx.lineTo(sx + 5, sy + 17); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(sx - 4, sy + 7); ctx.lineTo(sx - 5, sy + 17);
+    ctx.moveTo(sx + 4, sy + 7); ctx.lineTo(sx + 5, sy + 17);
+    ctx.stroke();
+  }
+
+  function drawPlayer(sx, sy) {
+    if (!characterReady) return drawFallbackPlayer(sx, sy);
+
+    const frameWidth = Math.floor(characterImage.width / CHARACTER_FRAME_COUNT);
+    const frameHeight = characterImage.height;
+    const frame = FRAME_BY_DIRECTION[player.direction] ?? 0;
+    const drawHeight = 92;
+    const drawWidth = drawHeight * (frameWidth / frameHeight);
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(
+      characterImage,
+      frame * frameWidth, 0, frameWidth, frameHeight,
+      Math.round(sx - drawWidth / 2), Math.round(sy - drawHeight + 18),
+      Math.round(drawWidth), drawHeight
+    );
+    ctx.restore();
   }
 
   function render() {
@@ -161,12 +186,15 @@
     drawables.sort((a, b) => a.sort - b.sort);
     for (const d of drawables) {
       if (d.kind === 'player') {
-        const p = iso(player.x, player.y); drawPlayer(p.x + camera.x, p.y + camera.y);
+        const p = iso(player.x, player.y);
+        drawPlayer(p.x + camera.x, p.y + camera.y);
       } else {
-        const p = iso(d.data.x, d.data.y); drawObject(d.data, p.x + camera.x, p.y + camera.y);
+        const p = iso(d.data.x, d.data.y);
+        drawObject(d.data, p.x + camera.x, p.y + camera.y);
       }
     }
-    status.textContent = `Seed ${seed} • posição ${player.x},${player.y} • objetos ${objects.filter(o => o.alive).length}`;
+    const spriteState = characterReady ? 'sprite 4-dir ativo' : 'aguardando PNG 4-dir';
+    status.textContent = `Seed ${seed} • posição ${player.x},${player.y} • ${spriteState}`;
     requestAnimationFrame(render);
   }
 
@@ -175,10 +203,18 @@
   }
 
   function move(dx, dy) {
+    if (dx > 0) player.direction = 'right';
+    else if (dx < 0) player.direction = 'left';
+    else if (dy > 0) player.direction = 'down';
+    else if (dy < 0) player.direction = 'up';
+
     const nx = player.x + dx;
     const ny = player.y + dy;
-    if (canWalk(nx, ny)) { player.x = nx; player.y = ny; save(); }
-    else showToast('Não é possível passar por aqui.');
+    if (canWalk(nx, ny)) {
+      player.x = nx;
+      player.y = ny;
+      save();
+    } else showToast('Não é possível passar por aqui.');
   }
 
   function interact() {
@@ -217,13 +253,19 @@
     try {
       const data = JSON.parse(localStorage.getItem('awe_save'));
       if (!data || data.seed !== seed) return false;
-      player = data.player;
+      player = { direction: 'down', ...data.player };
       objects = data.objects;
       return true;
     } catch { return false; }
   }
 
-  const keyMap = { ArrowUp: [0,-1], w: [0,-1], W: [0,-1], ArrowDown: [0,1], s: [0,1], S: [0,1], ArrowLeft: [-1,0], a: [-1,0], A: [-1,0], ArrowRight: [1,0], d: [1,0], D: [1,0] };
+  const keyMap = {
+    ArrowUp: [0,-1], w: [0,-1], W: [0,-1],
+    ArrowDown: [0,1], s: [0,1], S: [0,1],
+    ArrowLeft: [-1,0], a: [-1,0], A: [-1,0],
+    ArrowRight: [1,0], d: [1,0], D: [1,0]
+  };
+
   addEventListener('keydown', e => {
     if (keyMap[e.key]) { e.preventDefault(); move(...keyMap[e.key]); }
     if (e.key === 'e' || e.key === 'E' || e.key === ' ') interact();
@@ -234,10 +276,11 @@
     const trigger = e => { e.preventDefault(); move(...dirs[btn.dataset.dir]); };
     btn.addEventListener('pointerdown', trigger);
   });
+
   document.querySelector('#interact').addEventListener('click', interact);
   document.querySelector('#newWorld').addEventListener('click', () => {
     seed++;
-    player = { x: 0, y: 0, wood: 0, stone: 0, campfire: 0 };
+    player = { x: 0, y: 0, wood: 0, stone: 0, campfire: 0, direction: 'down' };
     generateWorld(); updateHud();
   });
   addEventListener('resize', resize);
