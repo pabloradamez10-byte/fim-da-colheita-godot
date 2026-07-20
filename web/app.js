@@ -13,25 +13,34 @@
   const TILE_H = 32;
   const MAP_W = 32;
   const MAP_H = 32;
-  const CHARACTER_SHEET = './assets/characters/CHR_M_SURVIVOR_0001_IDLE_4DIR.png';
-  const CHARACTER_FRAME_COUNT = 4;
-  const FRAME_BY_DIRECTION = { down: 0, right: 1, up: 2, left: 3 };
+
+  const CHARACTER_FILES = {
+    down: './assets/characters/CHR_M_SURVIVOR_0001_S.png',
+    right: './assets/characters/CHR_M_SURVIVOR_0001_E.png',
+    up: './assets/characters/CHR_M_SURVIVOR_0001_N.png',
+    left: './assets/characters/CHR_M_SURVIVOR_0001_W.png'
+  };
+
   const colors = {
     water: '#245d72', wetland: '#4f7055', grass: '#668b4f',
     soil: '#816b48', dry: '#927b58', rock: '#71746e'
   };
 
-  const characterImage = new Image();
-  let characterReady = false;
-  characterImage.src = CHARACTER_SHEET;
-  characterImage.addEventListener('load', () => {
-    characterReady = characterImage.width >= CHARACTER_FRAME_COUNT && characterImage.height > 0;
-    if (characterReady) showToast('Personagem em 4 direções carregado.');
-  });
-  characterImage.addEventListener('error', () => {
-    characterReady = false;
-    console.warn('PNG do personagem ainda não foi enviado:', CHARACTER_SHEET);
-  });
+  const characterImages = {};
+  const loadedDirections = new Set();
+
+  for (const [direction, src] of Object.entries(CHARACTER_FILES)) {
+    const image = new Image();
+    image.src = src;
+    image.addEventListener('load', () => {
+      loadedDirections.add(direction);
+      if (loadedDirections.size === 4) showToast('Personagem em 4 direções carregado.');
+    });
+    image.addEventListener('error', () => {
+      console.warn('PNG direcional não encontrado:', src);
+    });
+    characterImages[direction] = image;
+  }
 
   let seed = Number(localStorage.getItem('awe_seed')) || 104729;
   let world = [];
@@ -147,21 +156,20 @@
   }
 
   function drawPlayer(sx, sy) {
-    if (!characterReady) return drawFallbackPlayer(sx, sy);
+    const image = characterImages[player.direction] || characterImages.down;
+    if (!image || !image.complete || image.naturalWidth === 0) return drawFallbackPlayer(sx, sy);
 
-    const frameWidth = Math.floor(characterImage.width / CHARACTER_FRAME_COUNT);
-    const frameHeight = characterImage.height;
-    const frame = FRAME_BY_DIRECTION[player.direction] ?? 0;
-    const drawHeight = 92;
-    const drawWidth = drawHeight * (frameWidth / frameHeight);
+    const drawHeight = 104;
+    const drawWidth = drawHeight * (image.naturalWidth / image.naturalHeight);
 
     ctx.save();
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(
-      characterImage,
-      frame * frameWidth, 0, frameWidth, frameHeight,
-      Math.round(sx - drawWidth / 2), Math.round(sy - drawHeight + 18),
-      Math.round(drawWidth), drawHeight
+      image,
+      Math.round(sx - drawWidth / 2),
+      Math.round(sy - drawHeight + 19),
+      Math.round(drawWidth),
+      drawHeight
     );
     ctx.restore();
   }
@@ -193,7 +201,7 @@
         drawObject(d.data, p.x + camera.x, p.y + camera.y);
       }
     }
-    const spriteState = characterReady ? 'sprite 4-dir ativo' : 'aguardando PNG 4-dir';
+    const spriteState = loadedDirections.size === 4 ? 'personagem 4-dir ativo' : `sprites ${loadedDirections.size}/4`;
     status.textContent = `Seed ${seed} • posição ${player.x},${player.y} • ${spriteState}`;
     requestAnimationFrame(render);
   }
