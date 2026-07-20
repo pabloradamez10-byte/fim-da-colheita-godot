@@ -13,12 +13,14 @@
   const TILE_H = 32;
   const MAP_W = 32;
   const MAP_H = 32;
+  const ASSET_VERSION = '20260720-02';
+  const RAW_BASE = 'https://raw.githubusercontent.com/pabloradamez10-byte/fim-da-colheita-godot/main/web/assets/characters';
 
   const CHARACTER_FILES = {
-    down: './assets/characters/CHR_M_SURVIVOR_0001_S.png',
-    right: './assets/characters/CHR_M_SURVIVOR_0001_E.png',
-    up: './assets/characters/CHR_M_SURVIVOR_0001_N.png',
-    left: './assets/characters/CHR_M_SURVIVOR_0001_W.png'
+    down: `${RAW_BASE}/CHR_M_SURVIVOR_0001_S.png?v=${ASSET_VERSION}`,
+    right: `${RAW_BASE}/CHR_M_SURVIVOR_0001_E.png?v=${ASSET_VERSION}`,
+    up: `${RAW_BASE}/CHR_M_SURVIVOR_0001_N.png?v=${ASSET_VERSION}`,
+    left: `${RAW_BASE}/CHR_M_SURVIVOR_0001_W.png?v=${ASSET_VERSION}`
   };
 
   const colors = {
@@ -31,14 +33,15 @@
 
   for (const [direction, src] of Object.entries(CHARACTER_FILES)) {
     const image = new Image();
-    image.src = src;
+    image.crossOrigin = 'anonymous';
     image.addEventListener('load', () => {
       loadedDirections.add(direction);
-      if (loadedDirections.size === 4) showToast('Personagem em 4 direções carregado.');
+      if (loadedDirections.size === 4) showToast('Personagem novo carregado.');
     });
     image.addEventListener('error', () => {
-      console.warn('PNG direcional não encontrado:', src);
+      console.error('Falha ao carregar PNG:', direction, src);
     });
+    image.src = src;
     characterImages[direction] = image;
   }
 
@@ -201,8 +204,8 @@
         drawObject(d.data, p.x + camera.x, p.y + camera.y);
       }
     }
-    const spriteState = loadedDirections.size === 4 ? 'personagem 4-dir ativo' : `sprites ${loadedDirections.size}/4`;
-    status.textContent = `Seed ${seed} • posição ${player.x},${player.y} • ${spriteState}`;
+    const spriteState = loadedDirections.size === 4 ? 'NOVO personagem 4-dir ativo' : `carregando sprites ${loadedDirections.size}/4`;
+    status.textContent = `Alpha 0.2.1 • Seed ${seed} • posição ${player.x},${player.y} • ${spriteState}`;
     requestAnimationFrame(render);
   }
 
