@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "awe://schemas/character-manifest.schema.json",
+  "title": "AWE Procedural Character Manifest",
+  "type": "object",
+  "required": ["id", "seed", "body", "head", "appearance", "equipment"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^CHR_[A-Z0-9_]+$" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "sex": { "enum": ["male", "female"] },
+        "age_group": { "enum": ["young_adult", "adult", "older_adult"] },
+        "profession": { "type": "string" },
+        "wealth": { "enum": ["low", "medium", "high"] },
+        "community": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "body": {
+      "type": "object",
+      "required": ["asset_id", "build", "rig_id", "skin_tone"],
+      "properties": {
+        "asset_id": { "type": "string", "pattern": "^CHR_BODY_[0-9]{4}$" },
+        "build": { "enum": ["slim", "medium", "strong"] },
+        "rig_id": { "const": "RIG_HUMAN_0001" },
+        "skin_tone": { "type": "string" }
+      }
+    },
+    "head": {
+      "type": "object",
+      "required": ["asset_id"],
+      "properties": {
+        "asset_id": { "type": "string", "pattern": "^CHR_HEAD_[0-9]{4}$" },
+        "scar_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "properties": {
+        "hair": { "type": ["string", "null"], "pattern": "^CHR_HAIR_[0-9]{4}$" },
+        "beard": { "type": ["string", "null"], "pattern": "^CHR_BEARD_[0-9]{4}$" },
+        "upper_clothes": { "type": "string", "pattern": "^CHR_TOP_[0-9]{4}$" },
+        "lower_clothes": { "type": "string", "pattern": "^CHR_BOTTOM_[0-9]{4}$" },
+        "footwear": { "type": "string", "pattern": "^CHR_SHOE_[0-9]{4}$" },
+        "backpack": { "type": ["string", "null"], "pattern": "^CHR_BACKPACK_[0-9]{4}$" },
+        "accessories": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^CHR_ACC_[0-9]{4}$" }
+        }
+      },
+      "required": ["upper_clothes", "lower_clothes", "footwear"]
+    },
+    "equipment": {
+      "type": "object",
+      "properties": {
+        "right_hand": { "type": ["string", "null"] },
+        "left_hand": { "type": ["string", "null"] },
+        "back_slot": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "additionalProperties": false
+}
