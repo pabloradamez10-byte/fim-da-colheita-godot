@@ -9,11 +9,31 @@ export class WorldGenerator {
     const random = this.seededRandom(seed);
     const terrain = [];
     const objects = [];
+    const elevation = [];
+    let totalElevation = 0;
 
     for (let y = 0; y < this.config.height; y++) {
       const row = [];
       for (let x = 0; x < this.config.width; x++) {
-        const terrainId = terrainForNoise(this.smoothNoise(x, y, seed));
+        const value = this.smoothNoise(x, y, seed);
+        row.push(value);
+        totalElevation += value;
+      }
+      elevation.push(row);
+    }
+
+    const tileCount = this.config.width * this.config.height;
+    const mean = totalElevation / tileCount;
+    let squaredDifference = 0;
+    for (const row of elevation) {
+      for (const value of row) squaredDifference += (value - mean) ** 2;
+    }
+    const deviation = Math.sqrt(squaredDifference / tileCount) || 1;
+
+    for (let y = 0; y < this.config.height; y++) {
+      const row = [];
+      for (let x = 0; x < this.config.width; x++) {
+        const terrainId = terrainForNoise((elevation[y][x] - mean) / deviation);
         row.push(terrainId);
         this.tryPlaceObject(objects, terrainId, x, y, random());
       }
@@ -45,15 +65,33 @@ export class WorldGenerator {
   smoothNoise(x, y, seed) {
     let total = 0;
     let amplitude = 1;
-    let frequency = 0.08;
+    let frequency = 0.045;
     let normalization = 0;
     for (let octave = 0; octave < 4; octave++) {
-      total += this.hashNoise(x * frequency, y * frequency, seed + octave * 971) * amplitude;
+      total += this.valueNoise(x * frequency, y * frequency, seed + octave * 971) * amplitude;
       normalization += amplitude;
       amplitude *= 0.5;
       frequency *= 2;
     }
     return total / normalization;
+  }
+
+  valueNoise(x, y, seed) {
+    const x0 = Math.floor(x);
+    const y0 = Math.floor(y);
+    const tx = this.fade(x - x0);
+    const ty = this.fade(y - y0);
+    const top = this.lerp(this.hashNoise(x0, y0, seed), this.hashNoise(x0 + 1, y0, seed), tx);
+    const bottom = this.lerp(this.hashNoise(x0, y0 + 1, seed), this.hashNoise(x0 + 1, y0 + 1, seed), tx);
+    return this.lerp(top, bottom, ty);
+  }
+
+  fade(value) {
+    return value * value * (3 - 2 * value);
+  }
+
+  lerp(start, end, amount) {
+    return start + (end - start) * amount;
   }
 
   hashNoise(x, y, seed) {

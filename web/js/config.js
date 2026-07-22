@@ -1,10 +1,10 @@
-export const VERSION = '0.5.1';
-export const ASSET_CACHE_VERSION = '20260722-06';
+export const VERSION = '0.5.2';
+export const ASSET_CACHE_VERSION = '20260722-07';
 
 export const WORLD_CONFIG = Object.freeze({
   defaultSeed: 104729,
-  width: 32,
-  height: 32,
+  width: 64,
+  height: 64,
   tileWidth: 64,
   tileHeight: 32
 });

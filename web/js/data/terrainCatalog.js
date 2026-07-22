@@ -33,10 +33,9 @@ export const TERRAIN_CATALOG = Object.freeze({
   dry: {
     id: 'dry', name: 'Solo seco', color: '#927b58', walkable: true, movementCost: 1.15,
     variants: [
-      { assetId: 'TERRAIN_DIRT_001', weight: 45 },
-      { assetId: 'TERRAIN_GRAVEL_001', weight: 25 },
-      { assetId: 'TERRAIN_SAND_001', weight: 15 },
-      { assetId: 'TERRAIN_ROAD_DIRT_001', weight: 15 }
+      { assetId: 'TERRAIN_DIRT_001', weight: 55 },
+      { assetId: 'TERRAIN_GRAVEL_001', weight: 30 },
+      { assetId: 'TERRAIN_SAND_001', weight: 15 }
     ]
   },
   rock: {
@@ -58,10 +57,10 @@ export const PLANNED_TERRAIN_IDS = Object.freeze([
 ]);
 
 export function terrainForNoise(value) {
-  if (value < -0.38) return 'water';
-  if (value < -0.18) return 'wetland';
-  if (value < 0.25) return 'grass';
-  if (value < 0.48) return 'soil';
-  if (value < 0.67) return 'dry';
+  if (value < -1.15) return 'water';
+  if (value < -0.65) return 'wetland';
+  if (value < 0.55) return 'grass';
+  if (value < 1.05) return 'soil';
+  if (value < 1.45) return 'dry';
   return 'rock';
 }
