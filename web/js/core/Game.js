@@ -1,16 +1,16 @@
 import { VERSION, WORLD_CONFIG } from '../config.js';
-import { TERRAIN_CATALOG } from '../data/terrainCatalog.js';
 import { Player } from '../entities/Player.js';
 import { InventorySystem } from '../systems/InventorySystem.js';
 import { InteractionSystem } from '../systems/InteractionSystem.js';
 import { WorldGenerator } from '../world/WorldGenerator.js';
 
 export class Game {
-  constructor({ eventBus, assetManager, saveManager, renderer, elements }) {
+  constructor({ eventBus, assetManager, saveManager, renderer, terrainManager, elements }) {
     this.eventBus = eventBus;
     this.assetManager = assetManager;
     this.saveManager = saveManager;
     this.renderer = renderer;
+    this.terrainManager = terrainManager;
     this.elements = elements;
     this.worldGenerator = new WorldGenerator(WORLD_CONFIG);
     this.interactionSystem = new InteractionSystem();
@@ -46,7 +46,7 @@ export class Game {
     const generated = this.worldGenerator.generate(this.seed);
     this.terrain = generated.terrain;
     this.objects = generated.objects;
-    const spawn = this.worldGenerator.findWalkableSpawn(this.terrain, id => TERRAIN_CATALOG[id]?.walkable);
+    const spawn = this.worldGenerator.findWalkableSpawn(this.terrain, id => this.terrainManager.isWalkable(id));
     this.player.moveTo(spawn.x, spawn.y);
     if (persist) this.save();
     this.eventBus.emit('toast', `Mundo gerado: seed ${this.seed}`);
@@ -72,7 +72,7 @@ export class Game {
 
   canWalk(x, y) {
     return x >= 0 && y >= 0 && x < WORLD_CONFIG.width && y < WORLD_CONFIG.height &&
-      TERRAIN_CATALOG[this.terrain[y][x]]?.walkable;
+      this.terrainManager.isWalkable(this.terrain[y][x]);
   }
 
   interact() {

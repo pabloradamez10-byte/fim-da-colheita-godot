@@ -1,4 +1,4 @@
-# AWE Preview 0.3.1 — Versão Web
+# AWE Preview 0.4.0 — Versão Web
 
 Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação no navegador do celular antes da disponibilidade de um computador com Godot.
 
@@ -13,6 +13,8 @@ Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação
 - crafting automático da primeira fogueira;
 - salvamento local no navegador;
 - interface responsiva para celular.
+- seis variações oficiais de grama escolhidas de forma determinística pela seed;
+- propriedades de terreno centralizadas no Terrain Manager.
 
 ## Arquitetura
 

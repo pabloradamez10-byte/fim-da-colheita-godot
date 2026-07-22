@@ -1,13 +1,13 @@
-import { TERRAIN_CATALOG } from '../data/terrainCatalog.js';
 import { PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js';
 import { createDiamondPath, worldToScreen } from './IsometricMath.js';
 
 export class Renderer {
-  constructor(canvas, config, assetManager) {
+  constructor(canvas, config, assetManager, terrainManager) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.config = config;
     this.assetManager = assetManager;
+    this.terrainManager = terrainManager;
     this.camera = { x: 0, y: 0 };
   }
 
@@ -30,7 +30,7 @@ export class Renderer {
     for (let y = 0; y < this.config.height; y++) {
       for (let x = 0; x < this.config.width; x++) {
         const point = this.toCameraScreen(x, y);
-        this.drawTile(point.x, point.y, state.terrain[y][x]);
+        this.drawTile(point.x, point.y, state.terrain[y][x], x, y, state.seed);
       }
     }
 
@@ -54,19 +54,18 @@ export class Renderer {
     return { x: point.x + this.camera.x, y: point.y + this.camera.y };
   }
 
-  drawTile(x, y, terrainId) {
-    const terrain = TERRAIN_CATALOG[terrainId];
+  drawTile(x, y, terrainId, gridX, gridY, seed) {
     createDiamondPath(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
-    this.context.fillStyle = terrain?.color || '#ff00ff';
+    this.context.fillStyle = this.terrainManager.getFallbackColor(terrainId);
     this.context.fill();
 
-    const image = terrain?.assetId ? this.assetManager.getImage(terrain.assetId) : null;
+    const assetId = this.terrainManager.getVariantAssetId(terrainId, gridX, gridY, seed);
+    const image = assetId ? this.assetManager.getImage(assetId) : null;
     if (image) {
       this.context.save();
       createDiamondPath(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
       this.context.clip();
-      this.context.drawImage(image, 45, 165, 935, 665,
-        x - this.config.tileWidth / 2, y - this.config.tileHeight / 2,
+      this.context.drawImage(image, x - this.config.tileWidth / 2, y - this.config.tileHeight / 2,
         this.config.tileWidth, this.config.tileHeight);
       this.context.restore();
     }
