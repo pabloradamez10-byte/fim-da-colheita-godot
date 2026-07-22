@@ -1,9 +1,11 @@
 export const TERRAIN_CATALOG = Object.freeze({
   water: {
-    id: 'water', name: 'Água profunda', color: '#245d72', walkable: false, movementCost: Infinity, variants: []
+    id: 'water', name: 'Água profunda', color: '#245d72', walkable: false, movementCost: Infinity,
+    variants: [{ assetId: 'TERRAIN_WATER_DEEP_001', weight: 1 }]
   },
   wetland: {
-    id: 'wetland', name: 'Área alagada', color: '#4f7055', walkable: true, movementCost: 1.5, variants: []
+    id: 'wetland', name: 'Água rasa', color: '#4f7055', walkable: true, movementCost: 1.5,
+    variants: [{ assetId: 'TERRAIN_WATER_SHALLOW_001', weight: 1 }]
   },
   grass: {
     id: 'grass',
@@ -21,21 +23,38 @@ export const TERRAIN_CATALOG = Object.freeze({
     ]
   },
   soil: {
-    id: 'soil', name: 'Solo fértil', color: '#816b48', walkable: true, movementCost: 1.1, variants: []
+    id: 'soil', name: 'Solo fértil', color: '#816b48', walkable: true, movementCost: 1.1,
+    variants: [
+      { assetId: 'TERRAIN_DIRT_001', weight: 46 },
+      { assetId: 'TERRAIN_DIRT_DARK_001', weight: 34 },
+      { assetId: 'TERRAIN_MUD_001', weight: 20 }
+    ]
   },
   dry: {
-    id: 'dry', name: 'Solo seco', color: '#927b58', walkable: true, movementCost: 1.15, variants: []
+    id: 'dry', name: 'Solo seco', color: '#927b58', walkable: true, movementCost: 1.15,
+    variants: [
+      { assetId: 'TERRAIN_DIRT_001', weight: 45 },
+      { assetId: 'TERRAIN_GRAVEL_001', weight: 25 },
+      { assetId: 'TERRAIN_SAND_001', weight: 15 },
+      { assetId: 'TERRAIN_ROAD_DIRT_001', weight: 15 }
+    ]
   },
   rock: {
-    id: 'rock', name: 'Rocha', color: '#71746e', walkable: true, movementCost: 1.35, variants: []
+    id: 'rock', name: 'Rocha', color: '#71746e', walkable: true, movementCost: 1.35,
+    variants: [
+      { assetId: 'TERRAIN_ROCK_001', weight: 75 },
+      { assetId: 'TERRAIN_GRAVEL_001', weight: 25 }
+    ]
   }
 });
 
 export const PLANNED_TERRAIN_IDS = Object.freeze([
-  'TERRAIN_GRASS', 'TERRAIN_GRASS_DRY', 'TERRAIN_DIRT', 'TERRAIN_DIRT_DARK',
-  'TERRAIN_MUD', 'TERRAIN_GRAVEL', 'TERRAIN_ROCK', 'TERRAIN_SAND',
-  'TERRAIN_ASPHALT', 'TERRAIN_ROAD_DIRT', 'TERRAIN_SIDEWALK',
-  'TERRAIN_WATER_SHALLOW', 'TERRAIN_WATER_DEEP'
+  'TERRAIN_GRASS_001', 'TERRAIN_GRASS_002', 'TERRAIN_GRASS_003',
+  'TERRAIN_GRASS_FLOWERS_001', 'TERRAIN_GRASS_STONES_001', 'TERRAIN_GRASS_WORN_001',
+  'TERRAIN_DIRT_001', 'TERRAIN_DIRT_DARK_001', 'TERRAIN_MUD_001',
+  'TERRAIN_GRAVEL_001', 'TERRAIN_ROCK_001', 'TERRAIN_SAND_001',
+  'TERRAIN_ASPHALT_001', 'TERRAIN_ROAD_DIRT_001', 'TERRAIN_SIDEWALK_001',
+  'TERRAIN_WATER_SHALLOW_001', 'TERRAIN_WATER_DEEP_001'
 ]);
 
 export function terrainForNoise(value) {

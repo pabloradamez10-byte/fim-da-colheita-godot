@@ -1,4 +1,4 @@
-import { PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js';
+import { OBJECT_ASSETS_BY_TYPE, PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js';
 import { Camera } from './Camera.js';
 import {
   drawIsometricTile,
@@ -93,6 +93,18 @@ export class Renderer {
 
   drawObject(object) {
     const point = this.toCameraScreen(object.x, object.y);
+    const definition = OBJECT_ASSETS_BY_TYPE[object.type];
+    const image = definition ? this.assetManager.getImage(definition.assetId) : null;
+    if (image) {
+      drawSpriteWithPivot(this.context, image, point.x, point.y, {
+        height: definition.height,
+        pivotX: 0.5,
+        pivotY: 1,
+        groundOffset: 0
+      });
+      return;
+    }
+
     if (object.type === 'tree') {
       this.context.fillStyle = '#5e422d';
       this.context.fillRect(point.x - 3, point.y - 24, 6, 24);
