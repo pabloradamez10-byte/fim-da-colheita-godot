@@ -13,15 +13,17 @@
   const TILE_H = 32;
   const MAP_W = 32;
   const MAP_H = 32;
-  const ASSET_VERSION = '20260720-02';
-  const RAW_BASE = 'https://raw.githubusercontent.com/pabloradamez10-byte/fim-da-colheita-godot/main/web/assets/characters';
+  const VERSION = '0.2.6';
+  const ASSET_VERSION = '20260722-01';
+  const ASSET_BASE = './assets';
 
   const CHARACTER_FILES = {
-    down: `${RAW_BASE}/CHR_M_SURVIVOR_0001_S.png?v=${ASSET_VERSION}`,
-    right: `${RAW_BASE}/CHR_M_SURVIVOR_0001_E.png?v=${ASSET_VERSION}`,
-    up: `${RAW_BASE}/CHR_M_SURVIVOR_0001_N.png?v=${ASSET_VERSION}`,
-    left: `${RAW_BASE}/CHR_M_SURVIVOR_0001_W.png?v=${ASSET_VERSION}`
+    down: `${ASSET_BASE}/characters/CHR_M_SURVIVOR_0001_S.png?v=${ASSET_VERSION}`,
+    right: `${ASSET_BASE}/characters/CHR_M_SURVIVOR_0001_E.png?v=${ASSET_VERSION}`,
+    up: `${ASSET_BASE}/characters/CHR_M_SURVIVOR_0001_N.png?v=${ASSET_VERSION}`,
+    left: `${ASSET_BASE}/characters/CHR_M_SURVIVOR_0001_W.png?v=${ASSET_VERSION}`
   };
+  const GRASS_FILE = `${ASSET_BASE}/terrain/TERRAIN_GRASS_001.png?v=${ASSET_VERSION}`;
 
   const colors = {
     water: '#245d72', wetland: '#4f7055', grass: '#668b4f',
@@ -30,6 +32,7 @@
 
   const characterImages = {};
   const loadedDirections = new Set();
+  const failedAssets = new Set();
 
   for (const [direction, src] of Object.entries(CHARACTER_FILES)) {
     const image = new Image();
@@ -39,17 +42,39 @@
       if (loadedDirections.size === 4) showToast('Personagem novo carregado.');
     });
     image.addEventListener('error', () => {
+      failedAssets.add(`personagem:${direction}`);
       console.error('Falha ao carregar PNG:', direction, src);
     });
     image.src = src;
     characterImages[direction] = image;
   }
 
-  let seed = Number(localStorage.getItem('awe_seed')) || 104729;
+  const grassImage = new Image();
+  let grassReady = false;
+  grassImage.addEventListener('load', () => {
+    grassReady = true;
+    showToast('Primeiro terreno de grama carregado.');
+  });
+  grassImage.addEventListener('error', () => {
+    failedAssets.add('terreno:grama');
+    console.error('Falha ao carregar PNG de terreno:', GRASS_FILE);
+  });
+  grassImage.src = GRASS_FILE;
+
+  let seed = loadSeed();
   let world = [];
   let objects = [];
   let camera = { x: 0, y: 0 };
   let player = { x: 0, y: 0, wood: 0, stone: 0, campfire: 0, direction: 'down' };
+
+  function loadSeed() {
+    try {
+      return Number(localStorage.getItem('awe_seed')) || 104729;
+    } catch (error) {
+      console.warn('Armazenamento local indisponível; usando seed padrão.', error);
+      return 104729;
+    }
+  }
 
   function mulberry32(a) {
     return function() {
@@ -85,7 +110,7 @@
     return 'rock';
   }
 
-  function generateWorld() {
+  function generateWorld({ persist = true } = {}) {
     const rnd = mulberry32(seed);
     world = [];
     objects = [];
@@ -104,9 +129,22 @@
     player.x = Math.floor(MAP_W / 2);
     player.y = Math.floor(MAP_H / 2);
     player.direction = player.direction || 'down';
-    while (world[player.y][player.x] === 'water') player.x++;
-    save();
+    const spawn = findWalkableSpawn(player.x, player.y);
+    player.x = spawn.x;
+    player.y = spawn.y;
+    if (persist) save();
     showToast('Mundo gerado: seed ' + seed);
+  }
+
+  function findWalkableSpawn(startX, startY) {
+    for (let radius = 0; radius < Math.max(MAP_W, MAP_H); radius++) {
+      for (let y = Math.max(0, startY - radius); y <= Math.min(MAP_H - 1, startY + radius); y++) {
+        for (let x = Math.max(0, startX - radius); x <= Math.min(MAP_W - 1, startX + radius); x++) {
+          if (world[y][x] !== 'water') return { x, y };
+        }
+      }
+    }
+    return { x: 0, y: 0 };
   }
 
   function iso(x, y) {
@@ -121,15 +159,29 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function drawTile(cx, cy, color) {
+  function diamondPath(cx, cy) {
     ctx.beginPath();
     ctx.moveTo(cx, cy - TILE_H / 2);
     ctx.lineTo(cx + TILE_W / 2, cy);
     ctx.lineTo(cx, cy + TILE_H / 2);
     ctx.lineTo(cx - TILE_W / 2, cy);
     ctx.closePath();
-    ctx.fillStyle = color;
+  }
+
+  function drawTile(cx, cy, terrainType) {
+    diamondPath(cx, cy);
+    ctx.fillStyle = colors[terrainType] || '#ff00ff';
     ctx.fill();
+
+    if (terrainType === 'grass' && grassReady) {
+      ctx.save();
+      diamondPath(cx, cy);
+      ctx.clip();
+      ctx.drawImage(grassImage, 45, 165, 935, 665, cx - TILE_W / 2, cy - TILE_H / 2, TILE_W, TILE_H);
+      ctx.restore();
+    }
+
+    diamondPath(cx, cy);
     ctx.strokeStyle = 'rgba(15,25,17,.22)';
     ctx.stroke();
   }
@@ -189,7 +241,7 @@
     for (let y = 0; y < MAP_H; y++) {
       for (let x = 0; x < MAP_W; x++) {
         const p = iso(x, y);
-        drawTile(p.x + camera.x, p.y + camera.y, colors[world[y][x]]);
+        drawTile(p.x + camera.x, p.y + camera.y, world[y][x]);
       }
     }
     for (const o of objects) if (o.alive) drawables.push({ sort: o.x + o.y, kind: 'object', data: o });
@@ -204,8 +256,9 @@
         drawObject(d.data, p.x + camera.x, p.y + camera.y);
       }
     }
-    const spriteState = loadedDirections.size === 4 ? 'NOVO personagem 4-dir ativo' : `carregando sprites ${loadedDirections.size}/4`;
-    status.textContent = `Alpha 0.2.1 • Seed ${seed} • posição ${player.x},${player.y} • ${spriteState}`;
+    const spriteState = loadedDirections.size === 4 ? 'sprites 4/4' : `sprites ${loadedDirections.size}/4`;
+    const assetState = failedAssets.size ? ` • fallbacks ${failedAssets.size}` : '';
+    status.textContent = `Alpha ${VERSION} • Seed ${seed} • grama ${grassReady ? 'ativa' : 'fallback'} • ${spriteState}${assetState} • posição ${player.x},${player.y}`;
     requestAnimationFrame(render);
   }
 
@@ -256,18 +309,33 @@
   }
 
   function save() {
-    localStorage.setItem('awe_seed', String(seed));
-    localStorage.setItem('awe_save', JSON.stringify({ seed, player, objects }));
+    try {
+      localStorage.setItem('awe_seed', String(seed));
+      localStorage.setItem('awe_save', JSON.stringify({ version: 1, seed, player, objects }));
+      return true;
+    } catch (error) {
+      console.error('Não foi possível salvar o progresso:', error);
+      showToast('Não foi possível salvar neste navegador.');
+      return false;
+    }
   }
 
   function load() {
     try {
       const data = JSON.parse(localStorage.getItem('awe_save'));
-      if (!data || data.seed !== seed) return false;
+      if (!data || data.seed !== seed || !isValidPlayer(data.player) || !Array.isArray(data.objects)) return false;
       player = { direction: 'down', ...data.player };
       objects = data.objects;
       return true;
-    } catch { return false; }
+    } catch (error) {
+      console.warn('Save local inválido; um mundo seguro será iniciado.', error);
+      return false;
+    }
+  }
+
+  function isValidPlayer(value) {
+    return value && Number.isInteger(value.x) && Number.isInteger(value.y) &&
+      value.x >= 0 && value.y >= 0 && value.x < MAP_W && value.y < MAP_H;
   }
 
   const keyMap = {
@@ -297,8 +365,8 @@
   addEventListener('resize', resize);
 
   resize();
-  generateWorld();
-  load();
+  generateWorld({ persist: false });
+  if (!load()) save();
   updateHud();
   requestAnimationFrame(render);
 })();
