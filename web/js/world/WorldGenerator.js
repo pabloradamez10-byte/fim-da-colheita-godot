@@ -35,12 +35,19 @@ export class WorldGenerator {
       for (let x = 0; x < this.config.width; x++) {
         const terrainId = terrainForNoise((elevation[y][x] - mean) / deviation);
         row.push(terrainId);
-        this.tryPlaceObject(objects, terrainId, x, y, random());
       }
       terrain.push(row);
     }
 
-    return { terrain, objects };
+    const smoothedTerrain = this.smoothTerrainEdges(terrain, 2);
+    for (let y = 0; y < this.config.height; y++) {
+      for (let x = 0; x < this.config.width; x++) {
+        const habitat = this.valueNoise(x * 0.075, y * 0.075, seed + 8191);
+        this.tryPlaceObject(objects, smoothedTerrain[y][x], x, y, random(), habitat);
+      }
+    }
+
+    return { terrain: smoothedTerrain, objects };
   }
 
   findWalkableSpawn(terrain, isWalkable) {
@@ -56,10 +63,32 @@ export class WorldGenerator {
     return { x: 0, y: 0 };
   }
 
-  tryPlaceObject(objects, terrainId, x, y, roll) {
-    if (terrainId === 'grass' && roll < 0.105) objects.push({ x, y, type: 'tree', alive: true });
-    else if ((terrainId === 'soil' || terrainId === 'dry') && roll < 0.045) objects.push({ x, y, type: 'stone', alive: true });
-    else if (terrainId === 'wetland' && roll < 0.035) objects.push({ x, y, type: 'bush', alive: true });
+  tryPlaceObject(objects, terrainId, x, y, roll, habitat) {
+    if (terrainId === 'grass' && habitat > -0.08 && roll < 0.17) {
+      objects.push({ x, y, type: 'tree', alive: true });
+    } else if ((terrainId === 'soil' || terrainId === 'dry' || terrainId === 'rock') &&
+      habitat > 0.12 && roll < 0.09) {
+      objects.push({ x, y, type: 'stone', alive: true });
+    } else if (terrainId === 'wetland' && habitat > -0.02 && roll < 0.08) {
+      objects.push({ x, y, type: 'bush', alive: true });
+    }
+  }
+
+  smoothTerrainEdges(source, passes) {
+    let terrain = source;
+    const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+    for (let pass = 0; pass < passes; pass++) {
+      terrain = terrain.map((row, y) => row.map((terrainId, x) => {
+        const neighbors = directions
+          .map(([dx, dy]) => terrain[y + dy]?.[x + dx])
+          .filter(Boolean);
+        const counts = new Map();
+        for (const neighbor of neighbors) counts.set(neighbor, (counts.get(neighbor) || 0) + 1);
+        const dominant = [...counts.entries()].sort((left, right) => right[1] - left[1])[0];
+        return dominant?.[1] >= 3 && dominant[0] !== terrainId ? dominant[0] : terrainId;
+      }));
+    }
+    return terrain;
   }
 
   smoothNoise(x, y, seed) {

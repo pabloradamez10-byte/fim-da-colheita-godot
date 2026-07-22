@@ -14,35 +14,35 @@ export const TERRAIN_CATALOG = Object.freeze({
     walkable: true,
     movementCost: 1,
     variants: [
-      { assetId: 'TERRAIN_GRASS_001', weight: 30 },
-      { assetId: 'TERRAIN_GRASS_002', weight: 24 },
-      { assetId: 'TERRAIN_GRASS_003', weight: 16 },
-      { assetId: 'TERRAIN_GRASS_FLOWERS_001', weight: 10 },
-      { assetId: 'TERRAIN_GRASS_STONES_001', weight: 9 },
-      { assetId: 'TERRAIN_GRASS_WORN_001', weight: 11 }
+      { assetId: 'TERRAIN_GRASS_001', weight: 58 },
+      { assetId: 'TERRAIN_GRASS_002', weight: 16 },
+      { assetId: 'TERRAIN_GRASS_003', weight: 10 },
+      { assetId: 'TERRAIN_GRASS_FLOWERS_001', weight: 5 },
+      { assetId: 'TERRAIN_GRASS_STONES_001', weight: 5 },
+      { assetId: 'TERRAIN_GRASS_WORN_001', weight: 6 }
     ]
   },
   soil: {
     id: 'soil', name: 'Solo fértil', color: '#816b48', walkable: true, movementCost: 1.1,
     variants: [
-      { assetId: 'TERRAIN_DIRT_001', weight: 46 },
-      { assetId: 'TERRAIN_DIRT_DARK_001', weight: 34 },
-      { assetId: 'TERRAIN_MUD_001', weight: 20 }
+      { assetId: 'TERRAIN_DIRT_001', weight: 68 },
+      { assetId: 'TERRAIN_DIRT_DARK_001', weight: 22 },
+      { assetId: 'TERRAIN_MUD_001', weight: 10 }
     ]
   },
   dry: {
     id: 'dry', name: 'Solo seco', color: '#927b58', walkable: true, movementCost: 1.15,
     variants: [
-      { assetId: 'TERRAIN_DIRT_001', weight: 55 },
-      { assetId: 'TERRAIN_GRAVEL_001', weight: 30 },
-      { assetId: 'TERRAIN_SAND_001', weight: 15 }
+      { assetId: 'TERRAIN_DIRT_001', weight: 70 },
+      { assetId: 'TERRAIN_GRAVEL_001', weight: 20 },
+      { assetId: 'TERRAIN_SAND_001', weight: 10 }
     ]
   },
   rock: {
     id: 'rock', name: 'Rocha', color: '#71746e', walkable: true, movementCost: 1.35,
     variants: [
-      { assetId: 'TERRAIN_ROCK_001', weight: 75 },
-      { assetId: 'TERRAIN_GRAVEL_001', weight: 25 }
+      { assetId: 'TERRAIN_ROCK_001', weight: 85 },
+      { assetId: 'TERRAIN_GRAVEL_001', weight: 15 }
     ]
   }
 });
