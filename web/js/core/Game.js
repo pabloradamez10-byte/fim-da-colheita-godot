@@ -36,6 +36,9 @@ export class Game {
 
   bindEvents() {
     this.eventBus.on('toast', message => this.showToast(message));
+    this.eventBus.on('assets:progress', status => {
+      this.elements.status.textContent = `Alpha ${VERSION} • carregando assets ${status.completed}/${status.total}`;
+    });
     addEventListener('resize', () => this.renderer.resize());
   }
 

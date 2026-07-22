@@ -1,4 +1,4 @@
-# AWE Preview 0.3.0 — Versão Web
+# AWE Preview 0.3.1 — Versão Web
 
 Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação no navegador do celular antes da disponibilidade de um computador com Godot.
 

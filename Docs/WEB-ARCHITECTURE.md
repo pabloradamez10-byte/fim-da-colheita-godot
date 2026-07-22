@@ -1,4 +1,4 @@
-# Arquitetura web — Alpha 0.3.0
+# Arquitetura web — Alpha 0.3.1
 
 ## Entrada
 
@@ -28,3 +28,17 @@
 Os módulos usam JavaScript nativo do navegador, sem biblioteca externa e com caminhos relativos compatíveis com GitHub Pages.
 
 `web/app.js` e `web/app-clean.js` foram preservados como legado inativo até que a versão modular seja validada visualmente.
+
+## Asset Manager
+
+Os assets são registrados por ID em `data/assetCatalog.js`. O gerenciador:
+
+- aceita imagens e está preparado para JSON e áudio;
+- evita solicitações duplicadas durante e depois do carregamento;
+- informa progresso pelo `EventBus`;
+- registra falhas sem impedir a inicialização;
+- aplica cache busting centralizado e controlado;
+- expõe `getImage(assetId)` para a renderização;
+- mantém caminhos relativos compatíveis com GitHub Pages.
+
+Quando um PNG não carrega, o renderizador mantém o fallback vetorial do personagem ou a cor do terreno.

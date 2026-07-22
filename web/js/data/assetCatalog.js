@@ -1,12 +1,10 @@
-const ASSET_VERSION = '20260722-02';
-
-export const ASSET_CATALOG = Object.freeze({
-  CHARACTER_PLAYER_S: `./assets/characters/CHR_M_SURVIVOR_0001_S.png?v=${ASSET_VERSION}`,
-  CHARACTER_PLAYER_E: `./assets/characters/CHR_M_SURVIVOR_0001_E.png?v=${ASSET_VERSION}`,
-  CHARACTER_PLAYER_N: `./assets/characters/CHR_M_SURVIVOR_0001_N.png?v=${ASSET_VERSION}`,
-  CHARACTER_PLAYER_W: `./assets/characters/CHR_M_SURVIVOR_0001_W.png?v=${ASSET_VERSION}`,
-  TERRAIN_GRASS_001: `./assets/terrain/TERRAIN_GRASS_001.png?v=${ASSET_VERSION}`
-});
+export const ASSET_DEFINITIONS = Object.freeze([
+  { id: 'CHARACTER_PLAYER_S', type: 'image', path: './assets/characters/CHR_M_SURVIVOR_0001_S.png' },
+  { id: 'CHARACTER_PLAYER_E', type: 'image', path: './assets/characters/CHR_M_SURVIVOR_0001_E.png' },
+  { id: 'CHARACTER_PLAYER_N', type: 'image', path: './assets/characters/CHR_M_SURVIVOR_0001_N.png' },
+  { id: 'CHARACTER_PLAYER_W', type: 'image', path: './assets/characters/CHR_M_SURVIVOR_0001_W.png' },
+  { id: 'TERRAIN_GRASS_001', type: 'image', path: './assets/terrain/TERRAIN_GRASS_001.png' }
+]);
 
 export const PLAYER_ASSETS_BY_DIRECTION = Object.freeze({
   down: 'CHARACTER_PLAYER_S',

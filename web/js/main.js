@@ -1,5 +1,5 @@
-import { ASSET_CATALOG } from './data/assetCatalog.js';
-import { WORLD_CONFIG } from './config.js';
+import { ASSET_DEFINITIONS } from './data/assetCatalog.js';
+import { ASSET_CACHE_VERSION, WORLD_CONFIG } from './config.js';
 import { AssetManager } from './core/AssetManager.js';
 import { EventBus } from './core/EventBus.js';
 import { Game } from './core/Game.js';
@@ -17,7 +17,8 @@ const elements = {
 };
 
 const eventBus = new EventBus();
-const assetManager = new AssetManager(ASSET_CATALOG, eventBus);
+const assetManager = new AssetManager({ eventBus, cacheVersion: ASSET_CACHE_VERSION });
+assetManager.registerMany(ASSET_DEFINITIONS);
 const saveManager = new SaveManager(eventBus, WORLD_CONFIG.defaultSeed);
 const renderer = new Renderer(elements.canvas, WORLD_CONFIG, assetManager);
 const game = new Game({ eventBus, assetManager, saveManager, renderer, elements });
