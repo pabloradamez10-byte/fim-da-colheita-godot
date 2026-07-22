@@ -1,12 +1,12 @@
-import { OBJECT_ASSETS_BY_TYPE, PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js';
-import { Camera } from './Camera.js';
+import { OBJECT_ASSETS_BY_TYPE, PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js?v=054';
+import { Camera } from './Camera.js?v=054';
 import {
   drawIsometricTile,
   drawSpriteWithPivot,
   isTileVisible,
   sortByDepth,
   worldToScreen
-} from './IsometricMath.js';
+} from './IsometricMath.js?v=054';
 
 export class Renderer {
   constructor(canvas, config, assetManager, terrainManager) {
@@ -86,9 +86,7 @@ export class Renderer {
       this.context.restore();
     }
 
-    drawIsometricTile(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
-    this.context.strokeStyle = 'rgba(15,25,17,.22)';
-    this.context.stroke();
+    // Sem grade sobreposta: as texturas se unem visualmente e escondem o efeito quadriculado.
   }
 
   drawObject(object) {

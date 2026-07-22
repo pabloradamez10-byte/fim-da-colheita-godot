@@ -1,4 +1,4 @@
-# AWE Preview 0.5.3 — Versão Web
+# AWE Preview 0.5.4 — Versão Web
 
 Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação no navegador do celular antes da disponibilidade de um computador com Godot.
 
@@ -23,6 +23,8 @@ Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação
 - mundo ampliado para 64 x 64 tiles com biomas interpolados em manchas contínuas.
 - bordas de bioma suavizadas e variações de piso mais discretas;
 - bosques, clareiras, arbustos e pedras distribuídos por zonas ecológicas.
+- grade visual removida para unir os tiles e suavizar as formas do terreno;
+- saves antigos migrados e objetos validados para impedir árvores ou pedras dentro da água.
 
 ## Arquitetura
 

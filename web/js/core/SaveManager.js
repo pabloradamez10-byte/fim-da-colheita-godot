@@ -1,6 +1,6 @@
 const SEED_KEY = 'awe_seed';
 const SAVE_KEY = 'awe_save';
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2;
 
 export class SaveManager {
   constructor(eventBus, defaultSeed) {
@@ -42,7 +42,7 @@ export class SaveManager {
 
   isValid(data, seed, worldConfig) {
     const player = data?.player;
-    return data?.seed === seed && Array.isArray(data.objects) && player &&
+    return data?.version === SAVE_VERSION && data?.seed === seed && Array.isArray(data.objects) && player &&
       Number.isInteger(player.x) && Number.isInteger(player.y) &&
       player.x >= 0 && player.y >= 0 &&
       player.x < worldConfig.width && player.y < worldConfig.height;

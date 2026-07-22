@@ -1,8 +1,8 @@
-import { VERSION, WORLD_CONFIG } from '../config.js';
-import { Player } from '../entities/Player.js';
-import { InventorySystem } from '../systems/InventorySystem.js';
-import { InteractionSystem } from '../systems/InteractionSystem.js';
-import { WorldGenerator } from '../world/WorldGenerator.js';
+import { VERSION, WORLD_CONFIG } from '../config.js?v=054';
+import { Player } from '../entities/Player.js?v=054';
+import { InventorySystem } from '../systems/InventorySystem.js?v=054';
+import { InteractionSystem } from '../systems/InteractionSystem.js?v=054';
+import { WorldGenerator } from '../world/WorldGenerator.js?v=054';
 
 export class Game {
   constructor({ eventBus, assetManager, saveManager, renderer, terrainManager, elements }) {
@@ -95,7 +95,15 @@ export class Game {
   restore(saved) {
     this.player = new Player(saved.player);
     this.inventory = new InventorySystem(saved.player);
-    this.objects = saved.objects;
+    this.objects = saved.objects.filter(object => this.isObjectAllowedOnTerrain(object));
+  }
+
+  isObjectAllowedOnTerrain(object) {
+    const terrainId = this.terrain[object.y]?.[object.x];
+    if (object.type === 'tree') return terrainId === 'grass';
+    if (object.type === 'bush') return terrainId === 'wetland';
+    if (object.type === 'stone') return terrainId === 'soil' || terrainId === 'dry' || terrainId === 'rock';
+    return false;
   }
 
   updateHud() {

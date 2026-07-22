@@ -1,4 +1,4 @@
-import { terrainForNoise } from '../data/terrainCatalog.js';
+import { terrainForNoise } from '../data/terrainCatalog.js?v=054';
 
 export class WorldGenerator {
   constructor(config) {

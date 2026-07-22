@@ -1,13 +1,13 @@
-import { ASSET_DEFINITIONS } from './data/assetCatalog.js';
-import { TERRAIN_CATALOG } from './data/terrainCatalog.js';
-import { ASSET_CACHE_VERSION, WORLD_CONFIG } from './config.js';
-import { AssetManager } from './core/AssetManager.js';
-import { EventBus } from './core/EventBus.js';
-import { Game } from './core/Game.js';
-import { InputManager } from './core/InputManager.js';
-import { SaveManager } from './core/SaveManager.js';
-import { Renderer } from './rendering/Renderer.js';
-import { TerrainManager } from './world/TerrainManager.js';
+import { ASSET_DEFINITIONS } from './data/assetCatalog.js?v=054';
+import { TERRAIN_CATALOG } from './data/terrainCatalog.js?v=054';
+import { ASSET_CACHE_VERSION, WORLD_CONFIG } from './config.js?v=054';
+import { AssetManager } from './core/AssetManager.js?v=054';
+import { EventBus } from './core/EventBus.js?v=054';
+import { Game } from './core/Game.js?v=054';
+import { InputManager } from './core/InputManager.js?v=054';
+import { SaveManager } from './core/SaveManager.js?v=054';
+import { Renderer } from './rendering/Renderer.js?v=054';
+import { TerrainManager } from './world/TerrainManager.js?v=054';
 
 const elements = {
   canvas: document.querySelector('#game'),
