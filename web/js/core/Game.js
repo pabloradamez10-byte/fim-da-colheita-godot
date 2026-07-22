@@ -115,7 +115,8 @@ export class Game {
     this.renderer.render(this);
     const assets = this.assetManager.getStatus();
     this.elements.status.textContent = `Alpha ${VERSION} • Seed ${this.seed} • assets ${assets.loaded}/${assets.total}` +
-      `${assets.failures ? ` • fallbacks ${assets.failures}` : ''} • posição ${this.player.x},${this.player.y}`;
+      `${assets.failures ? ` • fallbacks ${assets.failures}` : ''} • tiles ${this.renderer.visibleTileCount}` +
+      ` • posição ${this.player.x},${this.player.y}`;
     requestAnimationFrame(() => this.renderLoop());
   }
 }

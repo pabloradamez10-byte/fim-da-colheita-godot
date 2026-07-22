@@ -1,5 +1,12 @@
 import { PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js';
-import { createDiamondPath, worldToScreen } from './IsometricMath.js';
+import { Camera } from './Camera.js';
+import {
+  drawIsometricTile,
+  drawSpriteWithPivot,
+  isTileVisible,
+  sortByDepth,
+  worldToScreen
+} from './IsometricMath.js';
 
 export class Renderer {
   constructor(canvas, config, assetManager, terrainManager) {
@@ -8,7 +15,8 @@ export class Renderer {
     this.config = config;
     this.assetManager = assetManager;
     this.terrainManager = terrainManager;
-    this.camera = { x: 0, y: 0 };
+    this.camera = new Camera();
+    this.visibleTileCount = 0;
   }
 
   resize() {
@@ -24,20 +32,28 @@ export class Renderer {
     const height = this.canvas.clientHeight;
     this.context.clearRect(0, 0, width, height);
     const playerScreen = this.toScreen(state.player.x, state.player.y);
-    this.camera.x += (width / 2 - playerScreen.x - this.camera.x) * 0.12;
-    this.camera.y += (height / 2 - playerScreen.y - this.camera.y) * 0.12;
+    this.camera.follow(playerScreen.x, playerScreen.y, width, height);
+    this.visibleTileCount = 0;
 
     for (let y = 0; y < this.config.height; y++) {
       for (let x = 0; x < this.config.width; x++) {
         const point = this.toCameraScreen(x, y);
+        if (!isTileVisible(point.x, point.y, width, height,
+          this.config.tileWidth, this.config.tileHeight, 2)) continue;
         this.drawTile(point.x, point.y, state.terrain[y][x], x, y, state.seed);
+        this.visibleTileCount++;
       }
     }
 
     const drawables = state.objects.filter(object => object.alive)
-      .map(object => ({ depth: object.x + object.y, kind: 'object', data: object }));
-    drawables.push({ depth: state.player.x + state.player.y + 0.1, kind: 'player' });
-    drawables.sort((left, right) => left.depth - right.depth);
+      .filter(object => {
+        const point = this.toCameraScreen(object.x, object.y);
+        return isTileVisible(point.x, point.y, width, height,
+          this.config.tileWidth, this.config.tileHeight, 4);
+      })
+      .map(object => ({ depth: object.x + object.y, layer: 0, kind: 'object', data: object }));
+    drawables.push({ depth: state.player.x + state.player.y, layer: 1, kind: 'player' });
+    sortByDepth(drawables);
 
     for (const drawable of drawables) {
       if (drawable.kind === 'player') this.drawPlayer(state.player);
@@ -51,11 +67,11 @@ export class Renderer {
 
   toCameraScreen(x, y) {
     const point = this.toScreen(x, y);
-    return { x: point.x + this.camera.x, y: point.y + this.camera.y };
+    return this.camera.apply(point);
   }
 
   drawTile(x, y, terrainId, gridX, gridY, seed) {
-    createDiamondPath(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
+    drawIsometricTile(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
     this.context.fillStyle = this.terrainManager.getFallbackColor(terrainId);
     this.context.fill();
 
@@ -63,14 +79,14 @@ export class Renderer {
     const image = assetId ? this.assetManager.getImage(assetId) : null;
     if (image) {
       this.context.save();
-      createDiamondPath(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
+      drawIsometricTile(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
       this.context.clip();
       this.context.drawImage(image, x - this.config.tileWidth / 2, y - this.config.tileHeight / 2,
         this.config.tileWidth, this.config.tileHeight);
       this.context.restore();
     }
 
-    createDiamondPath(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
+    drawIsometricTile(this.context, x, y, this.config.tileWidth, this.config.tileHeight);
     this.context.strokeStyle = 'rgba(15,25,17,.22)';
     this.context.stroke();
   }
@@ -101,9 +117,12 @@ export class Renderer {
     const point = this.toCameraScreen(player.x, player.y);
     const image = this.assetManager.getImage(PLAYER_ASSETS_BY_DIRECTION[player.direction]);
     if (!image) return this.drawFallbackPlayer(point.x, point.y);
-    const height = 104;
-    const width = height * image.naturalWidth / image.naturalHeight;
-    this.context.drawImage(image, Math.round(point.x - width / 2), Math.round(point.y - height + 19), Math.round(width), height);
+    drawSpriteWithPivot(this.context, image, point.x, point.y, {
+      height: 104,
+      pivotX: 0.5,
+      pivotY: 1,
+      groundOffset: 18
+    });
   }
 
   drawFallbackPlayer(x, y) {

@@ -1,5 +1,5 @@
-export const VERSION = '0.4.0';
-export const ASSET_CACHE_VERSION = '20260722-04';
+export const VERSION = '0.5.0';
+export const ASSET_CACHE_VERSION = '20260722-05';
 
 export const WORLD_CONFIG = Object.freeze({
   defaultSeed: 104729,
