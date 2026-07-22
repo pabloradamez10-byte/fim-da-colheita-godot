@@ -1,4 +1,4 @@
-# AWE Preview 0.1 — Versão Web
+# AWE Preview 0.3.0 — Versão Web
 
 Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação no navegador do celular antes da disponibilidade de um computador com Godot.
 
@@ -13,6 +13,12 @@ Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação
 - crafting automático da primeira fogueira;
 - salvamento local no navegador;
 - interface responsiva para celular.
+
+## Arquitetura
+
+A versão ativa utiliza módulos JavaScript nativos em `web/js/`. A entrada única é `web/js/main.js`; os antigos `app.js` e `app-clean.js` permanecem apenas como legado inativo durante a validação.
+
+Consulte `Docs/WEB-ARCHITECTURE.md` para conhecer a divisão de responsabilidades.
 
 ## Como executar
 
