@@ -1,8 +1,8 @@
-import { VERSION, WORLD_CONFIG } from '../config.js?v=054';
-import { Player } from '../entities/Player.js?v=054';
-import { InventorySystem } from '../systems/InventorySystem.js?v=054';
-import { InteractionSystem } from '../systems/InteractionSystem.js?v=054';
-import { WorldGenerator } from '../world/WorldGenerator.js?v=054';
+import { VERSION, WORLD_CONFIG } from '../config.js?v=055';
+import { Player } from '../entities/Player.js?v=055';
+import { InventorySystem } from '../systems/InventorySystem.js?v=055';
+import { InteractionSystem } from '../systems/InteractionSystem.js?v=055';
+import { WorldGenerator } from '../world/WorldGenerator.js?v=055';
 
 export class Game {
   constructor({ eventBus, assetManager, saveManager, renderer, terrainManager, elements }) {

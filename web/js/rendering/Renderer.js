@@ -1,12 +1,12 @@
-import { OBJECT_ASSETS_BY_TYPE, PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js?v=054';
-import { Camera } from './Camera.js?v=054';
+import { OBJECT_ASSETS_BY_TYPE, PLAYER_ASSETS_BY_DIRECTION } from '../data/assetCatalog.js?v=055';
+import { Camera } from './Camera.js?v=055';
 import {
   drawIsometricTile,
   drawSpriteWithPivot,
   isTileVisible,
   sortByDepth,
   worldToScreen
-} from './IsometricMath.js?v=054';
+} from './IsometricMath.js?v=055';
 
 export class Renderer {
   constructor(canvas, config, assetManager, terrainManager) {
@@ -131,7 +131,7 @@ export class Renderer {
       height: 104,
       pivotX: 0.5,
       pivotY: 1,
-      groundOffset: 18
+      groundOffset: 0
     });
   }
 

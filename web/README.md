@@ -1,4 +1,4 @@
-# AWE Preview 0.5.4 — Versão Web
+# AWE Preview 0.5.5 — Versão Web
 
 Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação no navegador do celular antes da disponibilidade de um computador com Godot.
 
@@ -25,6 +25,7 @@ Primeiro protótipo web jogável de **Fim da Colheita**, criado para validação
 - bosques, clareiras, arbustos e pedras distribuídos por zonas ecológicas.
 - grade visual removida para unir os tiles e suavizar as formas do terreno;
 - saves antigos migrados e objetos validados para impedir árvores ou pedras dentro da água.
+- sobrevivente-base redesenhado em quatro direções conforme a Bíblia de Arte, sem mochila ou equipamento fixo.
 
 ## Arquitetura
 

@@ -1,13 +1,13 @@
-import { ASSET_DEFINITIONS } from './data/assetCatalog.js?v=054';
-import { TERRAIN_CATALOG } from './data/terrainCatalog.js?v=054';
-import { ASSET_CACHE_VERSION, WORLD_CONFIG } from './config.js?v=054';
-import { AssetManager } from './core/AssetManager.js?v=054';
-import { EventBus } from './core/EventBus.js?v=054';
-import { Game } from './core/Game.js?v=054';
-import { InputManager } from './core/InputManager.js?v=054';
-import { SaveManager } from './core/SaveManager.js?v=054';
-import { Renderer } from './rendering/Renderer.js?v=054';
-import { TerrainManager } from './world/TerrainManager.js?v=054';
+import { ASSET_DEFINITIONS } from './data/assetCatalog.js?v=055';
+import { TERRAIN_CATALOG } from './data/terrainCatalog.js?v=055';
+import { ASSET_CACHE_VERSION, WORLD_CONFIG } from './config.js?v=055';
+import { AssetManager } from './core/AssetManager.js?v=055';
+import { EventBus } from './core/EventBus.js?v=055';
+import { Game } from './core/Game.js?v=055';
+import { InputManager } from './core/InputManager.js?v=055';
+import { SaveManager } from './core/SaveManager.js?v=055';
+import { Renderer } from './rendering/Renderer.js?v=055';
+import { TerrainManager } from './world/TerrainManager.js?v=055';
 
 const elements = {
   canvas: document.querySelector('#game'),
