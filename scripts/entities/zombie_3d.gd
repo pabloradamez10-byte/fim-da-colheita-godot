@@ -32,7 +32,8 @@ func _physics_process(delta: float) -> void:
 	dir.y = 0.0
 	if distance > ATTACK_RANGE:
 		velocity = dir.normalized() * SPEED
-		rotation.y = lerp_angle(rotation.y, atan2(dir.x, dir.z), minf(1.0, delta * 7.0))
+		# Os modelos também têm a frente visual em -Z.
+		rotation.y = lerp_angle(rotation.y, atan2(dir.x, dir.z) + PI, minf(1.0, delta * 7.0))
 		move_and_slide()
 		gait_time += delta * 7.0
 		if visual_root != null:
@@ -75,7 +76,6 @@ func _build_visual() -> void:
 	var right_arm := _box(Vector3(0.22,0.85,0.22), Vector3(0.48,1.3,-0.12), _mat(skin_colors[variant]))
 	right_arm.rotation_degrees.x = -26.0
 	_sphere(0.34, Vector3(0,2.0,0), _mat(skin_colors[variant]), Vector3(0.92,1.0,0.9))
-	# Feridas/roupa rasgada visualmente simples, mas tridimensionais.
 	_box(Vector3(0.30,0.06,0.05), Vector3(0.12,1.5,0.23), _mat("641919"))
 	if variant % 2 == 0:
 		_box(Vector3(0.72,0.08,0.72), Vector3(0,2.28,0), _mat("2d2c27"))
