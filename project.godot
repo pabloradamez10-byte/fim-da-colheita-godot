@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.2 - Fim da Colheita / visual, collisions and interior update
+; Alpha 0.5.3 - Fim da Colheita / chunk streaming, inventory and character orientation
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.2"
-config/version="0.5.2-alpha"
+config/name="Fim da Colheita - Alpha 0.5.3"
+config/version="0.5.3-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
