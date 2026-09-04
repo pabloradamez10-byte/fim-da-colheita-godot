@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v055.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v056.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/ui/hud_3d.gd" id="2_hud"]
 [ext_resource type="Script" path="res://scripts/ui/mobile_controls.gd" id="3_mobile"]
 [ext_resource type="Script" path="res://scripts/camera/camera_rig_3d.gd" id="4_camera"]
-[ext_resource type="Script" path="res://scripts/world/city_chunk_streamer_3d_v055.gd" id="5_chunks"]
+[ext_resource type="Script" path="res://scripts/world/city_chunk_streamer_3d_v056.gd" id="5_chunks"]
 [ext_resource type="Script" path="res://scripts/ui/inventory_ui.gd" id="6_inventory"]
 
 [node name="FimDaColheita3D" type="Node3D"]
@@ -40,7 +40,7 @@ offset_right = 880.0
 offset_bottom = 32.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 19
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.5"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.6"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -49,7 +49,7 @@ offset_right = 880.0
 offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 13
-text = "Mundo contínuo • cidades asfaltadas • veículos e loot procedural"
+text = "Lotes urbanos • terreno orgânico • telhados revisados • mundo contínuo"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -85,7 +85,7 @@ offset_right = 970.0
 offset_bottom = 173.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.62)
 theme_override_font_sizes/font_size = 12
-text = "Entre nos prédios para ocultar o telhado • vasculhe caixas e veículos • siga a estrada até a cidade"
+text = "Explore lotes e interiores • telhados ocultam ao entrar • vasculhe casas, garagens e veículos"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
