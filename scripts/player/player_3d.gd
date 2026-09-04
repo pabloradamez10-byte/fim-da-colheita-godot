@@ -22,7 +22,6 @@ var equipped_index := 0
 var attack_cooldown := 0.0
 var visual_root: Node3D
 var weapon_anchor: Node3D
-var camera: Camera3D
 var bob_time := 0.0
 
 const WALK_SPEED := 5.0
@@ -32,7 +31,6 @@ func _ready() -> void:
 	add_to_group("player")
 	_build_collision()
 	_build_visual()
-	_build_camera()
 
 func _physics_process(delta: float) -> void:
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
@@ -62,7 +60,10 @@ func _physics_process(delta: float) -> void:
 	var dir := Vector3(input_vec.x + input_vec.y, 0.0, -input_vec.x + input_vec.y)
 	if dir.length() > 0.05:
 		dir = dir.normalized()
-		rotation.y = lerp_angle(rotation.y, atan2(dir.x, dir.z), minf(1.0, delta * 10.0))
+		# O modelo visual tem a frente apontando para -Z (mochila em +Z).
+		# Somar PI faz o personagem olhar para a direção real do deslocamento.
+		var target_yaw := atan2(dir.x, dir.z) + PI
+		rotation.y = lerp_angle(rotation.y, target_yaw, minf(1.0, delta * 12.0))
 	velocity.x = dir.x * (RUN_SPEED if running else WALK_SPEED)
 	velocity.z = dir.z * (RUN_SPEED if running else WALK_SPEED)
 	velocity.y = 0.0
@@ -71,7 +72,7 @@ func _physics_process(delta: float) -> void:
 	if visual_root != null:
 		if dir.length() > 0.05:
 			bob_time += delta * (13.0 if running else 9.0)
-			visual_root.position.y = sin(bob_time) * 0.06
+			visual_root.position.y = sin(bob_time) * 0.045
 		else:
 			visual_root.position.y = lerpf(visual_root.position.y, 0.0, delta * 8.0)
 
@@ -93,11 +94,6 @@ func _physics_process(delta: float) -> void:
 	if cycle:
 		cycle_weapon()
 
-func _process(_delta: float) -> void:
-	if camera != null:
-		camera.global_position = global_position + Vector3(18.0, 22.0, 18.0)
-		camera.look_at(global_position + Vector3(0, 1.0, 0), Vector3.UP)
-
 func _update_needs(delta: float) -> void:
 	hunger = maxf(0.0, hunger - 0.012 * delta)
 	thirst = maxf(0.0, thirst - 0.022 * delta)
@@ -111,34 +107,29 @@ func _attack() -> void:
 		return
 	var weapon := get_equipped_weapon()
 	if weapon == "machete":
-		if stamina < 7.0:
-			return
+		if stamina < 7.0: return
 		stamina -= 7.0
 		attack_cooldown = 0.48
 		_damage_nearest(2.5, 38.0)
 		_animate_weapon_swing()
 	elif weapon == "pistol":
-		if int(inventory.get("ammo_9mm", 0)) <= 0:
-			return
+		if int(inventory.get("ammo_9mm", 0)) <= 0: return
 		inventory["ammo_9mm"] = int(inventory.get("ammo_9mm", 0)) - 1
 		attack_cooldown = 0.32
 		_damage_nearest(21.0, 42.0)
 	elif weapon == "shotgun":
-		if int(inventory.get("shells", 0)) <= 0:
-			return
+		if int(inventory.get("shells", 0)) <= 0: return
 		inventory["shells"] = int(inventory.get("shells", 0)) - 1
 		attack_cooldown = 0.85
 		_damage_nearest(13.0, 78.0)
 
 func _damage_nearest(max_range: float, damage: float) -> void:
-	if world == null or not world.has_method("get_zombies"):
-		return
+	if world == null or not world.has_method("get_zombies"): return
 	var nearest: Node3D = null
 	var best := max_range
 	for candidate in world.call("get_zombies"):
 		var zombie := candidate as Node3D
-		if zombie == null:
-			continue
+		if zombie == null: continue
 		var d := global_position.distance_to(zombie.global_position)
 		if d < best:
 			best = d
@@ -147,36 +138,59 @@ func _damage_nearest(max_range: float, damage: float) -> void:
 		nearest.call("take_damage", damage)
 
 func _animate_weapon_swing() -> void:
-	if weapon_anchor == null:
-		return
+	if weapon_anchor == null: return
+	var start_rot := weapon_anchor.rotation_degrees
 	var tween := create_tween()
-	tween.tween_property(weapon_anchor, "rotation_degrees:z", -65.0, 0.09)
-	tween.tween_property(weapon_anchor, "rotation_degrees:z", 0.0, 0.15)
+	tween.tween_property(weapon_anchor, "rotation_degrees:z", start_rot.z - 72.0, 0.09)
+	tween.tween_property(weapon_anchor, "rotation_degrees:z", start_rot.z, 0.16)
 
 func cycle_weapon() -> void:
-	if owned_weapons.size() <= 1:
-		return
+	if owned_weapons.size() <= 1: return
 	equipped_index = (equipped_index + 1) % owned_weapons.size()
 	_refresh_weapon_visual()
 
 func unlock_weapon(id: String) -> void:
 	if not owned_weapons.has(id):
 		owned_weapons.append(id)
-		equipped_index = owned_weapons.find(id)
-		_refresh_weapon_visual()
+	equip_weapon(id)
+
+func equip_weapon(id: String) -> bool:
+	if not owned_weapons.has(id): return false
+	equipped_index = owned_weapons.find(id)
+	_refresh_weapon_visual()
+	return true
 
 func get_equipped_weapon() -> String:
-	if owned_weapons.is_empty():
-		return "machete"
+	if owned_weapons.is_empty(): return "machete"
 	return owned_weapons[clampi(equipped_index, 0, owned_weapons.size() - 1)]
+
+func get_owned_weapons() -> Array[String]:
+	return owned_weapons.duplicate()
+
+func get_inventory_snapshot() -> Dictionary:
+	return inventory.duplicate(true)
 
 func add_item(id: String, amount: int = 1) -> void:
 	inventory[id] = int(inventory.get(id, 0)) + amount
 
+func use_inventory_item(id: String) -> bool:
+	var count := int(inventory.get(id, 0))
+	if count <= 0: return false
+	match id:
+		"food":
+			hunger = minf(100.0, hunger + 28.0)
+		"water":
+			thirst = minf(100.0, thirst + 35.0)
+		"bandage":
+			health = minf(100.0, health + 30.0)
+		_:
+			return false
+	inventory[id] = count - 1
+	return true
+
 func take_damage(amount: float) -> void:
 	health = maxf(0.0, health - amount)
-	if health <= 0.0:
-		_respawn()
+	if health <= 0.0: _respawn()
 
 func _respawn() -> void:
 	health = 100.0
@@ -203,10 +217,8 @@ func get_inventory_summary() -> String:
 
 func get_weapon_summary() -> String:
 	var weapon := get_equipped_weapon()
-	if weapon == "pistol":
-		return "PISTOLA 9mm — %d munições" % int(inventory.get("ammo_9mm",0))
-	if weapon == "shotgun":
-		return "ESPINGARDA — %d cartuchos" % int(inventory.get("shells",0))
+	if weapon == "pistol": return "PISTOLA 9mm — %d munições" % int(inventory.get("ammo_9mm",0))
+	if weapon == "shotgun": return "ESPINGARDA — %d cartuchos" % int(inventory.get("shells",0))
 	return "FACÃO — corpo a corpo"
 
 func export_save_state() -> Dictionary:
@@ -224,11 +236,9 @@ func import_save_state(state: Dictionary) -> void:
 	hunger = float(state.get("hunger",100.0))
 	thirst = float(state.get("thirst",100.0))
 	var inv: Dictionary = state.get("inventory", {}) as Dictionary
-	for key in inv:
-		inventory[str(key)] = int(inv[key])
+	for key in inv: inventory[str(key)] = int(inv[key])
 	owned_weapons.clear()
-	for item in state.get("weapons", ["machete"]):
-		owned_weapons.append(str(item))
+	for item in state.get("weapons", ["machete"]): owned_weapons.append(str(item))
 	if owned_weapons.is_empty(): owned_weapons.append("machete")
 	equipped_index = clampi(int(state.get("equipped",0)), 0, owned_weapons.size()-1)
 	_refresh_weapon_visual()
@@ -246,44 +256,41 @@ func _build_visual() -> void:
 	visual_root = Node3D.new()
 	visual_root.name = "CharacterVisual"
 	add_child(visual_root)
-	# Corpo modular low-poly: pernas, tronco, cabeça, mochila e braços separados.
 	_box(Vector3(0.7, 0.85, 0.38), Vector3(0, 1.35, 0), _material("35473b"))
 	_box(Vector3(0.28, 0.82, 0.28), Vector3(-0.2, 0.55, 0), _material("26302b"))
 	_box(Vector3(0.28, 0.82, 0.28), Vector3(0.2, 0.55, 0), _material("26302b"))
-	_box(Vector3(0.22, 0.78, 0.22), Vector3(-0.48, 1.35, 0), _material("35473b"))
-	_box(Vector3(0.22, 0.78, 0.22), Vector3(0.48, 1.35, 0), _material("35473b"))
+	_box(Vector3(0.22, 0.78, 0.22), Vector3(-0.48, 1.35, -0.06), _material("35473b"))
+	_box(Vector3(0.22, 0.78, 0.22), Vector3(0.48, 1.35, -0.08), _material("35473b"))
 	_sphere(0.34, Vector3(0, 2.05, 0), _material("b98c68"), Vector3(0.9,1.0,0.9))
+	# Mochila atrás: +Z. Isso define claramente a frente visual como -Z.
 	_box(Vector3(0.64, 0.82, 0.25), Vector3(0, 1.38, 0.32), _material("5a4935"))
 	_box(Vector3(0.68, 0.10, 0.68), Vector3(0, 2.34, 0), _material("2a241f"))
 	weapon_anchor = Node3D.new()
-	weapon_anchor.position = Vector3(0.56, 1.18, -0.05)
+	weapon_anchor.name = "RightHandWeaponAnchor"
+	weapon_anchor.position = Vector3(0.48, 1.38, -0.30)
 	visual_root.add_child(weapon_anchor)
 	_refresh_weapon_visual()
 
 func _refresh_weapon_visual() -> void:
-	if weapon_anchor == null:
-		return
-	for child in weapon_anchor.get_children():
-		child.free()
+	if weapon_anchor == null: return
+	for child in weapon_anchor.get_children(): child.free()
+	weapon_anchor.rotation_degrees = Vector3.ZERO
 	var weapon := get_equipped_weapon()
 	if weapon == "machete":
-		var blade := _box_to(weapon_anchor, Vector3(0.12, 0.72, 0.06), Vector3(0, -0.25, 0), _material("a7aaa4"))
-		blade.rotation_degrees.z = -10
-		_box_to(weapon_anchor, Vector3(0.13, 0.28, 0.08), Vector3(0, 0.25, 0), _material("4a2c1d"))
+		weapon_anchor.rotation_degrees = Vector3(-18.0, -8.0, -12.0)
+		_box_to(weapon_anchor, Vector3(0.11, 0.11, 0.34), Vector3(0,0,0.05), _material("4a2c1d"))
+		var blade := _box_to(weapon_anchor, Vector3(0.13, 0.055, 0.82), Vector3(0.02,0,-0.53), _material("a7aaa4"))
+		blade.rotation_degrees.y = -4.0
 	elif weapon == "pistol":
-		_box_to(weapon_anchor, Vector3(0.16, 0.20, 0.48), Vector3(0, 0, -0.18), _material("343938"))
-		var grip := _box_to(weapon_anchor, Vector3(0.15, 0.36, 0.18), Vector3(0, -0.22, -0.03), _material("2d302f"))
-		grip.rotation_degrees.x = -12
+		weapon_anchor.rotation_degrees = Vector3(-5.0, 0.0, -7.0)
+		_box_to(weapon_anchor, Vector3(0.15, 0.16, 0.48), Vector3(0,0,-0.20), _material("343938"))
+		var grip := _box_to(weapon_anchor, Vector3(0.15, 0.34, 0.16), Vector3(0,-0.18,-0.02), _material("2d302f"))
+		grip.rotation_degrees.x = -15.0
 	elif weapon == "shotgun":
-		_box_to(weapon_anchor, Vector3(0.16, 0.16, 1.55), Vector3(0, 0, -0.68), _material("444846"))
-		_box_to(weapon_anchor, Vector3(0.20, 0.22, 0.70), Vector3(0, 0, 0.35), _material("6b452d"))
-
-func _build_camera() -> void:
-	camera = Camera3D.new()
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 24.0
-	camera.current = true
-	get_parent().add_child.call_deferred(camera)
+		weapon_anchor.rotation_degrees = Vector3(0.0, 0.0, -5.0)
+		_box_to(weapon_anchor, Vector3(0.12, 0.12, 1.45), Vector3(0,0,-0.65), _material("444846"))
+		_box_to(weapon_anchor, Vector3(0.18, 0.20, 0.72), Vector3(0,0,0.38), _material("6b452d"))
+		_box_to(weapon_anchor, Vector3(0.18, 0.18, 0.48), Vector3(0,-0.03,-0.15), _material("6b452d"))
 
 func _material(hex: String) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
