@@ -64,20 +64,20 @@ func try_interact_near(pos: Vector3, target_player: Node) -> bool:
 			target_player.call("add_item", "wood", 4)
 		"city_home", "rural_home":
 			target_player.call("add_item", "food", 1 + marker % 3)
-			target_player.call("add_item", "water", 1 + (marker / 3) % 2)
-			target_player.call("add_item", "fiber", 1 + (marker / 7) % 2)
+			target_player.call("add_item", "water", 1 + int(marker / 3) % 2)
+			target_player.call("add_item", "fiber", 1 + int(marker / 7) % 2)
 			if marker % 4 == 0:
 				target_player.call("add_item", "bandage", 1)
 		"city_garage", "rural_garage":
 			target_player.call("add_item", "wood", 2 + marker % 4)
-			target_player.call("add_item", "stone", 1 + (marker / 5) % 3)
+			target_player.call("add_item", "stone", 1 + int(marker / 5) % 3)
 			if marker % 5 == 0:
 				target_player.call("add_item", "ammo_9mm", 5 + marker % 7)
 			if marker % 13 == 0:
 				target_player.call("unlock_weapon", "pistol")
 		"city_market":
 			target_player.call("add_item", "food", 3 + marker % 3)
-			target_player.call("add_item", "water", 2 + (marker / 3) % 3)
+			target_player.call("add_item", "water", 2 + int(marker / 3) % 3)
 			if marker % 2 == 0:
 				target_player.call("add_item", "bandage", 1)
 		"city_armory":
@@ -97,7 +97,7 @@ func try_interact_near(pos: Vector3, target_player: Node) -> bool:
 	return true
 
 func get_world_summary() -> Dictionary:
-	var summary := super.get_world_summary()
+	var summary: Dictionary = super.get_world_summary()
 	var streamer := get_tree().get_first_node_in_group("chunk_streamer")
 	if streamer != null and streamer.has_method("get_city_debug_metrics"):
 		var metrics := streamer.call("get_city_debug_metrics") as Dictionary
