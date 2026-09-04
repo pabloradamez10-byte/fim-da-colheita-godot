@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.6 - Fim da Colheita / organic terrain, lot-safe cities and roof polish
+; Alpha 0.5.7 - Fim da Colheita / quadras urbanas e malha viária contínua
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.6"
-config/version="0.5.6-alpha"
+config/name="Fim da Colheita - Alpha 0.5.7"
+config/version="0.5.7-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
@@ -20,4 +20,4 @@ window/stretch/mode="canvas_items"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0.10, 0.12, 0.10, 1)
+environment/defaults/default_clear_color=Color(0.085, 0.10, 0.085, 1)
