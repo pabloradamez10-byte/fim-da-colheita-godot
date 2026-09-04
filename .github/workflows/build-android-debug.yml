@@ -1,0 +1,65 @@
+name: Build Android Alpha
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/android-alpha-0.3.0
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Godot Android environment
+        shell: bash
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mkdir -p ~/.config
+          if [ -d /root/.config/godot ]; then
+            rm -rf ~/.config/godot
+            cp -R /root/.config/godot ~/.config/godot
+          fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then
+            rm -rf ~/.local/share/godot/export_templates/4.3.stable
+            cp -R /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable
+          fi
+          SETTINGS=$(find ~/.config/godot -name 'editor_settings-4*.tres' | head -n 1)
+          test -n "$SETTINGS"
+          test -f /root/debug.keystore
+          cat >> "$SETTINGS" <<'EOF'
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "/root/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          EOF
+
+      - name: Import project
+        shell: bash
+        run: godot --headless --editor --quit
+
+      - name: Export debug APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /root/debug.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+        run: |
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.3.0-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.3.0-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FimDaColheita-Alpha-0.3.0-Android
+          path: build/android/FimDaColheita-Alpha-0.3.0-debug.apk
+          if-no-files-found: error
