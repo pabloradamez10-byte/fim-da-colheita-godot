@@ -9,29 +9,28 @@ func _generate_chunk(coord: Vector2i) -> void:
 	var root := loaded_chunks.get(coord) as Node3D
 	if root == null:
 		return
-	var city := _city_info(coord)
+	var city: Dictionary = _city_info(coord)
 	if bool(city.get("city", false)):
 		_build_city_chunk(root, coord, city)
 	else:
 		_build_rural_poi_if_needed(root, coord)
 
 func _terrain_id(gx: int, gz: int, h: float, m: float) -> String:
-	var coord := _cell_to_chunk(gx, gz)
-	var city := _city_info(coord)
+	var coord: Vector2i = _cell_to_chunk(gx, gz)
+	var city: Dictionary = _city_info(coord)
 	if bool(city.get("city", false)):
 		var local := city.get("local", Vector2i.ZERO) as Vector2i
-		var lx := posmod(gx, CHUNK_CELLS)
-		var lz := posmod(gz, CHUNK_CELLS)
+		var lx: int = posmod(gx, CHUNK_CELLS)
+		var lz: int = posmod(gz, CHUNK_CELLS)
 		if (local.x == 0 and lx in [3,4]) or (local.y == 0 and lz in [3,4]):
 			return "road"
 		return "grass"
-	# Estrada de ligação entre a fazenda e a primeira cidade, a leste.
 	if gx >= BASE_HALF_CELLS and gx <= (STARTER_CITY_CENTER.x + 1) * CHUNK_CELLS and abs(gz) <= 1:
 		return "road"
 	return super._terrain_id(gx, gz, h, m)
 
 func _generate_nature_cell(parent: Node3D, gx: int, gz: int, terrain_id: String) -> void:
-	var coord := _cell_to_chunk(gx, gz)
+	var coord: Vector2i = _cell_to_chunk(gx, gz)
 	if bool(_city_info(coord).get("city", false)):
 		return
 	super._generate_nature_cell(parent, gx, gz, terrain_id)
@@ -42,11 +41,11 @@ func _cell_to_chunk(gx: int, gz: int) -> Vector2i:
 func _city_info(coord: Vector2i) -> Dictionary:
 	if abs(coord.x - STARTER_CITY_CENTER.x) <= CITY_RADIUS and abs(coord.y - STARTER_CITY_CENTER.y) <= CITY_RADIUS:
 		return {"city": true, "center": STARTER_CITY_CENTER, "local": coord - STARTER_CITY_CENTER, "starter": true}
-	var sx := floori(float(coord.x) / float(CITY_SPACING))
-	var sz := floori(float(coord.y) / float(CITY_SPACING))
+	var sx: int = floori(float(coord.x) / float(CITY_SPACING))
+	var sz: int = floori(float(coord.y) / float(CITY_SPACING))
 	for dz in range(-1, 2):
 		for dx in range(-1, 2):
-			var center := _sector_city_center(sx + dx, sz + dz)
+			var center: Vector2i = _sector_city_center(sx + dx, sz + dz)
 			if abs(center.x) <= 2 and abs(center.y) <= 2:
 				continue
 			if abs(coord.x - center.x) <= CITY_RADIUS and abs(coord.y - center.y) <= CITY_RADIUS:
@@ -54,9 +53,10 @@ func _city_info(coord: Vector2i) -> Dictionary:
 	return {"city": false}
 
 func _sector_city_center(sx: int, sz: int) -> Vector2i:
-	var marker := abs(hash("city:%d:%d:%d" % [world_seed, sx, sz]))
-	var ox := 3 + marker % max(1, CITY_SPACING - 5)
-	var oz := 3 + (marker / 17) % max(1, CITY_SPACING - 5)
+	var marker: int = int(abs(hash("city:%d:%d:%d" % [world_seed, sx, sz])))
+	var limit: int = maxi(1, CITY_SPACING - 5)
+	var ox: int = 3 + marker % limit
+	var oz: int = 3 + int(marker / 17) % limit
 	return Vector2i(sx * CITY_SPACING + ox, sz * CITY_SPACING + oz)
 
 func _build_city_chunk(root: Node3D, coord: Vector2i, info: Dictionary) -> void:
@@ -64,8 +64,8 @@ func _build_city_chunk(root: Node3D, coord: Vector2i, info: Dictionary) -> void:
 	var local := info.get("local", Vector2i.ZERO) as Vector2i
 	var origin := Vector3(coord.x * CHUNK_CELLS * CELL_SIZE, 0.25, coord.y * CHUNK_CELLS * CELL_SIZE)
 	_build_city_sidewalks(root, origin, local)
-	var marker := abs(hash("building:%d:%d:%d" % [world_seed, coord.x, coord.y]))
-	var building_pos := _building_position(origin, local, marker)
+	var marker: int = int(abs(hash("building:%d:%d:%d" % [world_seed, coord.x, coord.y])))
+	var building_pos: Vector3 = _building_position(origin, local, marker)
 	if local == Vector2i.ZERO:
 		_build_market(root, building_pos, coord)
 	elif local == Vector2i(1, 1):
@@ -77,7 +77,7 @@ func _build_city_chunk(root: Node3D, coord: Vector2i, info: Dictionary) -> void:
 	_build_street_props(root, origin, marker)
 
 func _building_position(origin: Vector3, local: Vector2i, marker: int) -> Vector3:
-	var p := origin + Vector3(16.0, 0.0, 16.0)
+	var p: Vector3 = origin + Vector3(16.0, 0.0, 16.0)
 	if local.x == 0:
 		p.x += -7.0 if marker % 2 == 0 else 7.0
 	elif local.y == 0:
@@ -85,7 +85,7 @@ func _building_position(origin: Vector3, local: Vector2i, marker: int) -> Vector
 	return p
 
 func _build_city_sidewalks(parent: Node3D, origin: Vector3, local: Vector2i) -> void:
-	var stone := _material_for("stone_light")
+	var stone: Material = _material_for("stone_light")
 	if local.x == 0:
 		_flat_box(parent, Vector3(3.0, 0.08, 31.0), origin + Vector3(7.2, 0.14, 16.0), stone)
 		_flat_box(parent, Vector3(3.0, 0.08, 31.0), origin + Vector3(24.8, 0.14, 16.0), stone)
@@ -99,14 +99,13 @@ func _build_house(parent: Node3D, pos: Vector3, coord: Vector2i, variant: int) -
 	root.position = pos
 	root.add_to_group("city_building")
 	parent.add_child(root)
-	var wall_mat := _material_for("interior_wall") if variant % 2 == 0 else _material_for("wood_old")
+	var wall_mat: Material = _material_for("interior_wall") if variant % 2 == 0 else _material_for("wood_old")
 	_solid_box(root, Vector3(10.5,0.22,8.5), Vector3(0,0.11,0), _material_for("interior_floor"), "HouseFloor")
 	_solid_box(root, Vector3(10.5,2.9,0.28), Vector3(0,1.45,-4.15), wall_mat, "HouseBackWall")
 	_solid_box(root, Vector3(0.28,2.9,8.5), Vector3(-5.1,1.45,0), wall_mat, "HouseLeftWall")
 	_solid_box(root, Vector3(0.28,2.9,8.5), Vector3(5.1,1.45,0), wall_mat, "HouseRightWall")
 	_solid_box(root, Vector3(3.7,2.9,0.28), Vector3(-3.25,1.45,4.15), wall_mat, "HouseFrontLeft")
 	_solid_box(root, Vector3(3.7,2.9,0.28), Vector3(3.25,1.45,4.15), wall_mat, "HouseFrontRight")
-	# Telhado parcial: mantém leitura externa sem esconder todo o interior na câmera isométrica.
 	_flat_box(root, Vector3(4.4,0.22,9.0), Vector3(-3.0,3.15,0), _material_for("roof"))
 	_flat_box(root, Vector3(4.4,0.22,9.0), Vector3(3.0,3.15,0), _material_for("roof"))
 	_furniture_box(root, Vector3(2.2,0.55,1.0), Vector3(-3.1,0.52,-2.5), _material_for("wood"), "BedFrame")
@@ -121,7 +120,7 @@ func _build_garage(parent: Node3D, pos: Vector3, coord: Vector2i, variant: int) 
 	root.position = pos
 	root.add_to_group("city_building")
 	parent.add_child(root)
-	var wall := _material_for("rust") if variant == 0 else _material_for("wood_dark")
+	var wall: Material = _material_for("rust") if variant == 0 else _material_for("wood_dark")
 	_solid_box(root, Vector3(11.0,0.22,8.0), Vector3(0,0.11,0), _material_for("stone_light"), "GarageFloor")
 	_solid_box(root, Vector3(11.0,3.1,0.25), Vector3(0,1.55,-3.9), wall, "GarageBack")
 	_solid_box(root, Vector3(0.25,3.1,8.0), Vector3(-5.4,1.55,0), wall, "GarageLeft")
@@ -168,14 +167,14 @@ func _build_armory(parent: Node3D, pos: Vector3, coord: Vector2i) -> void:
 
 func _build_street_props(parent: Node3D, origin: Vector3, marker: int) -> void:
 	for i in range(3):
-		var x := 4.0 + float((marker / (i + 1)) % 24)
-		var z := 4.0 + float((marker / (i + 3)) % 24)
+		var x: float = 4.0 + float(int(marker / (i + 1)) % 24)
+		var z: float = 4.0 + float(int(marker / (i + 3)) % 24)
 		_furniture_box(parent, Vector3(0.45,1.0,0.45), origin + Vector3(x,0.55,z), _material_for("metal"), "StreetPost")
 
 func _build_rural_poi_if_needed(parent: Node3D, coord: Vector2i) -> void:
 	if abs(coord.x) <= 2 and abs(coord.y) <= 2:
 		return
-	var marker := abs(hash("rural:%d:%d:%d" % [world_seed, coord.x, coord.y])) % 100
+	var marker: int = int(abs(hash("rural:%d:%d:%d" % [world_seed, coord.x, coord.y]))) % 100
 	if marker >= 10:
 		return
 	var origin := Vector3(coord.x * CHUNK_CELLS * CELL_SIZE + 16.0, 0.25, coord.y * CHUNK_CELLS * CELL_SIZE + 16.0)
@@ -256,7 +255,7 @@ func _flat_box(parent: Node3D, size: Vector3, pos: Vector3, mat: Material) -> Me
 	return node
 
 func get_city_debug_metrics() -> Dictionary:
-	var distance := -1
+	var distance: int = -1
 	if player != null and is_instance_valid(player):
 		var city_pos := Vector3((STARTER_CITY_CENTER.x * CHUNK_CELLS + CHUNK_CELLS / 2.0) * CELL_SIZE, 0.0, (STARTER_CITY_CENTER.y * CHUNK_CELLS + CHUNK_CELLS / 2.0) * CELL_SIZE)
 		distance = int(player.global_position.distance_to(city_pos))
