@@ -31,4 +31,8 @@ func _process(delta: float) -> void:
 	if world != null and world.has_method("get_world_summary"):
 		var summary: Dictionary = world.call("get_world_summary")
 		var interior_text := "Interior OK" if bool(summary.get("interior", false)) else "Interior --"
-		world_status.text = "Seed %s  |  Layout %s  |  Zumbis %s  |  Colisões %s  |  %s" % [str(summary.get("seed", "?")), str(summary.get("layout", "?")), str(summary.get("zombies", 0)), str(summary.get("colliders", 0)), interior_text]
+		var chunk_count := 0
+		var streamer := get_tree().get_first_node_in_group("chunk_streamer")
+		if streamer != null and streamer.has_method("get_loaded_chunk_count"):
+			chunk_count = int(streamer.call("get_loaded_chunk_count"))
+		world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Colisões %s  |  %s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(chunk_count), str(summary.get("colliders", 0)), interior_text]
