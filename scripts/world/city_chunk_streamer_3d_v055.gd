@@ -57,7 +57,7 @@ func _build_house(parent: Node3D, pos: Vector3, coord: Vector2i, variant: int) -
 	_create_loot_container(root, Vector3(3.5, 0.72, -1.3), "city_home", "city:%d:%d:kitchen" % [coord.x, coord.y])
 	_create_loot_container(root, Vector3(-3.8, 0.72, 1.0), "city_home", "city:%d:%d:wardrobe" % [coord.x, coord.y])
 	_create_loot_container(root, Vector3(-1.4, 0.72, -2.6), "city_home", "city:%d:%d:bedroom" % [coord.x, coord.y])
-	_add_house_roof(root, Vector3(10.9, 8.9), 3.15, _material_for("roof"))
+	_add_house_roof(root, Vector2(10.9, 8.9), 3.15, _material_for("roof"))
 	_add_roof_trigger(root, Vector3(9.6, 2.6, 7.4), 1.35)
 
 func _build_garage(parent: Node3D, pos: Vector3, coord: Vector2i, variant: int) -> void:
@@ -130,7 +130,7 @@ func _build_rural_house(parent: Node3D, pos: Vector3, coord: Vector2i) -> void:
 	var root: Node3D = parent.get_node_or_null("RuralHouse_%d_%d" % [coord.x, coord.y]) as Node3D
 	if root == null:
 		return
-	_add_house_roof(root, Vector3(8.9, 7.4), 2.95, _material_for("roof"))
+	_add_house_roof(root, Vector2(8.9, 7.4), 2.95, _material_for("roof"))
 	_add_roof_trigger(root, Vector3(7.5, 2.4, 6.0), 1.25)
 	_create_loot_container(root, Vector3(2.6, 0.72, 1.6), "rural_home", "rural:%d:%d:home_extra" % [coord.x, coord.y])
 
