@@ -1,10 +1,10 @@
-name: Build Android Alpha 0.5.1
+name: Build Android Alpha 0.5.2
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - feat/android-alpha-0.5.0-biblia
+      - feat/android-alpha-0.5.2-visual-interior
 
 jobs:
   android-debug:
@@ -44,11 +44,15 @@ jobs:
 
       - name: Import project and parse scripts
         shell: bash
-        run: godot --headless --editor --quit
+        run: |
+          set -o pipefail
+          godot --headless --editor --quit 2>&1 | tee /tmp/godot-import.log
+          ! grep -q "SCRIPT ERROR" /tmp/godot-import.log
+          ! grep -q "Parse Error" /tmp/godot-import.log
 
-      - name: Validate camera, player and generated meshes
+      - name: Validate textures collisions and interior roof system
         shell: bash
-        run: godot --headless --path . --script res://scripts/core/alpha_0_5_1_smoke_test.gd
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_2_smoke_test.gd
 
       - name: Export debug APK
         shell: bash
@@ -58,12 +62,13 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p build/android
-          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.1-debug.apk"
-          test -f build/android/FimDaColheita-Alpha-0.5.1-debug.apk
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.2-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.5.2-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.2-debug.apk) -gt 10000000
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FimDaColheita-Alpha-0.5.1-Android
-          path: build/android/FimDaColheita-Alpha-0.5.1-debug.apk
+          name: FimDaColheita-Alpha-0.5.2-Android
+          path: build/android/FimDaColheita-Alpha-0.5.2-debug.apk
           if-no-files-found: error
