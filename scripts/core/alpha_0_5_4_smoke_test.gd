@@ -30,10 +30,9 @@ func _run() -> void:
 		quit(4)
 		return
 
+	# Mede imediatamente: em gameplay normal chunks distantes são descarregados
+	# quando o player permanece na fazenda; isso não deve invalidar a geração da cidade.
 	var city_metrics := streamer.call("debug_force_city_sample") as Dictionary
-	for _i in range(4):
-		await process_frame
-	city_metrics = streamer.call("get_city_debug_metrics") as Dictionary
 	if int(city_metrics.get("city_buildings", 0)) < 7:
 		printerr("SMOKE 0.5.4 FAIL: cidade gerou poucos prédios: %s" % str(city_metrics))
 		quit(5)
