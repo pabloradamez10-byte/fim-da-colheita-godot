@@ -6,8 +6,8 @@
 [ext_resource type="Script" path="res://scripts/ui/mobile_controls.gd" id="4_mobile"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_player"]
-radius = 10.0
-height = 30.0
+radius = 11.0
+height = 34.0
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_world")
@@ -20,14 +20,14 @@ z_index = 20
 script = ExtResource("2_player")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-position = Vector2(0, 20)
+position = Vector2(0, 18)
 shape = SubResource("CapsuleShape2D_player")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(0, 80)
-zoom = Vector2(1.25, 1.25)
+position = Vector2(0, 40)
+zoom = Vector2(1.0, 1.0)
 position_smoothing_enabled = true
-position_smoothing_speed = 6.0
+position_smoothing_speed = 7.0
 
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 5
@@ -36,55 +36,55 @@ script = ExtResource("3_hud")
 [node name="TopPanel" type="ColorRect" parent="HUD"]
 offset_left = 18.0
 offset_top = 18.0
-offset_right = 760.0
-offset_bottom = 122.0
-color = Color(0.035, 0.047, 0.039, 0.88)
+offset_right = 790.0
+offset_bottom = 120.0
+color = Color(0.025, 0.03, 0.025, 0.88)
 mouse_filter = 2
 
 [node name="Title" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
-offset_top = 8.0
-offset_right = 720.0
+offset_top = 7.0
+offset_right = 745.0
 offset_bottom = 30.0
-theme_override_colors/font_color = Color(0.91, 0.78, 0.55, 1)
-theme_override_font_sizes/font_size = 18
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.3.0"
+theme_override_colors/font_color = Color(0.93, 0.72, 0.3, 1)
+theme_override_font_sizes/font_size = 19
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.4.0"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
 offset_top = 34.0
-offset_right = 720.0
+offset_right = 745.0
 offset_bottom = 54.0
-theme_override_colors/font_color = Color(0.82, 0.87, 0.80, 1)
+theme_override_colors/font_color = Color(0.8, 0.84, 0.77, 1)
 theme_override_font_sizes/font_size = 13
-text = "Carregando Atlas World Engine..."
+text = "Carregando fazenda..."
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
 offset_top = 58.0
-offset_right = 720.0
+offset_right = 745.0
 offset_bottom = 78.0
-theme_override_colors/font_color = Color(0.93, 0.93, 0.90, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.9, 1)
 theme_override_font_sizes/font_size = 14
-text = "VIDA 100 | FOME 100 | SEDE 100 | FÔLEGO 100"
+text = "VIDA 100   FOME 100   SEDE 100   FÔLEGO 100"
 
 [node name="Inventory" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
 offset_top = 80.0
-offset_right = 720.0
-offset_bottom = 100.0
-theme_override_colors/font_color = Color(0.91, 0.78, 0.55, 1)
+offset_right = 745.0
+offset_bottom = 101.0
+theme_override_colors/font_color = Color(0.93, 0.72, 0.3, 1)
 theme_override_font_sizes/font_size = 13
-text = "MOCHILA  Madeira 0 | Pedra 0 | Fibra 0"
+text = "MOCHILA  Madeira 0 | Pedra 0 | Fibra 0 | 9mm 15 | Cart. 6"
 
 [node name="DesktopHelp" type="Label" parent="HUD"]
 offset_left = 20.0
-offset_top = 130.0
-offset_right = 620.0
-offset_bottom = 152.0
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.65)
-theme_override_font_sizes/font_size = 12
-text = "PC: WASD mover | Shift correr | Espaço atacar | E coletar | F5 salvar | R novo mundo"
+offset_top = 128.0
+offset_right = 700.0
+offset_bottom = 150.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.48)
+theme_override_font_sizes/font_size = 11
+text = "PC: WASD mover | Shift correr | Espaço usar arma | E coletar | F5 salvar | R novo mundo"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
