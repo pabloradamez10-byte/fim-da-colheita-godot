@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.8 - Fim da Colheita / movimento fluido, personagem articulado e quadras fechadas
+; Alpha 0.5.9 - Fim da Colheita / sprite 2D direcional, grounding e colisão de garagem
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.8"
-config/version="0.5.8-alpha"
+config/name="Fim da Colheita - Alpha 0.5.9"
+config/version="0.5.9-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
