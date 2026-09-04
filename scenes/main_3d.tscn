@@ -126,3 +126,5 @@ offset_right = 1262.0
 offset_bottom = 67.0
 theme_override_font_sizes/font_size = 12
 text = "NOVA SEED"
+
+[connection signal="pressed" from="MobileLayer/MobileControls/NewSeedButton" to="." method="new_seed"]
