@@ -23,11 +23,12 @@ func _process(delta: float) -> void:
 		return
 	if player.has_method("get_vitals"):
 		var data: Dictionary = player.call("get_vitals")
-		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d" % [int(data.get("health",0)),int(data.get("hunger",0)),int(data.get("thirst",0)),int(data.get("stamina",0))]
+		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d" % [int(data.get("health", 0)), int(data.get("hunger", 0)), int(data.get("thirst", 0)), int(data.get("stamina", 0))]
 	if player.has_method("get_inventory_summary"):
 		inventory.text = "MOCHILA  " + str(player.call("get_inventory_summary"))
 	if player.has_method("get_weapon_summary"):
 		weapon.text = "EQUIPADO  " + str(player.call("get_weapon_summary"))
 	if world != null and world.has_method("get_world_summary"):
 		var summary: Dictionary = world.call("get_world_summary")
-		world_status.text = "Seed %s  |  Fazenda layout %s  |  Zumbis %s  |  Mundo 3D procedural" % [str(summary.get("seed","?")), str(summary.get("layout","?")), str(summary.get("zombies",0))]
+		var interior_text := "Interior OK" if bool(summary.get("interior", false)) else "Interior --"
+		world_status.text = "Seed %s  |  Layout %s  |  Zumbis %s  |  Colisões %s  |  %s" % [str(summary.get("seed", "?")), str(summary.get("layout", "?")), str(summary.get("zombies", 0)), str(summary.get("colliders", 0)), interior_text]
