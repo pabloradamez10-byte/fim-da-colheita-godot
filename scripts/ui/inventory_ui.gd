@@ -121,17 +121,22 @@ func _refresh_contents() -> void:
 
 	var snapshot: Dictionary = {}
 	if player.has_method("get_inventory_snapshot"):
-		snapshot = player.call("get_inventory_snapshot") as Dictionary
+		var raw_snapshot: Variant = player.call("get_inventory_snapshot")
+		if raw_snapshot is Dictionary:
+			snapshot = raw_snapshot as Dictionary
 	for id in ["wood","stone","fiber","food","water","bandage","ammo_9mm","shells"]:
-		_add_item_row(id, int(snapshot.get(id,0)))
+		_add_item_row(str(id), int(snapshot.get(id,0)))
 
-	var weapons: Array[String] = []
+	var weapons: Array = []
 	if player.has_method("get_owned_weapons"):
-		weapons = player.call("get_owned_weapons") as Array[String]
+		var raw_weapons: Variant = player.call("get_owned_weapons")
+		if raw_weapons is Array:
+			weapons = raw_weapons as Array
 	var equipped := ""
 	if player.has_method("get_equipped_weapon"):
 		equipped = str(player.call("get_equipped_weapon"))
-	for id in weapons:
+	for raw_id in weapons:
+		var id := str(raw_id)
 		_add_weapon_row(id, id == equipped)
 
 func _add_item_row(id: String, amount: int) -> void:
@@ -146,11 +151,7 @@ func _add_item_row(id: String, amount: int) -> void:
 		use.text = "USAR"
 		use.disabled = amount <= 0
 		use.custom_minimum_size = Vector2(78,32)
-		use.pressed.connect(func():
-			if player != null and player.has_method("use_inventory_item"):
-				player.call("use_inventory_item", id)
-				_refresh_contents()
-		)
+		use.pressed.connect(_on_use_item.bind(id))
 		row.add_child(use)
 	items_box.add_child(row)
 
@@ -165,13 +166,19 @@ func _add_weapon_row(id: String, equipped: bool) -> void:
 	equip.text = "ATIVO" if equipped else "EQUIPAR"
 	equip.disabled = equipped
 	equip.custom_minimum_size = Vector2(92,38)
-	equip.pressed.connect(func():
-		if player != null and player.has_method("equip_weapon"):
-			player.call("equip_weapon", id)
-			_refresh_contents()
-	)
+	equip.pressed.connect(_on_equip_weapon.bind(id))
 	row.add_child(equip)
 	weapons_box.add_child(row)
+
+func _on_use_item(id: String) -> void:
+	if player != null and player.has_method("use_inventory_item"):
+		player.call("use_inventory_item", id)
+		_refresh_contents()
+
+func _on_equip_weapon(id: String) -> void:
+	if player != null and player.has_method("equip_weapon"):
+		player.call("equip_weapon", id)
+		_refresh_contents()
 
 func is_inventory_open() -> bool:
 	return panel != null and panel.visible
