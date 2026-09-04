@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.1 - Fim da Colheita / Bible-aligned 3D procedural slice
+; Alpha 0.5.2 - Fim da Colheita / visual, collisions and interior update
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.1"
-config/version="0.5.1-alpha"
+config/name="Fim da Colheita - Alpha 0.5.2"
+config/version="0.5.2-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
