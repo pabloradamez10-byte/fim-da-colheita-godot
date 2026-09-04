@@ -10,16 +10,22 @@ var joystick_touch_id: int = -1
 var move_vector := Vector2.ZERO
 var attack_requested := false
 var interact_requested := false
+var cycle_weapon_requested := false
+var new_seed_requested := false
 
 @onready var attack_button: Button = $AttackButton
 @onready var interact_button: Button = $InteractButton
 @onready var sprint_button: Button = $SprintButton
+@onready var weapon_button: Button = $WeaponButton
+@onready var new_seed_button: Button = $NewSeedButton
 
 func _ready() -> void:
 	add_to_group("mobile_controls")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	attack_button.pressed.connect(_on_attack_pressed)
-	interact_button.pressed.connect(_on_interact_pressed)
+	attack_button.pressed.connect(func(): attack_requested = true)
+	interact_button.pressed.connect(func(): interact_requested = true)
+	weapon_button.pressed.connect(func(): cycle_weapon_requested = true)
+	new_seed_button.pressed.connect(func(): new_seed_requested = true)
 	get_viewport().size_changed.connect(_refresh_layout)
 	_refresh_layout()
 	queue_redraw()
@@ -38,12 +44,11 @@ func _input(event: InputEvent) -> void:
 			if joystick_touch_id == -1 and touch.position.distance_to(joystick_center) <= joystick_radius * 1.7:
 				joystick_touch_id = touch.index
 				_update_joystick(touch.position)
-		else:
-			if touch.index == joystick_touch_id:
-				joystick_touch_id = -1
-				move_vector = Vector2.ZERO
-				joystick_knob = joystick_center
-				queue_redraw()
+		elif touch.index == joystick_touch_id:
+			joystick_touch_id = -1
+			move_vector = Vector2.ZERO
+			joystick_knob = joystick_center
+			queue_redraw()
 	elif event is InputEventScreenDrag:
 		var drag := event as InputEventScreenDrag
 		if drag.index == joystick_touch_id:
@@ -66,24 +71,26 @@ func is_sprinting() -> bool:
 	return sprint_button.button_pressed
 
 func consume_attack() -> bool:
-	if not attack_requested:
-		return false
+	if not attack_requested: return false
 	attack_requested = false
 	return true
 
 func consume_interact() -> bool:
-	if not interact_requested:
-		return false
+	if not interact_requested: return false
 	interact_requested = false
 	return true
 
-func _on_attack_pressed() -> void:
-	attack_requested = true
+func consume_cycle_weapon() -> bool:
+	if not cycle_weapon_requested: return false
+	cycle_weapon_requested = false
+	return true
 
-func _on_interact_pressed() -> void:
-	interact_requested = true
+func consume_new_seed() -> bool:
+	if not new_seed_requested: return false
+	new_seed_requested = false
+	return true
 
 func _draw() -> void:
-	draw_circle(joystick_center, joystick_radius, Color(0.04, 0.05, 0.04, 0.36))
-	draw_arc(joystick_center, joystick_radius, 0.0, TAU, 48, Color(0.88, 0.91, 0.86, 0.30), 3.0)
-	draw_circle(joystick_knob, 36.0, Color(0.91, 0.78, 0.55, 0.52))
+	draw_circle(joystick_center, joystick_radius, Color(0.04, 0.05, 0.04, 0.42))
+	draw_arc(joystick_center, joystick_radius, 0.0, TAU, 48, Color(0.92, 0.92, 0.86, 0.38), 3.0)
+	draw_circle(joystick_knob, 36.0, Color(0.74, 0.58, 0.29, 0.72))
