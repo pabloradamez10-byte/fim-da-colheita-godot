@@ -112,3 +112,14 @@ func get_weapon_summary() -> String:
 	if weapon == "spear":
 		return "LANÇA — corpo a corpo"
 	return super.get_weapon_summary()
+
+func get_inventory_summary() -> String:
+	var names := {"wood":"Madeira", "stone":"Pedra", "fiber":"Fibra", "food":"Comida", "water":"Água", "bandage":"Bandagem", "ammo_9mm":"9mm", "shells":"Cart."}
+	var parts: Array[String] = []
+	for id in ["wood","stone","fiber","food","water","bandage","ammo_9mm","shells"]:
+		var amount := int(inventory.get(id, 0))
+		if amount > 0:
+			parts.append("%s %d" % [names[id], amount])
+	if parts.is_empty():
+		return "vazia"
+	return " | ".join(parts)
