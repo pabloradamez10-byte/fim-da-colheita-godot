@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.9 - Fim da Colheita / sprite 2D direcional, grounding e colisão de garagem
+; Alpha 0.5.10 - Fim da Colheita / survivor maior e direção lateral corrigida
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.9"
-config/version="0.5.9-alpha"
+config/name="Fim da Colheita - Alpha 0.5.10"
+config/version="0.5.10-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
