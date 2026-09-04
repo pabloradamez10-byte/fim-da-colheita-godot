@@ -1,0 +1,55 @@
+name: Build Android Alpha
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/android-alpha-0.3.0
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Godot Android environment
+        shell: bash
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mkdir -p ~/.config
+          if [ -d /root/.config/godot ]; then
+            rm -rf ~/.config/godot
+            mv /root/.config/godot ~/.config/godot
+          fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then
+            rm -rf ~/.local/share/godot/export_templates/4.3.stable
+            mv /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable
+          fi
+          SETTINGS=$(find ~/.config/godot -name 'editor_settings-4*.tres' | head -n 1)
+          if [ -n "$SETTINGS" ]; then
+            echo 'export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"' >> "$SETTINGS"
+          fi
+
+      - name: Import project
+        shell: bash
+        run: godot --headless --editor --quit
+
+      - name: Export debug APK
+        shell: bash
+        run: |
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.3.0-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.3.0-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FimDaColheita-Alpha-0.3.0-Android
+          path: build/android/FimDaColheita-Alpha-0.3.0-debug.apk
+          if-no-files-found: error

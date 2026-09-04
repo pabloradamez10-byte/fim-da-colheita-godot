@@ -1,10 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.1 - Fim da Colheita
+; Alpha 0.3.0 - Fim da Colheita / Android playable slice
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.1"
+config/name="Fim da Colheita - Alpha 0.3.0"
+config/version="0.3.0-alpha"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
