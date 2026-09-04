@@ -1,10 +1,10 @@
-name: Build Android Alpha 0.5.9
+name: Build Android Alpha 0.5.10
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - feat/android-alpha-0.5.9-sprite-character
+      - feat/android-alpha-0.5.10-character-scale-direction
 
 jobs:
   android-debug:
@@ -50,9 +50,9 @@ jobs:
           ! grep -q "SCRIPT ERROR" /tmp/godot-import.log
           ! grep -q "Parse Error" /tmp/godot-import.log
 
-      - name: Validate sprite atlas grounding garage collision and regressions
+      - name: Validate enlarged sprite direction and regressions
         shell: bash
-        run: godot --headless --path . --script res://scripts/core/alpha_0_5_9_smoke_test.gd
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_10_smoke_test.gd
 
       - name: Export debug APK
         shell: bash
@@ -62,13 +62,13 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p build/android
-          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.9-debug.apk"
-          test -f build/android/FimDaColheita-Alpha-0.5.9-debug.apk
-          test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.9-debug.apk) -gt 10000000
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.10-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.5.10-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.10-debug.apk) -gt 10000000
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FimDaColheita-Alpha-0.5.9-Android
-          path: build/android/FimDaColheita-Alpha-0.5.9-debug.apk
+          name: FimDaColheita-Alpha-0.5.10-Android
+          path: build/android/FimDaColheita-Alpha-0.5.10-debug.apk
           if-no-files-found: error
