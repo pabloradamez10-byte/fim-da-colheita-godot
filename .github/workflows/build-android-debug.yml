@@ -1,10 +1,10 @@
-name: Build Android Alpha
+name: Build Android Alpha 0.4.0
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - feat/android-alpha-0.3.0
+      - feat/android-alpha-0.4.0-visual
 
 jobs:
   android-debug:
@@ -54,12 +54,12 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p build/android
-          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.3.0-debug.apk"
-          test -f build/android/FimDaColheita-Alpha-0.3.0-debug.apk
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.4.0-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.4.0-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FimDaColheita-Alpha-0.3.0-Android
-          path: build/android/FimDaColheita-Alpha-0.3.0-debug.apk
+          name: FimDaColheita-Alpha-0.4.0-Android
+          path: build/android/FimDaColheita-Alpha-0.4.0-debug.apk
           if-no-files-found: error
