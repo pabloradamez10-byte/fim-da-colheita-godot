@@ -33,20 +33,20 @@ func register_streamed_loot(pos: Vector3, kind: String, key: String, node: Node3
 	_register_interactable(pos, kind, key, node)
 
 func try_interact_near(pos: Vector3, target_player: Node) -> bool:
-	var nearest := -1
-	var best := 3.2
+	var nearest: int = -1
+	var best: float = 3.2
 	for i in range(interactables.size()):
 		var data := interactables[i] as Dictionary
-		var d := pos.distance_to(data.get("position", Vector3.ZERO) as Vector3)
+		var d: float = pos.distance_to(data.get("position", Vector3.ZERO) as Vector3)
 		if d < best:
 			best = d
 			nearest = i
 	if nearest < 0:
 		return false
 	var data := interactables[nearest] as Dictionary
-	var kind := str(data.get("type", ""))
-	var key := str(data.get("key", ""))
-	var marker := abs(hash("loot:%s:%d" % [key, world_seed]))
+	var kind: String = str(data.get("type", ""))
+	var key: String = str(data.get("key", ""))
+	var marker: int = int(abs(hash("loot:%s:%d" % [key, world_seed])))
 	match kind:
 		"tree":
 			target_player.call("add_item", "wood", 3)
