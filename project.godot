@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.7 - Fim da Colheita / quadras urbanas e malha viária contínua
+; Alpha 0.5.8 - Fim da Colheita / movimento fluido, personagem articulado e quadras fechadas
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.7"
-config/version="0.5.7-alpha"
+config/name="Fim da Colheita - Alpha 0.5.8"
+config/version="0.5.8-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
@@ -20,4 +20,4 @@ window/stretch/mode="canvas_items"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0.085, 0.10, 0.085, 1)
+environment/defaults/default_clear_color=Color(0.075, 0.09, 0.075, 1)
