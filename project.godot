@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.3.0 - Fim da Colheita / Android playable slice
+; Alpha 0.4.0 - Fim da Colheita / Android visual vertical slice
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.3.0"
-config/version="0.3.0-alpha"
+config/name="Fim da Colheita - Alpha 0.4.0"
+config/version="0.4.0-alpha"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
@@ -20,4 +20,4 @@ window/stretch/mode="canvas_items"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0.055, 0.071, 0.059, 1)
+environment/defaults/default_clear_color=Color(0.018, 0.022, 0.018, 1)
