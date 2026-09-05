@@ -12,11 +12,23 @@ func _ready() -> void:
 	add_to_group("interactive_door_0512" if interaction_kind == "door" else "interactive_window_0512")
 	_tune_collision_0513()
 
-func _tune_collision_0513() -> void:
-	var panel := get_node_or_null("Panel") as StaticBody3D
+func _find_panel() -> StaticBody3D:
+	for child in get_children():
+		if child is StaticBody3D:
+			return child as StaticBody3D
+	return null
+
+func _find_collision(panel: StaticBody3D) -> CollisionShape3D:
 	if panel == null:
-		return
-	var collision := panel.get_node_or_null("CollisionShape3D") as CollisionShape3D
+		return null
+	for child in panel.get_children():
+		if child is CollisionShape3D:
+			return child as CollisionShape3D
+	return null
+
+func _tune_collision_0513() -> void:
+	var panel := _find_panel()
+	var collision := _find_collision(panel)
 	if collision == null or not (collision.shape is BoxShape3D):
 		return
 	var box := collision.shape as BoxShape3D
@@ -48,10 +60,7 @@ func toggle_interaction() -> void:
 		_restore_collision_when_clear_0513(serial)
 
 func _panel_collision() -> CollisionShape3D:
-	var panel := get_node_or_null("Panel") as StaticBody3D
-	if panel == null:
-		return null
-	return panel.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	return _find_collision(_find_panel())
 
 func _restore_collision_when_clear_0513(serial: int) -> void:
 	var collision := _panel_collision()
@@ -72,5 +81,6 @@ func get_interaction_state() -> Dictionary:
 		"kind": interaction_kind,
 		"open": is_open,
 		"angle": rotation.y,
-		"collision_disabled": collision.disabled if collision != null else true
+		"collision_disabled": collision.disabled if collision != null else true,
+		"has_collision": collision != null
 	}
