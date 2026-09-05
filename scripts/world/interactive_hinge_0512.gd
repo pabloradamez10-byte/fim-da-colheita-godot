@@ -10,7 +10,8 @@ var _transition_serial: int = 0
 func _ready() -> void:
 	add_to_group("interactive_hinge_0512")
 	add_to_group("interactive_door_0512" if interaction_kind == "door" else "interactive_window_0512")
-	_tune_collision_0513()
+	# O painel é adicionado logo após o hinge entrar na árvore; ajustamos no frame seguinte.
+	call_deferred("_tune_collision_0513")
 
 func _find_panel() -> StaticBody3D:
 	for child in get_children():
