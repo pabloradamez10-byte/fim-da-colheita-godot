@@ -37,21 +37,21 @@ func _add_macro_ground_breakup_0515() -> void:
 	if generated_root == null:
 		return
 	var half: int = MAP_SIZE / 2
-	var placed := 0
+	var placed: int = 0
 	for gz in range(-half, half, 2):
 		for gx in range(-half, half, 2):
 			if placed >= 72:
 				return
-			var marker := abs(hash("macro0515:%d:%d:%d" % [world_seed, gx, gz])) % 100
+			var marker: int = int(abs(hash("macro0515:%d:%d:%d" % [world_seed, gx, gz]))) % 100
 			if marker > 24:
 				continue
-			var h := height_noise.get_noise_2d(float(gx), float(gz))
-			var m := moisture_noise.get_noise_2d(float(gx), float(gz))
-			var terrain := _terrain_id(gx, gz, h, m)
+			var h: float = height_noise.get_noise_2d(float(gx), float(gz))
+			var m: float = moisture_noise.get_noise_2d(float(gx), float(gz))
+			var terrain: String = _terrain_id(gx, gz, h, m)
 			if terrain in ["water", "rock", "road"]:
 				continue
-			var px := float(gx) * CELL_SIZE + float((marker % 7) - 3) * 0.38
-			var pz := float(gz) * CELL_SIZE + float((marker % 5) - 2) * 0.46
+			var px: float = float(gx) * CELL_SIZE + float((marker % 7) - 3) * 0.38
+			var pz: float = float(gz) * CELL_SIZE + float((marker % 5) - 2) * 0.46
 			var mat: Material = materials["grass_dead_0515"] if marker % 2 == 0 else materials["mud_stain_0515"]
 			_organic_patch_0515(Vector3(px, 0.135, pz), 1.7 + float(marker % 5) * 0.28, 0.9 + float(marker % 4) * 0.22, float(marker % 31) * 0.17, mat)
 			placed += 1
