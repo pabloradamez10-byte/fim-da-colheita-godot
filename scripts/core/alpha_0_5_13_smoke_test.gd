@@ -7,6 +7,14 @@ func _fail(code: int, message: String) -> void:
 	printerr("SMOKE 0.5.13 FAIL: %s" % message)
 	quit(code)
 
+func _find_collision_in_door(door: Node3D) -> CollisionShape3D:
+	for child in door.get_children():
+		if child is StaticBody3D:
+			for nested in (child as StaticBody3D).get_children():
+				if nested is CollisionShape3D:
+					return nested as CollisionShape3D
+	return null
+
 func _run() -> void:
 	var packed := load("res://scenes/main_3d.tscn") as PackedScene
 	if packed == null:
@@ -51,7 +59,7 @@ func _run() -> void:
 		_fail(5, "nenhuma porta interativa")
 		return
 	var door := doors[0] as Node3D
-	var collision := door.get_node_or_null("Panel/CollisionShape3D") as CollisionShape3D
+	var collision := _find_collision_in_door(door)
 	if collision == null or not (collision.shape is BoxShape3D):
 		_fail(6, "collider da porta ausente")
 		return
