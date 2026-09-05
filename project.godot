@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.14 - Fim da Colheita / Bíblia oficial: interiores detalhados, portas internas e loot contextual por cômodo
+; Alpha 0.5.15 - Fim da Colheita / refinamento visual, terreno orgânico e narrativa ambiental
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.14"
-config/version="0.5.14-alpha"
+config/name="Fim da Colheita - Alpha 0.5.15"
+config/version="0.5.15-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
@@ -20,4 +20,4 @@ window/stretch/mode="canvas_items"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0.075, 0.09, 0.075, 1)
+environment/defaults/default_clear_color=Color(0.065, 0.075, 0.062, 1)
