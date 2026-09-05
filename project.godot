@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.13 - Fim da Colheita / interação priorizada, porta corrigida e água bloqueada
+; Alpha 0.5.14 - Fim da Colheita / interiores detalhados, portas internas e loot contextual por cômodo
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.13"
-config/version="0.5.13-alpha"
+config/name="Fim da Colheita - Alpha 0.5.14"
+config/version="0.5.14-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
