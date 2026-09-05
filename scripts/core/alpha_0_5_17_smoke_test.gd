@@ -22,7 +22,7 @@ func _run() -> void:
 		_fail(2, "streamer ausente")
 		return
 
-	# Cria veículos diretamente para validar atlas, regiões e colliders independentemente da seed.
+	# Cria os nove tipos diretamente para validar atlas, regiões e colliders independentemente da seed.
 	for i in range(9):
 		streamer.call("_build_vehicle_sprite_0517", streamer, Vector3(float(i) * 5.0, 0.28, 0.0), 0.0 if i % 2 == 0 else PI * 0.5, i, "smoke0517:%d" % i)
 	for _i in range(4):
@@ -37,16 +37,17 @@ func _run() -> void:
 		_fail(4, "colliders dos veículos insuficientes: %d" % colliders.size())
 		return
 
-	var first := sprites[0] as Sprite3D
-	if first == null or first.texture == null:
-		_fail(5, "sprite sem textura")
-		return
-	if first.texture.get_width() != 480 or first.texture.get_height() != 360:
-		_fail(6, "atlas importado com dimensão inesperada: %dx%d" % [first.texture.get_width(), first.texture.get_height()])
-		return
-	if not first.region_enabled or int(first.region_rect.size.x) != 160 or int(first.region_rect.size.y) != 120:
-		_fail(7, "recorte do atlas não está ativo")
-		return
+	for raw in sprites:
+		var vehicle_sprite := raw as Sprite3D
+		if vehicle_sprite == null or vehicle_sprite.texture == null:
+			_fail(5, "sprite sem textura")
+			return
+		if vehicle_sprite.texture.get_width() != 192 or vehicle_sprite.texture.get_height() != 144:
+			_fail(6, "atlas importado com dimensão inesperada: %dx%d" % [vehicle_sprite.texture.get_width(), vehicle_sprite.texture.get_height()])
+			return
+		if not vehicle_sprite.region_enabled or int(vehicle_sprite.region_rect.size.x) != 64 or int(vehicle_sprite.region_rect.size.y) != 48:
+			_fail(7, "recorte 64x48 do atlas não está ativo")
+			return
 
 	# Confirma que a geração urbana usa o override novo.
 	if streamer.has_method("debug_force_city_sample"):
@@ -69,5 +70,6 @@ func _run() -> void:
 		_fail(11, "portas internas regrediram")
 		return
 
+	var first := sprites[0] as Sprite3D
 	print("SMOKE 0.5.17 OK: sprites=%d colliders=%d atlas=%dx%d" % [sprites.size(), colliders.size(), first.texture.get_width(), first.texture.get_height()])
 	quit(0)
