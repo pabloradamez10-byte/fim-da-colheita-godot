@@ -1,7 +1,7 @@
 extends "res://scripts/world/city_chunk_streamer_3d_v0516.gd"
 
-const VEHICLE_ATLAS_0517: Texture2D = preload("res://assets/vehicles/fdc_vehicle_atlas_0517.webp")
-const VEHICLE_TILE_0517 := Vector2i(160, 120)
+const VEHICLE_ATLAS_0517: Texture2D = preload("res://assets/vehicles/fdc_vehicle_atlas_0517.png")
+const VEHICLE_TILE_0517 := Vector2i(64, 48)
 const CITY_VEHICLE_VARIANTS_0517 := [0, 1, 2, 3, 4, 5, 6, 8]
 
 func _build_vehicle(parent: Node3D, pos: Vector3, yaw: float, _variant: int, key: String) -> void:
@@ -17,14 +17,16 @@ func _build_vehicle_sprite_0517(parent: Node3D, pos: Vector3, yaw: float, atlas_
 	root.add_to_group("vehicle_sprite_root_0517")
 	parent.add_child(root)
 
+	var safe_index := clampi(atlas_index, 0, 8)
 	var sprite := Sprite3D.new()
 	sprite.name = "VehicleSprite0517"
 	sprite.texture = VEHICLE_ATLAS_0517
 	sprite.region_enabled = true
-	var col := atlas_index % 3
-	var row := atlas_index / 3
+	var col: int = safe_index % 3
+	var row: int = safe_index / 3
 	sprite.region_rect = Rect2(float(col * VEHICLE_TILE_0517.x), float(row * VEHICLE_TILE_0517.y), float(VEHICLE_TILE_0517.x), float(VEHICLE_TILE_0517.y))
-	sprite.pixel_size = 0.028
+	# 64px * 0.07 = 4.48 unidades: mantém a escala do protótipo anterior, agora com arte detalhada.
+	sprite.pixel_size = 0.07
 	sprite.position = Vector3(0.0, 1.42, 0.0)
 	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	sprite.shaded = false
@@ -42,7 +44,7 @@ func _build_vehicle_sprite_0517(parent: Node3D, pos: Vector3, yaw: float, atlas_
 	root.add_child(collider)
 	var collision_shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	var collision_size := _vehicle_collision_size_0517(atlas_index)
+	var collision_size := _vehicle_collision_size_0517(safe_index)
 	box.size = collision_size
 	collision_shape.shape = box
 	collision_shape.position = Vector3(0.0, collision_size.y * 0.5, 0.0)
@@ -61,6 +63,8 @@ func _vehicle_collision_size_0517(atlas_index: int) -> Vector3:
 			return Vector3(2.35, 2.25, 5.15)
 		6: # utilitário/SUV
 			return Vector3(2.0, 1.62, 4.15)
+		7: # trator
+			return Vector3(2.15, 1.85, 3.60)
 		8: # carcaça queimada
 			return Vector3(2.0, 1.30, 4.05)
 		_:
