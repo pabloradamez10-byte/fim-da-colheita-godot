@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.16 - Fim da Colheita / correção de entrada nas casas e portas externas
+; Alpha 0.5.17 - Fim da Colheita / novos assets isométricos de veículos abandonados
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.16"
-config/version="0.5.16-alpha"
+config/name="Fim da Colheita - Alpha 0.5.17"
+config/version="0.5.17-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
