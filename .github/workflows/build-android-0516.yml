@@ -1,0 +1,77 @@
+name: Build Android Alpha 0.5.16
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - fix/android-alpha-0.5.16-house-entry
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Godot Android environment
+        shell: bash
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates ~/.config
+          if [ -d /root/.config/godot ]; then
+            rm -rf ~/.config/godot
+            cp -R /root/.config/godot ~/.config/godot
+          fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then
+            rm -rf ~/.local/share/godot/export_templates/4.3.stable
+            cp -R /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable
+          fi
+          SETTINGS=$(find ~/.config/godot -name 'editor_settings-4*.tres' | head -n 1)
+          test -n "$SETTINGS"
+          SIGN_PASS=$(openssl rand -hex 18)
+          KEYSTORE="$RUNNER_TEMP/fdc-debug.keystore"
+          keytool -genkeypair -noprompt -keystore "$KEYSTORE" -alias fdcdebug -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=FimDaColheita,O=Atlas,C=BR" -storepass "$SIGN_PASS" -keypass "$SIGN_PASS"
+          echo "FDC_KEYSTORE=$KEYSTORE" >> "$GITHUB_ENV"
+          echo "FDC_SIGN_PASS=$SIGN_PASS" >> "$GITHUB_ENV"
+          cat >> "$SETTINGS" <<EOF
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "$KEYSTORE"
+          export/android/debug_keystore_user = "fdcdebug"
+          export/android/debug_keystore_pass = "$SIGN_PASS"
+          EOF
+
+      - name: Import project and reject parser errors
+        shell: bash
+        run: |
+          set -o pipefail
+          godot --headless --editor --quit 2>&1 | tee /tmp/godot-import.log
+          ! grep -q "SCRIPT ERROR" /tmp/godot-import.log
+          ! grep -q "Parse Error" /tmp/godot-import.log
+
+      - name: Validate house entry door and regression fixes
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_16_smoke_test.gd
+
+      - name: Export debug APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ env.FDC_KEYSTORE }}
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: fdcdebug
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: ${{ env.FDC_SIGN_PASS }}
+        run: |
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.16-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.5.16-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.16-debug.apk) -gt 10000000
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FimDaColheita-Alpha-0.5.16-Android
+          path: build/android/FimDaColheita-Alpha-0.5.16-debug.apk
+          if-no-files-found: error
