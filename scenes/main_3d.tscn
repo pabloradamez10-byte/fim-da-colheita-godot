@@ -40,7 +40,7 @@ offset_right = 880.0
 offset_bottom = 32.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 19
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.17"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.18"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -49,7 +49,7 @@ offset_right = 880.0
 offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 13
-text = "Veículos isométricos novos • colisão e loot preservados • entradas 0.5.16 mantidas"
+text = "Orientação dos veículos corrigida • sprites, colisão e loot preservados"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -85,7 +85,7 @@ offset_right = 1160.0
 offset_bottom = 173.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.62)
 theme_override_font_sizes/font_size = 12
-text = "Vasculhe veículos abandonados • carros, pickups, vans, caminhão e carcaças"
+text = "Veículos agora acompanham corretamente o sentido isométrico das ruas"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
