@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.17 - Fim da Colheita / novos assets isométricos de veículos abandonados
+; Alpha 0.5.18 - Fim da Colheita / correção da orientação isométrica dos veículos
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.17"
-config/version="0.5.17-alpha"
+config/name="Fim da Colheita - Alpha 0.5.18"
+config/version="0.5.18-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
