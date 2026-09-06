@@ -9,6 +9,11 @@ func _build_vehicle(parent: Node3D, pos: Vector3, yaw: float, _variant: int, key
 	var atlas_index: int = CITY_VEHICLE_VARIANTS_0517[marker % CITY_VEHICLE_VARIANTS_0517.size()]
 	_build_vehicle_sprite_0517(parent, pos, yaw, atlas_index, key)
 
+func _vehicle_flip_h_0518(yaw: float) -> bool:
+	# Correção 0.5.18: na câmera isométrica atual, a leitura visual do atlas é oposta
+	# à regra usada na 0.5.17. Ruas no eixo Z precisam do espelho; eixo X usa o atlas original.
+	return absf(sin(yaw)) <= 0.55
+
 func _build_vehicle_sprite_0517(parent: Node3D, pos: Vector3, yaw: float, atlas_index: int, key: String) -> void:
 	var root := Node3D.new()
 	root.name = "AbandonedVehicle0517"
@@ -32,9 +37,9 @@ func _build_vehicle_sprite_0517(parent: Node3D, pos: Vector3, yaw: float, atlas_
 	sprite.shaded = false
 	sprite.transparent = true
 	sprite.double_sided = true
-	# As vias X/Z aparecem em diagonais opostas na câmera isométrica; o flip troca a leitura da direção sem girar o sprite no plano da tela.
-	sprite.flip_h = absf(sin(yaw)) > 0.55
+	sprite.flip_h = _vehicle_flip_h_0518(yaw)
 	sprite.add_to_group("vehicle_sprite_0517")
+	sprite.add_to_group("vehicle_orientation_0518")
 	root.add_child(sprite)
 
 	var collider := StaticBody3D.new()
@@ -81,4 +86,5 @@ func get_city_debug_metrics() -> Dictionary:
 	var result := super.get_city_debug_metrics()
 	result["vehicle_sprites_0517"] = get_tree().get_nodes_in_group("vehicle_sprite_0517").size()
 	result["vehicle_colliders_0517"] = get_tree().get_nodes_in_group("vehicle_collider_0517").size()
+	result["vehicle_orientation_0518"] = get_tree().get_nodes_in_group("vehicle_orientation_0518").size()
 	return result
