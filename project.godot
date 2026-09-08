@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.25 - Fim da Colheita / fila de produção, tempo real de crafting e ferramentas obrigatórias
+; Alpha 0.5.26 - Fim da Colheita / construção de base, peças persistentes e armazenamento
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.25"
-config/version="0.5.25-alpha"
+config/name="Fim da Colheita - Alpha 0.5.26"
+config/version="0.5.26-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
