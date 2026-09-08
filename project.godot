@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.27 - Fim da Colheita / portas, portões, integridade, reparo e desmontagem da base
+; Alpha 0.5.28 - Fim da Colheita / barricadas defensivas, fogueira, calor e iluminação
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.27"
-config/version="0.5.27-alpha"
+config/name="Fim da Colheita - Alpha 0.5.28"
+config/version="0.5.28-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
