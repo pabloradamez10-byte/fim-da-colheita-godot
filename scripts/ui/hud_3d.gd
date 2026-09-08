@@ -5,10 +5,47 @@ var player: Node = null
 var world: Node = null
 var refresh := 0.0
 
+@onready var top_panel: ColorRect = $TopPanel
+@onready var title: Label = $TopPanel/Title
 @onready var world_status: Label = $TopPanel/WorldStatus
 @onready var vitals: Label = $TopPanel/Vitals
 @onready var inventory: Label = $TopPanel/Inventory
 @onready var weapon: Label = $TopPanel/Weapon
+@onready var hint: Label = $Hint
+
+func _ready() -> void:
+	get_viewport().size_changed.connect(_refresh_layout_05321)
+	_refresh_layout_05321()
+
+func _refresh_layout_05321() -> void:
+	if top_panel == null:
+		return
+	var viewport_size := get_viewport().get_visible_rect().size
+	var panel_width := clampf(viewport_size.x - 190.0, 760.0, 1080.0)
+	top_panel.position = Vector2(16.0, 12.0)
+	top_panel.size = Vector2(panel_width, 106.0)
+
+	var content_width := maxf(200.0, panel_width - 28.0)
+	title.position = Vector2(14.0, 5.0)
+	title.size = Vector2(content_width, 19.0)
+	world_status.position = Vector2(14.0, 25.0)
+	world_status.size = Vector2(content_width, 18.0)
+	vitals.position = Vector2(14.0, 44.0)
+	vitals.size = Vector2(content_width, 18.0)
+	inventory.position = Vector2(14.0, 63.0)
+	inventory.size = Vector2(content_width, 18.0)
+	weapon.position = Vector2(14.0, 82.0)
+	weapon.size = Vector2(content_width, 19.0)
+
+	title.add_theme_font_size_override("font_size", 17)
+	world_status.add_theme_font_size_override("font_size", 11)
+	vitals.add_theme_font_size_override("font_size", 11)
+	inventory.add_theme_font_size_override("font_size", 11)
+	weapon.add_theme_font_size_override("font_size", 11)
+
+	hint.position = Vector2(18.0, 121.0)
+	hint.size = Vector2(maxf(320.0, viewport_size.x - 36.0), 20.0)
+	hint.add_theme_font_size_override("font_size", 10)
 
 func _process(delta: float) -> void:
 	refresh += delta
@@ -73,3 +110,10 @@ func _process(delta: float) -> void:
 			world_status.text = "Dia %d  %s  %s  %s  %d°C  |  Zumbis %s  |  %s%s%s%s" % [day, time_text, period, weather, ambient, str(summary.get("zombies", 0)), city_text, loop_text, water_text, vehicle_text]
 		else:
 			world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s%s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text, water_text, vehicle_text]
+
+func get_hud_layout_debug_05321() -> Dictionary:
+	return {
+		"panel_position": top_panel.position if top_panel != null else Vector2.ZERO,
+		"panel_size": top_panel.size if top_panel != null else Vector2.ZERO,
+		"hint_position": hint.position if hint != null else Vector2.ZERO
+	}
