@@ -120,7 +120,9 @@ func _movement_target_0519() -> Vector3:
 	alert_state_0519 = "idle"
 	last_heard_kind_0519 = ""
 	if wander_timer_0519 <= 0.0 or wander_direction_0519.length() <= 0.01:
-		var marker := float(int(abs(hash("wander0519:%s:%d" % [name, Time.get_ticks_msec() / 800])))) % 628) / 100.0
+		var tick_bucket := int(Time.get_ticks_msec() / 800)
+		var hash_value := int(abs(hash("wander0519:%s:%d" % [name, tick_bucket])))
+		var marker := float(hash_value % 628) / 100.0
 		wander_direction_0519 = Vector3(cos(marker), 0.0, sin(marker)).normalized()
 		wander_timer_0519 = 1.4 + float(variant) * 0.35
 	return global_position + wander_direction_0519 * 3.0
@@ -143,8 +145,6 @@ func _move_toward_target_0519(target: Vector3, delta: float) -> void:
 	_face_target_0519(target, delta)
 	move_and_slide()
 	gait_time += delta * (5.5 + speed)
-	if visual_root != null:
-		visual_root.position.y = abs(sin(gait_time)) * 0.045
 	if get_slide_collision_count() > 0 and alert_state_0519 == "idle":
 		wander_timer_0519 = 0.0
 
