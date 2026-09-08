@@ -28,11 +28,14 @@ func _process(delta: float) -> void:
 		var infection := int(data.get("infection", 0))
 		var fatigue := int(data.get("fatigue", 0))
 		var wetness := int(data.get("wetness", 0))
+		var water_sickness := int(round(float(data.get("water_sickness", 0.0))))
 		var body_temp := float(data.get("body_temperature", 36.9))
 		var sheltered := bool(data.get("sheltered", false))
 		var condition := ""
 		if pain >= 15 or bleeding >= 0.25 or infection >= 10:
 			condition = "   DOR %d   SANG %.1f   INFEC %d" % [pain, bleeding, infection]
+		if water_sickness >= 10:
+			condition += "   CONTAM.ÁGUA %d" % water_sickness
 		var shelter_text := " ABRIGO" if sheltered else ""
 		var wet_text := ""
 		if wetness >= 8:
@@ -58,7 +61,10 @@ func _process(delta: float) -> void:
 		var loop_text := ""
 		if kills >= 0 and deaths >= 0:
 			loop_text = "  |  Abates %d  Mortes %d" % [kills, deaths]
+		var water_text := ""
+		if summary.has("rain_water_stored_0529"):
+			water_text = "  |  Chuva %.1f" % float(summary.get("rain_water_stored_0529", 0.0))
 		if day > 0:
-			world_status.text = "Dia %d  %s  %s  %s  %d°C  |  Zumbis %s  |  %s%s" % [day, time_text, period, weather, ambient, str(summary.get("zombies", 0)), city_text, loop_text]
+			world_status.text = "Dia %d  %s  %s  %s  %d°C  |  Zumbis %s  |  %s%s%s" % [day, time_text, period, weather, ambient, str(summary.get("zombies", 0)), city_text, loop_text, water_text]
 		else:
-			world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text]
+			world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text, water_text]
