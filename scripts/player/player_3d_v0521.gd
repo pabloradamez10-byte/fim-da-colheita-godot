@@ -3,12 +3,14 @@ extends "res://scripts/player/player_3d_v0520.gd"
 const FATIGUE_BASE_RATE_0521 := 0.090
 const FATIGUE_RUN_RATE_0521 := 0.045
 const NORMAL_BODY_TEMP_0521 := 36.9
+const ENVIRONMENT_POLL_SECONDS_0521 := 0.20
 
 var fatigue_0521 := 8.0
 var body_temperature_0521 := NORMAL_BODY_TEMP_0521
 var sheltered_0521 := false
 var effective_ambient_temperature_0521 := 18.0
 var last_sleep_minutes_0521 := 0
+var environment_poll_timer_0521 := 0.0
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
@@ -34,12 +36,14 @@ func _update_fatigue_0521(delta: float) -> void:
 		pain_0519 = minf(100.0, pain_0519 + 0.045 * delta)
 
 func _update_temperature_0521(delta: float) -> void:
-	if world != null and world.has_method("get_environment_state_0521"):
+	environment_poll_timer_0521 = maxf(0.0, environment_poll_timer_0521 - delta)
+	if environment_poll_timer_0521 <= 0.0 and world != null and world.has_method("get_environment_state_0521"):
 		var raw: Variant = world.call("get_environment_state_0521", global_position)
 		if raw is Dictionary:
 			var env := raw as Dictionary
 			sheltered_0521 = bool(env.get("sheltered", false))
 			effective_ambient_temperature_0521 = float(env.get("effective_temperature", 18.0))
+		environment_poll_timer_0521 = ENVIRONMENT_POLL_SECONDS_0521
 
 	var target := NORMAL_BODY_TEMP_0521
 	if effective_ambient_temperature_0521 < 10.0:
@@ -81,6 +85,7 @@ func sleep_0521(minutes_to_sleep: int, shelter_quality: float = 1.0) -> bool:
 	thirst = maxf(0.0, thirst - float(minutes) * 0.026)
 	if shelter_quality >= 0.75:
 		body_temperature_0521 = move_toward(body_temperature_0521, NORMAL_BODY_TEMP_0521, 1.35 * recovery_factor)
+	environment_poll_timer_0521 = 0.0
 	return true
 
 func get_vitals() -> Dictionary:
@@ -103,6 +108,7 @@ func import_save_state(state: Dictionary) -> void:
 	fatigue_0521 = float(state.get("fatigue_0521", 8.0))
 	body_temperature_0521 = float(state.get("body_temperature_0521", NORMAL_BODY_TEMP_0521))
 	last_sleep_minutes_0521 = int(state.get("last_sleep_minutes_0521", 0))
+	environment_poll_timer_0521 = 0.0
 
 func reset_for_new_world() -> void:
 	super.reset_for_new_world()
@@ -111,12 +117,14 @@ func reset_for_new_world() -> void:
 	sheltered_0521 = false
 	effective_ambient_temperature_0521 = 18.0
 	last_sleep_minutes_0521 = 0
+	environment_poll_timer_0521 = 0.0
 
 func _respawn() -> void:
 	super._respawn()
 	fatigue_0521 = 38.0
 	body_temperature_0521 = 36.7
 	sheltered_0521 = false
+	environment_poll_timer_0521 = 0.0
 
 func get_survival_debug_0521() -> Dictionary:
 	return {
