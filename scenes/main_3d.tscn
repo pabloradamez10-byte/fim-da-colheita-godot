@@ -1,15 +1,15 @@
 [gd_scene load_steps=13 format=3]
 
-[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0531.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0532.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/ui/hud_3d.gd" id="2_hud"]
 [ext_resource type="Script" path="res://scripts/ui/mobile_controls.gd" id="3_mobile"]
 [ext_resource type="Script" path="res://scripts/camera/camera_rig_3d.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/world/city_chunk_streamer_3d_v0530.gd" id="5_chunks"]
-[ext_resource type="Script" path="res://scripts/ui/inventory_ui_v0530.gd" id="6_inventory"]
+[ext_resource type="Script" path="res://scripts/ui/inventory_ui_v0532.gd" id="6_inventory"]
 [ext_resource type="Script" path="res://scripts/ui/hotbar_ui_v0523.gd" id="7_hotbar"]
 [ext_resource type="Script" path="res://scripts/ui/build_ui_v0529.gd" id="8_build"]
 [ext_resource type="Script" path="res://scripts/ui/storage_ui_v0526.gd" id="9_storage"]
-[ext_resource type="Script" path="res://scripts/ui/campfire_ui_v0529.gd" id="10_campfire"]
+[ext_resource type="Script" path="res://scripts/ui/campfire_ui_v0532.gd" id="10_campfire"]
 [ext_resource type="Script" path="res://scripts/ui/water_ui_v0529.gd" id="11_water"]
 [ext_resource type="Script" path="res://scripts/ui/vehicle_ui_v0530.gd" id="12_vehicle"]
 
@@ -46,7 +46,7 @@ offset_right = 1060.0
 offset_bottom = 32.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 19
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.31"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.32"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -55,7 +55,7 @@ offset_right = 1060.0
 offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 13
-text = "Agricultura: preparar solo • plantar • chuva/rega • crescimento • colheita • persistência"
+text = "Agricultura 2.0 + alimentação: batata, milho, cenoura • frescor • cozinha na fogueira"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -91,7 +91,7 @@ offset_right = 1250.0
 offset_bottom = 173.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.62)
 theme_override_font_sizes/font_size = 12
-text = "INTERAGIR no canteiro: preparar → plantar → regar → colher • chuva mantém a terra úmida • veículos continuam funcionais"
+text = "MOCHILA escolhe a cultura e permite comer • INTERAGIR planta/rega/colhe • FOGUEIRA cozinha e ferve água"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
