@@ -64,7 +64,12 @@ func _process(delta: float) -> void:
 		var water_text := ""
 		if summary.has("rain_water_stored_0529"):
 			water_text = "  |  Chuva %.1f" % float(summary.get("rain_water_stored_0529", 0.0))
+		var vehicle_text := ""
+		var driving_name := str(summary.get("driving_vehicle_0530", ""))
+		if driving_name != "":
+			vehicle_text = "  |  %s  %.1fL  INT %d" % [driving_name, float(summary.get("driving_fuel_0530", 0.0)), int(round(float(summary.get("driving_health_0530", 0.0))))]
+			weapon.text = "DIRIGINDO  •  joystick acelera/freia e esterça  •  INTERAGIR para sair"
 		if day > 0:
-			world_status.text = "Dia %d  %s  %s  %s  %d°C  |  Zumbis %s  |  %s%s%s" % [day, time_text, period, weather, ambient, str(summary.get("zombies", 0)), city_text, loop_text, water_text]
+			world_status.text = "Dia %d  %s  %s  %s  %d°C  |  Zumbis %s  |  %s%s%s%s" % [day, time_text, period, weather, ambient, str(summary.get("zombies", 0)), city_text, loop_text, water_text, vehicle_text]
 		else:
-			world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text, water_text]
+			world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s%s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text, water_text, vehicle_text]
