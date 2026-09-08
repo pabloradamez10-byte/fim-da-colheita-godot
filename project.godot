@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.30 - Fim da Colheita / veículos dirigíveis, combustível, integridade e porta-malas
+; Alpha 0.5.32.1 - Fim da Colheita / estabilização de tela e interação mobile
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.30"
-config/version="0.5.30-alpha"
+config/name="Fim da Colheita - Alpha 0.5.32.1"
+config/version="0.5.32.1-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
@@ -15,6 +15,7 @@ window/size/viewport_height=720
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [rendering]
 renderer/rendering_method="gl_compatibility"
