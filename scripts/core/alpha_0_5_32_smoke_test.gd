@@ -168,7 +168,8 @@ func _run() -> void:
 		_fail(32, "validade não converteu comida vencida em estragada")
 		return
 
-	# Save/load preserva culturas, seleção, alimentos e contadores.
+	# Save/load preserva culturas, seleção, alimentos e contadores. Em builds posteriores,
+	# a versão de topo pode ser maior que 0.5.32 sem invalidar a regressão deste sistema.
 	scene.call("save_game")
 	var file := FileAccess.open(SAVE_PATH_0532, FileAccess.READ)
 	if file == null:
@@ -179,8 +180,9 @@ func _run() -> void:
 		_fail(34, "save 0.5.32 inválido")
 		return
 	var payload := parsed as Dictionary
-	if str(payload.get("version", "")) != "0.5.32-alpha":
-		_fail(35, "save não recebeu versão 0.5.32")
+	var save_version := str(payload.get("version", ""))
+	if save_version not in ["0.5.32-alpha", "0.5.33-alpha"]:
+		_fail(35, "save perdeu compatibilidade 0.5.32: %s" % save_version)
 		return
 	var world_state := payload.get("world", {}) as Dictionary
 	if str(world_state.get("selected_crop_0532", "")) != "carrot":
