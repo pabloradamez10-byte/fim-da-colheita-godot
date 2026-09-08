@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.19 - Fim da Colheita / sentidos de zumbis, ruído e ferimentos iniciais
+; Alpha 0.5.20 - Fim da Colheita / loop risco-recompensa, infecção, corpos e recuperação pós-morte
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.19"
-config/version="0.5.19-alpha"
+config/name="Fim da Colheita - Alpha 0.5.20"
+config/version="0.5.20-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
