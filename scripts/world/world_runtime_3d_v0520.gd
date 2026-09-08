@@ -158,9 +158,9 @@ func _spawn_loot_marker_0520(key: String, record: Dictionary, kind: String) -> v
 	var pos := _dict_to_vec_0520(record.get("position", {}) as Dictionary)
 	var root := Node3D.new()
 	root.name = "Corpse0520" if kind == "loot_zombie_0520" else "LostBackpack0520"
+	actors_root.add_child(root)
 	root.global_position = pos
 	root.add_to_group("corpse_loot_0520" if kind == "loot_zombie_0520" else "death_bag_0520")
-	actors_root.add_child(root)
 	if kind == "loot_zombie_0520":
 		_box(root, Vector3(1.18, 0.22, 0.54), Vector3(0.0, 0.14, 0.0), materials["cloth"])
 		_sphere(root, 0.25, Vector3(0.0, 0.19, -0.58), materials["wetland"], Vector3(0.95, 0.70, 0.95))
