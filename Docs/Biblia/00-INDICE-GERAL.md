@@ -7,6 +7,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - **DEFINIDO** — conceito aprovado e documentado.
 - **EM DESENVOLVIMENTO** — conceito definido, mas ainda sendo detalhado ou implementado.
 - **IMPLEMENTADO** — existe no jogo ou na infraestrutura atual.
+- **IMPLEMENTADO / EM EXPANSÃO** — já possui ciclo funcional, mas ainda está abaixo da profundidade final da Bíblia.
 - **PRECISA DE REVISÃO** — conteúdo existente que precisa ser sincronizado com o projeto atual.
 - **PLANEJADO** — tema reservado, ainda sem especificação completa.
 
@@ -23,7 +24,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 05 — O Mundo — **DEFINIDO**
 - 06 — Ecossistema Vivo — **EM DESENVOLVIMENTO**
 - 07 — World Simulator — **EM DESENVOLVIMENTO**
-- 08 — Mundo Físico — **EM DESENVOLVIMENTO**
+- 08 — Mundo Físico — **IMPLEMENTADO / EM EXPANSÃO**
 - 09 — Sociedade Humana — **PLANEJADO**
 - 10 — Facções — **PLANEJADO**
 - 11 — Economia Mundial — **PLANEJADO**
@@ -31,8 +32,8 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 ## Parte III — Personagens
 
 - 12 — Personagens, Atributos e Evolução — **EM DESENVOLVIMENTO**
-- 13 — Saúde — **PLANEJADO**
-- 14 — Necessidades Humanas — **PLANEJADO**
+- 13 — Saúde — **IMPLEMENTADO / EM EXPANSÃO**
+- 14 — Necessidades Humanas — **IMPLEMENTADO / EM EXPANSÃO**
 - 15 — Relacionamentos — **PLANEJADO**
 - 16 — Sucessão e Legado — **PLANEJADO**
 - 17 — Personalidade e Memória — **PLANEJADO**
@@ -40,20 +41,20 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 ## Parte IV — Natureza e Estruturas
 
 - 18 — Animais — **PLANEJADO**
-- 19 — Agricultura — **PLANEJADO**
-- 20 — Clima e Estações — **PLANEJADO**
-- 21 — Estruturas e Pontos de Interesse — **EM DESENVOLVIMENTO**
+- 19 — Agricultura — **IMPLEMENTADO / EM EXPANSÃO**
+- 20 — Clima e Estações — **EM DESENVOLVIMENTO**
+- 21 — Estruturas e Pontos de Interesse — **IMPLEMENTADO / EM EXPANSÃO**
 
 ## Parte V — Gameplay
 
-- 22 — Construção e Engenharia — **PLANEJADO**
-- 23 — Crafting, Produção e Manufatura — **EM DESENVOLVIMENTO**
-- 24 — Exploração e Expedições — **EM DESENVOLVIMENTO**
+- 22 — Construção e Engenharia — **IMPLEMENTADO / EM EXPANSÃO**
+- 23 — Crafting, Produção e Manufatura — **IMPLEMENTADO / EM EXPANSÃO**
+- 24 — Exploração e Expedições — **IMPLEMENTADO / EM EXPANSÃO**
 - 25 — Sistema Modular de Personagens — **EM DESENVOLVIMENTO**
 - 26 — Inventário, Equipamentos e Carga — **IMPLEMENTADO / EM EXPANSÃO**
-- 27 — Sobrevivência, Necessidades e Condição Física — **PLANEJADO**
-- 28 — Combate, Armas e Táticas — **PLANEJADO**
-- 29 — Veículos, Transporte e Logística — **PLANEJADO**
+- 27 — Sobrevivência, Necessidades e Condição Física — **IMPLEMENTADO / EM EXPANSÃO**
+- 28 — Combate, Armas e Táticas — **IMPLEMENTADO / EM EXPANSÃO**
+- 29 — Veículos, Transporte e Logística — **IMPLEMENTADO / EM EXPANSÃO**
 
 ## Parte VI — Atlas World Engine
 
@@ -69,8 +70,24 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 36 — Atlas Forge e Pipeline de Assets — **EM DESENVOLVIMENTO**
 - 37 — Biblioteca de Assets e Asset Registry — **EM DESENVOLVIMENTO**
 - 38 — Validação Técnica e Artística — **EM DESENVOLVIMENTO**
-- 39 — Integração Godot e Critérios de Aceite — **EM DESENVOLVIMENTO**
+- 39 — Integração Godot e Critérios de Aceite — **IMPLEMENTADO / EM EXPANSÃO**
 - 40 — Versionamento, ADRs e Registro de Decisões — **PLANEJADO**
+
+## Linha técnica atual da Alpha Android
+
+- 0.5.20 — loop risco/recompensa, morte, cadáveres e infecção;
+- 0.5.21 — tempo, sono e abrigo;
+- 0.5.22 — clima, chuva e umidade/exposição;
+- 0.5.23 — hotbar e durabilidade;
+- 0.5.24 — bancada e produção;
+- 0.5.25 — fila de produção;
+- 0.5.26 — construção, base e armazenamento;
+- 0.5.27 — manutenção e defesa da base;
+- 0.5.28 — fogueira e barricadas;
+- 0.5.29 — sobrevivência hídrica;
+- 0.5.30 — veículos dirigíveis, combustível, dano e logística;
+- 0.5.31 — agricultura inicial;
+- 0.5.32 — agricultura e alimentação 2.0.
 
 ## Documentação técnica associada
 
