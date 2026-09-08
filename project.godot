@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.29 - Fim da Colheita / captação, tratamento e sobrevivência hídrica
+; Alpha 0.5.30 - Fim da Colheita / veículos dirigíveis, combustível, integridade e porta-malas
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.29"
-config/version="0.5.29-alpha"
+config/name="Fim da Colheita - Alpha 0.5.30"
+config/version="0.5.30-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
