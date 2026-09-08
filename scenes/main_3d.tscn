@@ -1,12 +1,14 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0525.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0526.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/ui/hud_3d.gd" id="2_hud"]
 [ext_resource type="Script" path="res://scripts/ui/mobile_controls.gd" id="3_mobile"]
 [ext_resource type="Script" path="res://scripts/camera/camera_rig_3d.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/world/city_chunk_streamer_3d_v0521.gd" id="5_chunks"]
 [ext_resource type="Script" path="res://scripts/ui/inventory_ui_v0525.gd" id="6_inventory"]
 [ext_resource type="Script" path="res://scripts/ui/hotbar_ui_v0523.gd" id="7_hotbar"]
+[ext_resource type="Script" path="res://scripts/ui/build_ui_v0526.gd" id="8_build"]
+[ext_resource type="Script" path="res://scripts/ui/storage_ui_v0526.gd" id="9_storage"]
 
 [node name="FimDaColheita3D" type="Node3D"]
 script = ExtResource("1_world")
@@ -41,7 +43,7 @@ offset_right = 1060.0
 offset_bottom = 32.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 19
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.25"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.26"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -50,7 +52,7 @@ offset_right = 1060.0
 offset_bottom = 56.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 13
-text = "Crafting agora leva tempo • fila de produção com até 4 trabalhos • receitas podem exigir ferramenta"
+text = "Construção de base liberada • piso, parede, cerca e caixa persistente com armazenamento"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 16.0
@@ -86,7 +88,7 @@ offset_right = 1245.0
 offset_bottom = 173.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.62)
 theme_override_font_sizes/font_size = 12
-text = "ADICIONAR À FILA reserva capacidade • materiais só são consumidos quando o trabalho começa • produção de bancada pausa se você se afastar"
+text = "CONSTRUIR abre o modo de base • verde = pode colocar • vermelho = bloqueado • INTERAGIR numa caixa abre armazenamento"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
@@ -145,7 +147,13 @@ text = "NOVA SEED"
 [node name="HotbarUI" type="CanvasLayer" parent="."]
 script = ExtResource("7_hotbar")
 
+[node name="BuildUI" type="CanvasLayer" parent="."]
+script = ExtResource("8_build")
+
 [node name="InventoryUI" type="CanvasLayer" parent="."]
 script = ExtResource("6_inventory")
+
+[node name="StorageUI" type="CanvasLayer" parent="."]
+script = ExtResource("9_storage")
 
 [connection signal="pressed" from="MobileLayer/MobileControls/NewSeedButton" to="." method="new_seed"]
