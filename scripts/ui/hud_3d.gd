@@ -25,9 +25,10 @@ func _process(delta: float) -> void:
 		var data: Dictionary = player.call("get_vitals")
 		var pain := int(data.get("pain", 0))
 		var bleeding := float(data.get("bleeding", 0.0))
+		var infection := int(data.get("infection", 0))
 		var condition := ""
-		if pain >= 15 or bleeding >= 0.25:
-			condition = "   DOR %d   SANG %.1f" % [pain, bleeding]
+		if pain >= 15 or bleeding >= 0.25 or infection >= 10:
+			condition = "   DOR %d   SANG %.1f   INFEC %d" % [pain, bleeding, infection]
 		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d%s" % [int(data.get("health", 0)), int(data.get("hunger", 0)), int(data.get("thirst", 0)), int(data.get("stamina", 0)), condition]
 	if player.has_method("get_inventory_summary"):
 		inventory.text = "MOCHILA  " + str(player.call("get_inventory_summary"))
@@ -39,4 +40,9 @@ func _process(delta: float) -> void:
 		var city_text := "Cidade --"
 		if city_distance >= 0:
 			city_text = "Cidade %dm" % city_distance
-		world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text]
+		var kills := int(summary.get("kills_0520", -1))
+		var deaths := int(summary.get("deaths_0520", -1))
+		var loop_text := ""
+		if kills >= 0 and deaths >= 0:
+			loop_text = "  |  Abates %d  Mortes %d" % [kills, deaths]
+		world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text]
