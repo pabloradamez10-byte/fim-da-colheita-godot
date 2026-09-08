@@ -28,12 +28,15 @@ func _update_weather_exposure_0522(delta: float) -> void:
 
 	raining = precipitation_0522 > 0.10
 	foggy = weather_name_0522 == "NEBLINA"
+	var exposure_multiplier := 1.0
+	if has_method("get_rain_exposure_multiplier_0533"):
+		exposure_multiplier = clampf(float(call("get_rain_exposure_multiplier_0533")), 0.28, 1.0)
 	if sheltered_0521:
 		wetness_0522 = maxf(0.0, wetness_0522 - WETNESS_SHELTER_DRY_RATE_0522 * delta)
 	elif raining:
-		wetness_0522 = minf(100.0, wetness_0522 + WETNESS_RAIN_RATE_0522 * precipitation_0522 * delta)
+		wetness_0522 = minf(100.0, wetness_0522 + WETNESS_RAIN_RATE_0522 * precipitation_0522 * exposure_multiplier * delta)
 	elif foggy:
-		wetness_0522 = minf(100.0, wetness_0522 + WETNESS_FOG_RATE_0522 * delta)
+		wetness_0522 = minf(100.0, wetness_0522 + WETNESS_FOG_RATE_0522 * lerpf(0.72, 1.0, exposure_multiplier) * delta)
 	else:
 		wetness_0522 = maxf(0.0, wetness_0522 - WETNESS_CLEAR_DRY_RATE_0522 * delta)
 
