@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3]
 
-[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0532.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0533.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/ui/hud_3d.gd" id="2_hud"]
 [ext_resource type="Script" path="res://scripts/ui/mobile_controls.gd" id="3_mobile"]
 [ext_resource type="Script" path="res://scripts/camera/camera_rig_3d.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/world/city_chunk_streamer_3d_v0530.gd" id="5_chunks"]
-[ext_resource type="Script" path="res://scripts/ui/inventory_ui_v0532.gd" id="6_inventory"]
+[ext_resource type="Script" path="res://scripts/ui/inventory_ui_v0533.gd" id="6_inventory"]
 [ext_resource type="Script" path="res://scripts/ui/hotbar_ui_v0523.gd" id="7_hotbar"]
 [ext_resource type="Script" path="res://scripts/ui/build_ui_v0529.gd" id="8_build"]
 [ext_resource type="Script" path="res://scripts/ui/storage_ui_v0526.gd" id="9_storage"]
@@ -46,7 +46,7 @@ offset_right = 1064.0
 offset_bottom = 24.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 17
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.32.1"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.33"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 14.0
@@ -55,7 +55,7 @@ offset_right = 1064.0
 offset_bottom = 43.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 11
-text = "Agricultura 2.0 + alimentação: batata, milho, cenoura • frescor • cozinha na fogueira"
+text = "Vestuário corporal: proteção contra mordida/corte • frio/chuva • peso • loot de roupas"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 14.0
@@ -91,7 +91,7 @@ offset_right = 1262.0
 offset_bottom = 141.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.56)
 theme_override_font_sizes/font_size = 10
-text = "MOCHILA escolhe a cultura e permite comer • INTERAGIR planta/rega/colhe • FOGUEIRA cozinha e ferve água"
+text = "MOCHILA abre VESTUÁRIO • quartos/guarda-roupas podem ter roupas • equipamento protege de ataque e clima"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
