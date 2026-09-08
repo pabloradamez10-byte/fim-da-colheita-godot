@@ -27,13 +27,17 @@ func _process(delta: float) -> void:
 		var bleeding := float(data.get("bleeding", 0.0))
 		var infection := int(data.get("infection", 0))
 		var fatigue := int(data.get("fatigue", 0))
+		var wetness := int(data.get("wetness", 0))
 		var body_temp := float(data.get("body_temperature", 36.9))
 		var sheltered := bool(data.get("sheltered", false))
 		var condition := ""
 		if pain >= 15 or bleeding >= 0.25 or infection >= 10:
 			condition = "   DOR %d   SANG %.1f   INFEC %d" % [pain, bleeding, infection]
 		var shelter_text := " ABRIGO" if sheltered else ""
-		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d   CANSAÇO %d   TEMP %.1f°%s%s" % [int(data.get("health", 0)), int(data.get("hunger", 0)), int(data.get("thirst", 0)), int(data.get("stamina", 0)), fatigue, body_temp, shelter_text, condition]
+		var wet_text := ""
+		if wetness >= 8:
+			wet_text = "   MOLHADO %d" % wetness
+		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d   CANSAÇO %d   TEMP %.1f°%s%s%s" % [int(data.get("health", 0)), int(data.get("hunger", 0)), int(data.get("thirst", 0)), int(data.get("stamina", 0)), fatigue, body_temp, shelter_text, wet_text, condition]
 	if player.has_method("get_inventory_summary"):
 		inventory.text = "MOCHILA  " + str(player.call("get_inventory_summary"))
 	if player.has_method("get_weapon_summary"):
@@ -49,11 +53,12 @@ func _process(delta: float) -> void:
 		var day := int(summary.get("day_0521", 0))
 		var time_text := str(summary.get("time_0521", "--:--"))
 		var ambient := int(round(float(summary.get("ambient_temperature_0521", 18.0))))
+		var weather := str(summary.get("weather_0522", "ABERTO"))
 		var period := "NOITE" if bool(summary.get("night_0521", false)) else "DIA"
 		var loop_text := ""
 		if kills >= 0 and deaths >= 0:
 			loop_text = "  |  Abates %d  Mortes %d" % [kills, deaths]
 		if day > 0:
-			world_status.text = "Dia %d  %s  %s  %d°C  |  Zumbis %s  |  %s%s" % [day, time_text, period, ambient, str(summary.get("zombies", 0)), city_text, loop_text]
+			world_status.text = "Dia %d  %s  %s  %s  %d°C  |  Zumbis %s  |  %s%s" % [day, time_text, period, weather, ambient, str(summary.get("zombies", 0)), city_text, loop_text]
 		else:
 			world_status.text = "Seed %s  |  Zumbis %s  |  Chunks %s  |  Prédios %s  |  %s%s" % [str(summary.get("seed", "?")), str(summary.get("zombies", 0)), str(summary.get("chunks", 0)), str(summary.get("city_buildings", 0)), city_text, loop_text]
