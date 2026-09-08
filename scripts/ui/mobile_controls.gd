@@ -36,9 +36,29 @@ func _ready() -> void:
 
 func _refresh_layout() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
-	joystick_center = Vector2(150.0, viewport_size.y - 150.0)
+	joystick_radius = clampf(viewport_size.y * 0.125, 72.0, 92.0)
+	var joystick_margin := clampf(viewport_size.y * 0.075, 42.0, 56.0)
+	joystick_center = Vector2(joystick_radius + joystick_margin, viewport_size.y - joystick_radius - joystick_margin)
 	if joystick_touch_id == -1:
 		joystick_knob = joystick_center
+
+	var edge := 18.0
+	var attack_size := Vector2(116.0, 112.0)
+	var small_size := Vector2(116.0, 64.0)
+	var action_size := Vector2(136.0, 64.0)
+	attack_button.size = attack_size
+	weapon_button.size = small_size
+	interact_button.size = action_size
+	sprint_button.size = Vector2(122.0, 64.0)
+	new_seed_button.size = Vector2(126.0, 46.0)
+
+	var attack_pos := Vector2(viewport_size.x - edge - attack_size.x, viewport_size.y - edge - attack_size.y)
+	attack_button.position = attack_pos
+	weapon_button.position = Vector2(attack_pos.x, attack_pos.y - 12.0 - small_size.y)
+	var middle_x := attack_pos.x - 14.0 - action_size.x
+	interact_button.position = Vector2(middle_x, viewport_size.y - edge - action_size.y)
+	sprint_button.position = Vector2(middle_x + 7.0, interact_button.position.y - 12.0 - 64.0)
+	new_seed_button.position = Vector2(viewport_size.x - edge - 126.0, 14.0)
 	queue_redraw()
 
 func _input(event: InputEvent) -> void:
@@ -66,7 +86,6 @@ func _update_joystick(touch_position: Vector2) -> void:
 	if raw_distance <= joystick_deadzone:
 		move_vector = Vector2.ZERO
 	else:
-		# Remove o salto da deadzone e devolve uma curva analógica 0..1 contínua.
 		var remapped := (raw_distance - joystick_deadzone) / maxf(0.001, 1.0 - joystick_deadzone)
 		var eased := pow(clampf(remapped, 0.0, 1.0), 0.82)
 		move_vector = direction * eased
@@ -129,4 +148,16 @@ func is_vehicle_mode_0530() -> bool:
 func _draw() -> void:
 	draw_circle(joystick_center, joystick_radius, Color(0.035, 0.045, 0.035, 0.46))
 	draw_arc(joystick_center, joystick_radius, 0.0, TAU, 48, Color(0.90, 0.90, 0.84, 0.34), 3.0)
-	draw_circle(joystick_knob, 36.0, Color(0.70, 0.57, 0.31, 0.72))
+	draw_circle(joystick_knob, minf(36.0, joystick_radius * 0.42), Color(0.70, 0.57, 0.31, 0.72))
+
+func get_layout_debug_05321() -> Dictionary:
+	return {
+		"viewport": get_viewport().get_visible_rect().size,
+		"joystick_center": joystick_center,
+		"joystick_radius": joystick_radius,
+		"attack_rect": Rect2(attack_button.position, attack_button.size),
+		"interact_rect": Rect2(interact_button.position, interact_button.size),
+		"sprint_rect": Rect2(sprint_button.position, sprint_button.size),
+		"weapon_rect": Rect2(weapon_button.position, weapon_button.size),
+		"seed_rect": Rect2(new_seed_button.position, new_seed_button.size)
+	}
