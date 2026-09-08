@@ -23,7 +23,12 @@ func _process(delta: float) -> void:
 		return
 	if player.has_method("get_vitals"):
 		var data: Dictionary = player.call("get_vitals")
-		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d" % [int(data.get("health", 0)),int(data.get("hunger", 0)),int(data.get("thirst", 0)),int(data.get("stamina", 0))]
+		var pain := int(data.get("pain", 0))
+		var bleeding := float(data.get("bleeding", 0.0))
+		var condition := ""
+		if pain >= 15 or bleeding >= 0.25:
+			condition = "   DOR %d   SANG %.1f" % [pain, bleeding]
+		vitals.text = "VIDA %d   FOME %d   SEDE %d   FÔLEGO %d%s" % [int(data.get("health", 0)), int(data.get("hunger", 0)), int(data.get("thirst", 0)), int(data.get("stamina", 0)), condition]
 	if player.has_method("get_inventory_summary"):
 		inventory.text = "MOCHILA  " + str(player.call("get_inventory_summary"))
 	if player.has_method("get_weapon_summary"):
