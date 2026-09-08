@@ -57,6 +57,12 @@ func _update_temperature_0521(delta: float) -> void:
 	elif effective_ambient_temperature_0521 > 26.0:
 		target = 37.55 if not sheltered_0521 else 37.10
 
+	# 0.5.33: roupa equipada pode puxar o alvo térmico de frio para perto do normal.
+	# O hook é opcional para preservar todas as versões anteriores do Player.
+	if effective_ambient_temperature_0521 < 18.0 and has_method("get_cold_insulation_0533"):
+		var insulation := clampf(float(call("get_cold_insulation_0533")), 0.0, 0.78)
+		target = lerpf(target, NORMAL_BODY_TEMP_0521, insulation)
+
 	var response_rate := 0.010 if sheltered_0521 else 0.016
 	body_temperature_0521 = move_toward(body_temperature_0521, target, response_rate * delta)
 
