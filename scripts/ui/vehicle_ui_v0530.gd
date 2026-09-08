@@ -3,15 +3,13 @@ extends CanvasLayer
 
 const TRUNK_ITEMS_0530 := [
 	"wood", "stone", "fiber", "plank", "cordage", "stone_blade", "repair_kit",
-	"food", "water", "dirty_water", "bandage", "antiseptic", "ammo_9mm", "shells", "gasoline",
-	"potato_seed", "corn_seed", "carrot_seed"
+	"food", "water", "dirty_water", "bandage", "antiseptic", "ammo_9mm", "shells", "gasoline"
 ]
 const ITEM_NAMES_0530 := {
 	"wood":"Madeira", "stone":"Pedra", "fiber":"Fibra", "plank":"Tábuas", "cordage":"Corda",
 	"stone_blade":"Lâmina pedra", "repair_kit":"Kit reparo", "food":"Comida", "water":"Água segura",
 	"dirty_water":"Água bruta", "bandage":"Bandagem", "antiseptic":"Antisséptico",
-	"ammo_9mm":"Munição 9mm", "shells":"Cartuchos", "gasoline":"Gasolina",
-	"potato_seed":"Semente batata", "corn_seed":"Semente milho", "carrot_seed":"Semente cenoura"
+	"ammo_9mm":"Munição 9mm", "shells":"Cartuchos", "gasoline":"Gasolina"
 }
 
 var world: Node = null
@@ -213,7 +211,6 @@ func _add_trunk_row_0530(item_id: String, backpack_amount: int, trunk_amount: in
 	deposit.text = "> 1"
 	deposit.custom_minimum_size = Vector2(72, 30)
 	deposit.disabled = backpack_amount <= 0 or not can_deposit
-	# Touch mobile: button_down dispara no início do toque e não depende do botão sobreviver até o release.
 	deposit.button_down.connect(_deposit_0530.bind(item_id))
 	row.add_child(deposit)
 	var withdraw := Button.new()
