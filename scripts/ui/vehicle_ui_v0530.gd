@@ -159,7 +159,9 @@ func _refresh_0530() -> void:
 func _refresh_trunk_0530(data: Dictionary) -> void:
 	for child in rows_0530.get_children():
 		child.queue_free()
-	var backpack := player.call("get_inventory_snapshot") as Dictionary if player.has_method("get_inventory_snapshot") else {}
+	var backpack: Dictionary = {}
+	if player.has_method("get_inventory_snapshot"):
+		backpack = player.call("get_inventory_snapshot") as Dictionary
 	var trunk := data.get("trunk", {}) as Dictionary
 	var total := int(data.get("trunk_total", 0))
 	var capacity := int(data.get("trunk_capacity", 0))
