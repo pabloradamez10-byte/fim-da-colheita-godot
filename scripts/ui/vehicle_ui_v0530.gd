@@ -3,13 +3,15 @@ extends CanvasLayer
 
 const TRUNK_ITEMS_0530 := [
 	"wood", "stone", "fiber", "plank", "cordage", "stone_blade", "repair_kit",
-	"food", "water", "dirty_water", "bandage", "antiseptic", "ammo_9mm", "shells", "gasoline"
+	"food", "water", "dirty_water", "bandage", "antiseptic", "ammo_9mm", "shells", "gasoline",
+	"potato_seed", "corn_seed", "carrot_seed"
 ]
 const ITEM_NAMES_0530 := {
 	"wood":"Madeira", "stone":"Pedra", "fiber":"Fibra", "plank":"Tábuas", "cordage":"Corda",
 	"stone_blade":"Lâmina pedra", "repair_kit":"Kit reparo", "food":"Comida", "water":"Água segura",
 	"dirty_water":"Água bruta", "bandage":"Bandagem", "antiseptic":"Antisséptico",
-	"ammo_9mm":"Munição 9mm", "shells":"Cartuchos", "gasoline":"Gasolina"
+	"ammo_9mm":"Munição 9mm", "shells":"Cartuchos", "gasoline":"Gasolina",
+	"potato_seed":"Semente batata", "corn_seed":"Semente milho", "carrot_seed":"Semente cenoura"
 }
 
 var world: Node = null
@@ -24,6 +26,7 @@ var repair_button_0530: Button
 var rows_0530: VBoxContainer
 var active_uid_0530 := ""
 var refresh_timer_0530 := 0.0
+var trunk_signature_05321 := ""
 
 func _ready() -> void:
 	layer = 27
@@ -126,6 +129,7 @@ func open_vehicle_0530(uid: String) -> void:
 	if uid == "":
 		return
 	active_uid_0530 = uid
+	trunk_signature_05321 = ""
 	panel_0530.visible = true
 	overlay_0530.visible = true
 	_refresh_0530()
@@ -134,6 +138,7 @@ func close_vehicle_0530() -> void:
 	panel_0530.visible = false
 	overlay_0530.visible = false
 	active_uid_0530 = ""
+	trunk_signature_05321 = ""
 
 func _refresh_0530() -> void:
 	if active_uid_0530 == "" or world == null or player == null or not world.has_method("get_vehicle_status_0530"):
@@ -156,15 +161,26 @@ func _refresh_0530() -> void:
 	repair_button_0530.disabled = int(data.get("variant", 8)) == 8 or int(data.get("backpack_repair_kits", 0)) <= 0 or health >= max_health - 0.01
 	_refresh_trunk_0530(data)
 
+func _trunk_signature_for_05321(backpack: Dictionary, trunk: Dictionary, total: int, capacity: int) -> String:
+	var parts: Array[String] = [str(total), str(capacity)]
+	for item_id in TRUNK_ITEMS_0530:
+		parts.append("%s:%d:%d" % [item_id, int(backpack.get(item_id, 0)), int(trunk.get(item_id, 0))])
+	return "|".join(parts)
+
 func _refresh_trunk_0530(data: Dictionary) -> void:
-	for child in rows_0530.get_children():
-		child.queue_free()
 	var backpack: Dictionary = {}
 	if player.has_method("get_inventory_snapshot"):
 		backpack = player.call("get_inventory_snapshot") as Dictionary
 	var trunk := data.get("trunk", {}) as Dictionary
 	var total := int(data.get("trunk_total", 0))
 	var capacity := int(data.get("trunk_capacity", 0))
+	var next_signature := _trunk_signature_for_05321(backpack, trunk, total, capacity)
+	if next_signature == trunk_signature_05321:
+		return
+	trunk_signature_05321 = next_signature
+
+	for child in rows_0530.get_children():
+		child.queue_free()
 	for item_id in TRUNK_ITEMS_0530:
 		var backpack_amount := int(backpack.get(item_id, 0))
 		var trunk_amount := int(trunk.get(item_id, 0))
@@ -197,13 +213,14 @@ func _add_trunk_row_0530(item_id: String, backpack_amount: int, trunk_amount: in
 	deposit.text = "> 1"
 	deposit.custom_minimum_size = Vector2(72, 30)
 	deposit.disabled = backpack_amount <= 0 or not can_deposit
-	deposit.pressed.connect(_deposit_0530.bind(item_id))
+	# Touch mobile: button_down dispara no início do toque e não depende do botão sobreviver até o release.
+	deposit.button_down.connect(_deposit_0530.bind(item_id))
 	row.add_child(deposit)
 	var withdraw := Button.new()
 	withdraw.text = "< 1"
 	withdraw.custom_minimum_size = Vector2(72, 30)
 	withdraw.disabled = trunk_amount <= 0
-	withdraw.pressed.connect(_withdraw_0530.bind(item_id))
+	withdraw.button_down.connect(_withdraw_0530.bind(item_id))
 	row.add_child(withdraw)
 	rows_0530.add_child(row)
 
@@ -224,12 +241,14 @@ func _repair_0530() -> void:
 
 func _deposit_0530(item_id: String) -> void:
 	if world != null and player != null and world.has_method("vehicle_trunk_deposit_0530"):
-		world.call("vehicle_trunk_deposit_0530", active_uid_0530, item_id, 1, player)
+		if bool(world.call("vehicle_trunk_deposit_0530", active_uid_0530, item_id, 1, player)):
+			trunk_signature_05321 = ""
 	_refresh_0530()
 
 func _withdraw_0530(item_id: String) -> void:
 	if world != null and player != null and world.has_method("vehicle_trunk_withdraw_0530"):
-		world.call("vehicle_trunk_withdraw_0530", active_uid_0530, item_id, 1, player)
+		if bool(world.call("vehicle_trunk_withdraw_0530", active_uid_0530, item_id, 1, player)):
+			trunk_signature_05321 = ""
 	_refresh_0530()
 
 func get_vehicle_ui_debug_0530() -> Dictionary:
@@ -239,5 +258,7 @@ func get_vehicle_ui_debug_0530() -> Dictionary:
 		"uid": active_uid_0530,
 		"drive": drive_button_0530 != null,
 		"refuel": refuel_button_0530 != null,
-		"repair": repair_button_0530 != null
+		"repair": repair_button_0530 != null,
+		"touch_transfer_05321": true,
+		"signature_cache_05321": trunk_signature_05321
 	}
