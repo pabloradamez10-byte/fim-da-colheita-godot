@@ -32,16 +32,26 @@ func _spawn_zombies(count: int) -> void:
 
 func emit_noise_0519(pos: Vector3, radius: float, kind: String, source: Node = null) -> void:
 	var now := Time.get_ticks_msec()
+	var effective_radius := maxf(0.25, radius)
 	_prune_noise_0519(now, 6500)
 	noise_events_0519.append({
 		"position": pos,
-		"radius": maxf(0.25, radius),
+		"radius": effective_radius,
 		"kind": kind,
 		"created_ms": now,
 		"source_id": source.get_instance_id() if source != null and is_instance_valid(source) else 0
 	})
 	while noise_events_0519.size() > NOISE_HISTORY_LIMIT_0519:
 		noise_events_0519.pop_front()
+
+	# Immediate broadcast removes frame-order dependence and makes shots/steps responsive on mobile.
+	for raw in get_zombies():
+		if raw is Node3D:
+			var zombie := raw as Node3D
+			if source != null and zombie == source:
+				continue
+			if zombie.has_method("hear_noise_0519"):
+				zombie.call("hear_noise_0519", pos, effective_radius, kind)
 
 func get_loudest_noise_for_0519(listener_pos: Vector3, max_age_ms: int = 4800) -> Dictionary:
 	var now := Time.get_ticks_msec()
