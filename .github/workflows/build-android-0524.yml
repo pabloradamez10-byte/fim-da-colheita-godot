@@ -65,11 +65,7 @@ jobs:
         shell: bash
         run: godot --headless --path . --script res://scripts/core/alpha_0_5_19_smoke_test.gd
 
-      - name: Validate 0.5.23 hotbar durability regression
-        shell: bash
-        run: godot --headless --path . --script res://scripts/core/alpha_0_5_23_smoke_test.gd
-
-      - name: Validate 0.5.24 workbench production and full repairs
+      - name: Validate 0.5.24 workbench production hotbar durability and full repairs
         shell: bash
         run: godot --headless --path . --script res://scripts/core/alpha_0_5_24_smoke_test.gd
 
