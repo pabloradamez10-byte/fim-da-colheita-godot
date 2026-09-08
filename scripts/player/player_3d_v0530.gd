@@ -20,13 +20,14 @@ func _physics_process(delta: float) -> void:
 	if in_vehicle_0530 and world != null and world.has_method("sync_driver_player_0530"):
 		world.call("sync_driver_player_0530", self, vehicle_uid_0530)
 
-func enter_vehicle_0530(uid: String) -> bool:
+func enter_vehicle_0530(uid: String, count_entry: bool = true) -> bool:
 	if uid == "" or in_vehicle_0530:
 		return false
 	in_vehicle_0530 = true
 	vehicle_uid_0530 = uid
 	pending_vehicle_uid_0530 = uid
-	vehicles_entered_0530 += 1
+	if count_entry:
+		vehicles_entered_0530 += 1
 	visible = false
 	collision_layer = 0
 	collision_mask = 0
