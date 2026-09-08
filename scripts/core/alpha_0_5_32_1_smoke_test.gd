@@ -40,7 +40,9 @@ func _find_trunk_withdraw_button(rows: VBoxContainer, item_name: String) -> Butt
 			continue
 		for child: Node in row.get_children():
 			if child is Button and (child as Button).text == "< 1":
-				return child as Button
+				var button := child as Button
+				if not button.disabled:
+					return button
 	return null
 
 func _run() -> void:
@@ -117,15 +119,18 @@ func _run() -> void:
 		_fail(12, "UI de veículo ausente")
 		return
 	var vehicle_ui := vehicle_uis[0]
+	# Força o refresh e deixa o queue_free dos rows antigos terminar antes de buscar o botão tocável.
+	vehicle_ui.set("trunk_signature_05321", "")
 	vehicle_ui.call("_refresh_0530")
+	await process_frame
 	var ui_debug := vehicle_ui.call("get_vehicle_ui_debug_0530") as Dictionary
 	if not bool(ui_debug.get("touch_transfer_05321", false)):
 		_fail(13, "UI não está usando transferência touch segura")
 		return
 	var rows := vehicle_ui.get("rows_0530") as VBoxContainer
 	var withdraw_button := _find_trunk_withdraw_button(rows, "Fibra")
-	if withdraw_button == null or withdraw_button.disabled:
-		_fail(14, "botão de retirar fibra do carro não ficou disponível")
+	if withdraw_button == null:
+		_fail(14, "botão tocável de retirar fibra do carro não ficou disponível")
 		return
 	var backpack_before := int((player.call("get_inventory_snapshot") as Dictionary).get("fiber", 0))
 	withdraw_button.emit_signal("button_down")
@@ -141,12 +146,12 @@ func _run() -> void:
 	var test_pos := Vector3(760.0, 0.20, 760.0)
 	var dummy_door := DummyDoor.new()
 	dummy_door.name = "SmokeDoor05321"
-	dummy_door.global_position = test_pos
 	scene.add_child(dummy_door)
+	dummy_door.global_position = test_pos
 	var dummy_bed := Node3D.new()
 	dummy_bed.name = "SmokeBed05321"
-	dummy_bed.global_position = test_pos + Vector3(0.70, 0.0, 0.0)
 	scene.add_child(dummy_bed)
+	dummy_bed.global_position = test_pos + Vector3(0.70, 0.0, 0.0)
 	var interactables := scene.get("interactables") as Array
 	interactables.append({"type":"door", "key":"smoke_door_05321", "position":test_pos, "node":dummy_door})
 	interactables.append({"type":"sleep_bed_0521", "key":"smoke_bed_05321", "position":dummy_bed.global_position, "node":dummy_bed})
