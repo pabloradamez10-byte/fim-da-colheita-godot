@@ -1,4 +1,4 @@
-extends "res://scripts/world/world_runtime_3d_v0528.gd"
+extends "res://scripts/world/world_runtime_3d_v0528_final.gd"
 
 const PlayerV0529Script = preload("res://scripts/player/player_3d_v0529.gd")
 const SAVE_VERSION_0529 := "0.5.29-alpha"
