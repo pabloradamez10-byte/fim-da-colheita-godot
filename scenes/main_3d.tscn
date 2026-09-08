@@ -32,65 +32,65 @@ layer = 5
 script = ExtResource("2_hud")
 
 [node name="TopPanel" type="ColorRect" parent="HUD"]
-offset_left = 18.0
-offset_top = 18.0
-offset_right = 1110.0
-offset_bottom = 145.0
-color = Color(0.025, 0.03, 0.025, 0.84)
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 1096.0
+offset_bottom = 118.0
+color = Color(0.025, 0.03, 0.025, 0.76)
 mouse_filter = 2
 
 [node name="Title" type="Label" parent="HUD/TopPanel"]
-offset_left = 16.0
-offset_top = 8.0
-offset_right = 1060.0
-offset_bottom = 32.0
+offset_left = 14.0
+offset_top = 5.0
+offset_right = 1064.0
+offset_bottom = 24.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
-theme_override_font_sizes/font_size = 19
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.32"
+theme_override_font_sizes/font_size = 17
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.32.1"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
-offset_left = 16.0
-offset_top = 35.0
-offset_right = 1060.0
-offset_bottom = 56.0
+offset_left = 14.0
+offset_top = 25.0
+offset_right = 1064.0
+offset_bottom = 43.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 11
 text = "Agricultura 2.0 + alimentação: batata, milho, cenoura • frescor • cozinha na fogueira"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
-offset_left = 16.0
-offset_top = 59.0
-offset_right = 1060.0
-offset_bottom = 80.0
+offset_left = 14.0
+offset_top = 44.0
+offset_right = 1064.0
+offset_bottom = 62.0
 theme_override_colors/font_color = Color(0.94, 0.94, 0.89, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 11
 text = "VIDA 100   FOME 100   SEDE 100   FÔLEGO 100   CANSAÇO 8   TEMP 36.9°"
 
 [node name="Inventory" type="Label" parent="HUD/TopPanel"]
-offset_left = 16.0
-offset_top = 83.0
-offset_right = 1060.0
-offset_bottom = 104.0
+offset_left = 14.0
+offset_top = 63.0
+offset_right = 1064.0
+offset_bottom = 81.0
 theme_override_colors/font_color = Color(0.79, 0.72, 0.57, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 11
 text = "MOCHILA"
 
 [node name="Weapon" type="Label" parent="HUD/TopPanel"]
-offset_left = 16.0
-offset_top = 106.0
-offset_right = 1060.0
-offset_bottom = 128.0
+offset_left = 14.0
+offset_top = 82.0
+offset_right = 1064.0
+offset_bottom = 101.0
 theme_override_colors/font_color = Color(0.93, 0.67, 0.30, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 11
 text = "EQUIPADO  FACÃO — DUR 100%"
 
 [node name="Hint" type="Label" parent="HUD"]
-offset_left = 20.0
-offset_top = 150.0
-offset_right = 1250.0
-offset_bottom = 173.0
-theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.62)
-theme_override_font_sizes/font_size = 12
+offset_left = 18.0
+offset_top = 121.0
+offset_right = 1262.0
+offset_bottom = 141.0
+theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.56)
+theme_override_font_sizes/font_size = 10
 text = "MOCHILA escolhe a cultura e permite comer • INTERAGIR planta/rega/colhe • FOGUEIRA cozinha e ferve água"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
@@ -109,41 +109,41 @@ script = ExtResource("3_mobile")
 [node name="AttackButton" type="Button" parent="MobileLayer/MobileControls"]
 offset_left = 1138.0
 offset_top = 553.0
-offset_right = 1258.0
-offset_bottom = 673.0
+offset_right = 1254.0
+offset_bottom = 665.0
 theme_override_font_sizes/font_size = 18
 text = "ATACAR"
 
 [node name="InteractButton" type="Button" parent="MobileLayer/MobileControls"]
-offset_left = 982.0
-offset_top = 602.0
+offset_left = 988.0
+offset_top = 638.0
 offset_right = 1124.0
-offset_bottom = 674.0
+offset_bottom = 702.0
 theme_override_font_sizes/font_size = 14
 text = "INTERAGIR"
 
 [node name="SprintButton" type="Button" parent="MobileLayer/MobileControls"]
-offset_left = 996.0
-offset_top = 519.0
-offset_right = 1124.0
-offset_bottom = 590.0
+offset_left = 995.0
+offset_top = 562.0
+offset_right = 1117.0
+offset_bottom = 626.0
 theme_override_font_sizes/font_size = 15
 toggle_mode = true
 text = "CORRER"
 
 [node name="WeaponButton" type="Button" parent="MobileLayer/MobileControls"]
 offset_left = 1138.0
-offset_top = 470.0
-offset_right = 1258.0
-offset_bottom = 540.0
+offset_top = 477.0
+offset_right = 1254.0
+offset_bottom = 541.0
 theme_override_font_sizes/font_size = 14
 text = "ARMA"
 
 [node name="NewSeedButton" type="Button" parent="MobileLayer/MobileControls"]
-offset_left = 1132.0
-offset_top = 22.0
+offset_left = 1136.0
+offset_top = 14.0
 offset_right = 1262.0
-offset_bottom = 67.0
+offset_bottom = 60.0
 theme_override_font_sizes/font_size = 12
 text = "NOVA SEED"
 
