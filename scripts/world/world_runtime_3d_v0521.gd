@@ -5,7 +5,7 @@ const ZombieV0521Script = preload("res://scripts/entities/zombie_3d_v0521.gd")
 const SAVE_VERSION_0521 := "0.5.21-alpha"
 const GAME_MINUTES_PER_REAL_SECOND_0521 := 1.0
 const DAY_MINUTES_0521 := 1440.0
-const BED_INTERACT_RANGE_0521 := 2.45
+const BED_INTERACT_RANGE_0521 := 1.45
 
 var world_day_0521 := 1
 var world_minutes_0521 := 8.0 * 60.0
@@ -131,7 +131,6 @@ func get_time_state_0521() -> Dictionary:
 
 func _ambient_temperature_0521() -> float:
 	var hour := world_minutes_0521 / 60.0
-	# Aproximação inicial: mínima perto das 02h e máxima perto das 14h.
 	return 16.0 + 8.0 * sin((hour - 8.0) / 24.0 * TAU)
 
 func get_environment_state_0521(pos: Vector3) -> Dictionary:
@@ -162,6 +161,13 @@ func _is_position_sheltered_0521(pos: Vector3) -> bool:
 	return false
 
 func try_interact_near(pos: Vector3, target_player: Node) -> bool:
+	# Interações físicas visíveis (principalmente portas) têm prioridade sobre sono.
+	# Isso evita que uma cama próxima atrás da parede/porta avance várias horas ao tocar INTERAGIR.
+	var direct_index := _pick_special_interactable_0513(pos, target_player)
+	if direct_index >= 0:
+		if super.try_interact_near(pos, target_player):
+			return true
+
 	var bed_index := _nearest_bed_interaction_0521(pos)
 	if bed_index >= 0:
 		var sleep_minutes := _sleep_duration_0521(target_player)
@@ -247,5 +253,6 @@ func get_survival_loop_debug_0521() -> Dictionary:
 		"beds": get_tree().get_nodes_in_group("sleep_surface_0521").size(),
 		"shelters": get_tree().get_nodes_in_group("shelter_structure_0521").size(),
 		"player_0521": player != null and player.get_script() == PlayerV0521Script,
-		"zombies_0521": get_tree().get_nodes_in_group("zombies").size()
+		"zombies_0521": get_tree().get_nodes_in_group("zombies").size(),
+		"bed_interact_range_05321": BED_INTERACT_RANGE_0521
 	}
