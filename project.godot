@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.23 - Fim da Colheita / hotbar mobile, durabilidade e reparo de equipamento
+; Alpha 0.5.24 - Fim da Colheita / bancada, materiais processados e crafting por estação
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.23"
-config/version="0.5.23-alpha"
+config/name="Fim da Colheita - Alpha 0.5.24"
+config/version="0.5.24-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
