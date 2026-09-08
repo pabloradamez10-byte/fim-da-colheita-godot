@@ -50,8 +50,9 @@ func _attack() -> void:
 func take_damage(amount: float) -> void:
 	if amount <= 0.0:
 		return
+	var lethal := health - amount <= 0.0
 	super.take_damage(amount)
-	if health <= 0.0:
+	if lethal:
 		return
 	pain_0519 = minf(100.0, pain_0519 + amount * 1.45)
 	bleeding_0519 = minf(8.0, bleeding_0519 + maxf(0.0, amount - 4.0) * 0.085)
