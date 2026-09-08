@@ -19,7 +19,7 @@ var world_0519: Node = null
 
 func _ready() -> void:
 	super._ready()
-	world_0519 = get_tree().current_scene
+	world_0519 = _resolve_world_0519()
 	wander_timer_0519 = 0.1
 
 func _physics_process(delta: float) -> void:
@@ -36,7 +36,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if world_0519 == null or not is_instance_valid(world_0519):
-		world_0519 = get_tree().current_scene
+		world_0519 = _resolve_world_0519()
 
 	if sense_timer_0519 <= 0.0:
 		_update_senses_0519()
@@ -60,6 +60,17 @@ func _physics_process(delta: float) -> void:
 	global_position.y = GROUND_Y_0519
 	if visual_root != null:
 		visual_root.position.y = 0.0
+
+func _resolve_world_0519() -> Node:
+	var cursor: Node = get_parent()
+	while cursor != null:
+		if cursor.has_method("emit_noise_0519") and cursor.has_method("get_loudest_noise_for_0519"):
+			return cursor
+		cursor = cursor.get_parent()
+	var current := get_tree().current_scene
+	if current != null and current.has_method("emit_noise_0519"):
+		return current
+	return null
 
 func _update_senses_0519() -> void:
 	can_see_player_0519 = _can_see_player_0519()
@@ -177,5 +188,6 @@ func get_ai_debug_0519() -> Dictionary:
 		"can_see_player": can_see_player_0519,
 		"memory": memory_timer_0519,
 		"last_heard": last_heard_kind_0519,
-		"target": last_known_position_0519
+		"target": last_known_position_0519,
+		"world_resolved": world_0519 != null
 	}
