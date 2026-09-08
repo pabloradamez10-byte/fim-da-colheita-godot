@@ -13,6 +13,7 @@ var attack_held := false
 var interact_requested := false
 var cycle_weapon_requested := false
 var new_seed_requested := false
+var vehicle_mode_0530 := false
 
 @onready var attack_button: Button = $AttackButton
 @onready var interact_button: Button = $InteractButton
@@ -75,30 +76,55 @@ func get_move_vector() -> Vector2:
 	return move_vector
 
 func is_sprinting() -> bool:
-	return sprint_button.button_pressed
+	return false if vehicle_mode_0530 else sprint_button.button_pressed
 
 func is_attack_held() -> bool:
-	return attack_held
+	return false if vehicle_mode_0530 else attack_held
 
 func consume_attack() -> bool:
-	if not attack_requested: return false
+	if vehicle_mode_0530:
+		attack_requested = false
+		attack_held = false
+		return false
+	if not attack_requested:
+		return false
 	attack_requested = false
 	return true
 
 func consume_interact() -> bool:
-	if not interact_requested: return false
+	if not interact_requested:
+		return false
 	interact_requested = false
 	return true
 
 func consume_cycle_weapon() -> bool:
-	if not cycle_weapon_requested: return false
+	if vehicle_mode_0530:
+		cycle_weapon_requested = false
+		return false
+	if not cycle_weapon_requested:
+		return false
 	cycle_weapon_requested = false
 	return true
 
 func consume_new_seed() -> bool:
-	if not new_seed_requested: return false
+	if not new_seed_requested:
+		return false
 	new_seed_requested = false
 	return true
+
+func set_vehicle_mode_0530(enabled: bool) -> void:
+	vehicle_mode_0530 = enabled
+	attack_requested = false
+	attack_held = false
+	cycle_weapon_requested = false
+	attack_button.visible = not enabled
+	weapon_button.visible = not enabled
+	sprint_button.visible = not enabled
+	sprint_button.button_pressed = false
+	interact_button.text = "SAIR" if enabled else "INTERAGIR"
+
+func is_vehicle_mode_0530() -> bool:
+	return vehicle_mode_0530
 
 func _draw() -> void:
 	draw_circle(joystick_center, joystick_radius, Color(0.035, 0.045, 0.035, 0.46))
