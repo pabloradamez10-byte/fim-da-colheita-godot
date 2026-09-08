@@ -107,7 +107,7 @@ func _refresh_status_0528() -> void:
 	var fuel: float = float(status.get("fuel_minutes", 0.0))
 	var max_fuel: float = float(status.get("max_fuel", 360.0))
 	var burning: bool = bool(status.get("burning", false))
-	status_label.text = "%s\nCombustível: %d / %d min" % ["ACESa" if burning else "APAGADA", int(round(fuel)), int(round(max_fuel))]
+	status_label.text = "%s\nCombustível: %d / %d min" % ["ACESA" if burning else "APAGADA", int(round(fuel)), int(round(max_fuel))]
 	toggle_button.text = "APAGAR" if burning else "ACENDER"
 	toggle_button.disabled = not burning and fuel <= 0.01
 	fuel_button.disabled = fuel > max_fuel - 60.0 + 0.01
