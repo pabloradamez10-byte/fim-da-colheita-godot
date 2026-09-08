@@ -72,6 +72,18 @@ func _resolve_world_0519() -> Node:
 		return current
 	return null
 
+func hear_noise_0519(noise_position: Vector3, radius: float, kind: String) -> bool:
+	var distance := global_position.distance_to(noise_position)
+	if distance > radius:
+		return false
+	last_known_position_0519 = noise_position
+	last_heard_kind_0519 = kind
+	if alert_state_0519 != "chase" or memory_timer_0519 <= 0.0:
+		alert_state_0519 = "investigate"
+	memory_timer_0519 = maxf(memory_timer_0519, INVESTIGATE_TIME_0519)
+	wander_timer_0519 = 0.0
+	return true
+
 func _update_senses_0519() -> void:
 	can_see_player_0519 = _can_see_player_0519()
 	if can_see_player_0519:
@@ -85,10 +97,7 @@ func _update_senses_0519() -> void:
 		var heard: Variant = world_0519.call("get_loudest_noise_for_0519", global_position, 4800)
 		if heard is Dictionary and not (heard as Dictionary).is_empty():
 			var data := heard as Dictionary
-			last_known_position_0519 = data.get("position", global_position) as Vector3
-			last_heard_kind_0519 = str(data.get("kind", "noise"))
-			alert_state_0519 = "investigate"
-			memory_timer_0519 = INVESTIGATE_TIME_0519
+			hear_noise_0519(data.get("position", global_position) as Vector3, float(data.get("radius", 0.0)), str(data.get("kind", "noise")))
 
 func _can_see_player_0519() -> bool:
 	if player == null:
