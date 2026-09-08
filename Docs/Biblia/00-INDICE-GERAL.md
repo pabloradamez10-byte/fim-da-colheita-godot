@@ -50,7 +50,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 22 — Construção e Engenharia — **IMPLEMENTADO / EM EXPANSÃO**
 - 23 — Crafting, Produção e Manufatura — **IMPLEMENTADO / EM EXPANSÃO**
 - 24 — Exploração e Expedições — **IMPLEMENTADO / EM EXPANSÃO**
-- 25 — Sistema Modular de Personagens — **EM DESENVOLVIMENTO**
+- 25 — Sistema Modular de Personagens — **IMPLEMENTADO / EM EXPANSÃO**
 - 26 — Inventário, Equipamentos e Carga — **IMPLEMENTADO / EM EXPANSÃO**
 - 27 — Sobrevivência, Necessidades e Condição Física — **IMPLEMENTADO / EM EXPANSÃO**
 - 28 — Combate, Armas e Táticas — **IMPLEMENTADO / EM EXPANSÃO**
@@ -87,7 +87,9 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.29 — sobrevivência hídrica;
 - 0.5.30 — veículos dirigíveis, combustível, dano e logística;
 - 0.5.31 — agricultura inicial;
-- 0.5.32 — agricultura e alimentação 2.0.
+- 0.5.32 — agricultura e alimentação 2.0;
+- 0.5.32.1 — estabilização de tela ultrawide, HUD e interações mobile;
+- 0.5.33 — vestuário, slots corporais, proteção, clima e peso.
 
 ## Documentação técnica associada
 
