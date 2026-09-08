@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.22 - Fim da Colheita / chuva, neblina, umidade e clima sistêmico
+; Alpha 0.5.23 - Fim da Colheita / hotbar mobile, durabilidade e reparo de equipamento
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.22"
-config/version="0.5.22-alpha"
+config/name="Fim da Colheita - Alpha 0.5.23"
+config/version="0.5.23-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
