@@ -82,6 +82,8 @@ func _process(delta: float) -> void:
 		inventory.text = "MOCHILA  " + str(player.call("get_inventory_summary"))
 	if player.has_method("get_weapon_summary"):
 		weapon.text = "EQUIPADO  " + str(player.call("get_weapon_summary"))
+		if player.has_method("get_equipment_summary_0533"):
+			weapon.text += "  |  " + str(player.call("get_equipment_summary_0533"))
 	if world != null and world.has_method("get_world_summary"):
 		var summary: Dictionary = world.call("get_world_summary")
 		var city_distance := int(summary.get("city_distance", -1))
