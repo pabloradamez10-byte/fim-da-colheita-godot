@@ -83,7 +83,7 @@ jobs:
 
       - name: Validate 0.5.36 survival missions, rewards, progression and persistence
         shell: bash
-        run: godot --headless --path . --script res://scripts/core/alpha_0_5_36_smoke_test.gd
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_36_smoke_test_v2.gd
 
       - name: Export debug APK
         shell: bash
