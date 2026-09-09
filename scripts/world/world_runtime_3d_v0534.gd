@@ -14,7 +14,7 @@ var last_location_loot_0534 := ""
 
 func _load_save() -> void:
 	super._load_save()
-	var world_state := save_cache.get("world", {}) as Dictionary
+	var world_state: Dictionary = save_cache.get("world", {}) as Dictionary
 	var raw_counts: Variant = world_state.get("specialized_loot_found_0534", {})
 	if raw_counts is Dictionary:
 		for role in LOCATION_ROLES_0534:
@@ -25,18 +25,18 @@ func _grant_contextual_loot_0514(kind: String, key: String, source: Node3D, targ
 	if not kind.begins_with("loot_poi_"):
 		super._grant_contextual_loot_0514(kind, key, source, target_player)
 		return
-	var role := kind.trim_prefix("loot_poi_")
+	var role: String = kind.trim_prefix("loot_poi_")
 	if role not in LOCATION_ROLES_0534:
 		super._grant_contextual_loot_0514(kind, key, source, target_player)
 		return
-	var source_name := source.name if source != null else "none"
-	var bundle := _build_location_loot_bundle_0534(role, key, source_name)
+	var source_name: String = str(source.name) if source != null else "none"
+	var bundle: Dictionary = _build_location_loot_bundle_0534(role, key, source_name)
 	_apply_location_loot_bundle_0534(bundle, target_player)
 	specialized_loot_found_0534[role] = int(specialized_loot_found_0534.get(role, 0)) + 1
 	last_location_loot_0534 = role
 
 func _build_location_loot_bundle_0534(role: String, key: String, source_name: String = "none") -> Dictionary:
-	var marker := int(abs(hash("locationloot0534:%s:%s:%d:%s" % [role, key, world_seed, source_name])))
+	var marker: int = int(abs(hash("locationloot0534:%s:%s:%d:%s" % [role, key, world_seed, source_name])))
 	var items: Dictionary = {}
 	var foods: Dictionary = {}
 	var clothing: Array[String] = []
@@ -108,17 +108,17 @@ func _build_location_loot_bundle_0534(role: String, key: String, source_name: St
 func _apply_location_loot_bundle_0534(bundle: Dictionary, target_player: Node) -> void:
 	if target_player == null:
 		return
-	var items := bundle.get("items", {}) as Dictionary
+	var items: Dictionary = bundle.get("items", {}) as Dictionary
 	for raw_id: Variant in items.keys():
-		var item_id := str(raw_id)
-		var amount := int(items[raw_id])
+		var item_id: String = str(raw_id)
+		var amount: int = int(items[raw_id])
 		if amount > 0 and target_player.has_method("add_item"):
 			target_player.call("add_item", item_id, amount)
 
-	var foods := bundle.get("foods", {}) as Dictionary
+	var foods: Dictionary = bundle.get("foods", {}) as Dictionary
 	for raw_id: Variant in foods.keys():
-		var food_id := str(raw_id)
-		var amount := int(foods[raw_id])
+		var food_id: String = str(raw_id)
+		var amount: int = int(foods[raw_id])
 		if amount <= 0:
 			continue
 		if target_player.has_method("receive_food_item_0532"):
@@ -126,12 +126,12 @@ func _apply_location_loot_bundle_0534(bundle: Dictionary, target_player: Node) -
 		elif target_player.has_method("add_item"):
 			target_player.call("add_item", food_id, amount)
 
-	var clothing := bundle.get("clothing", []) as Array
+	var clothing: Array = bundle.get("clothing", []) as Array
 	if target_player.has_method("receive_clothing_0533"):
 		for raw_id: Variant in clothing:
 			target_player.call("receive_clothing_0533", str(raw_id), 1)
 
-	var weapons := bundle.get("weapons", []) as Array
+	var weapons: Array = bundle.get("weapons", []) as Array
 	if target_player.has_method("unlock_weapon"):
 		for raw_id: Variant in weapons:
 			target_player.call("unlock_weapon", str(raw_id))
@@ -144,7 +144,7 @@ func preview_location_loot_0534(role: String, key: String = "preview") -> Dictio
 func debug_grant_location_loot_0534(role: String, target_player: Node, key: String = "debug") -> bool:
 	if role not in LOCATION_ROLES_0534 or target_player == null:
 		return false
-	var bundle := _build_location_loot_bundle_0534(role, key, "debug")
+	var bundle: Dictionary = _build_location_loot_bundle_0534(role, key, "debug")
 	_apply_location_loot_bundle_0534(bundle, target_player)
 	specialized_loot_found_0534[role] = int(specialized_loot_found_0534.get(role, 0)) + 1
 	last_location_loot_0534 = role
@@ -160,7 +160,7 @@ func save_game() -> void:
 		return
 	var payload := parsed as Dictionary
 	payload["version"] = SAVE_VERSION_0534
-	var world_state := payload.get("world", {}) as Dictionary
+	var world_state: Dictionary = payload.get("world", {}) as Dictionary
 	world_state["specialized_loot_found_0534"] = specialized_loot_found_0534.duplicate(true)
 	world_state["last_location_loot_0534"] = last_location_loot_0534
 	payload["world"] = world_state
@@ -175,8 +175,8 @@ func new_seed() -> void:
 	super.new_seed()
 
 func get_world_summary() -> Dictionary:
-	var result := super.get_world_summary()
-	var total := 0
+	var result: Dictionary = super.get_world_summary()
+	var total: int = 0
 	for role in LOCATION_ROLES_0534:
 		total += int(specialized_loot_found_0534.get(role, 0))
 	result["location_loot_total_0534"] = total
@@ -184,7 +184,7 @@ func get_world_summary() -> Dictionary:
 	return result
 
 func get_location_loot_debug_0534() -> Dictionary:
-	var total := 0
+	var total: int = 0
 	for role in LOCATION_ROLES_0534:
 		total += int(specialized_loot_found_0534.get(role, 0))
 	return {
