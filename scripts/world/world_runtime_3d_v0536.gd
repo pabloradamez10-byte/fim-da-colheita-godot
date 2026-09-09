@@ -36,7 +36,7 @@ const MISSION_DEFS_0536 := {
 		"description": "Repare um veículo danificado.",
 		"event": "vehicle_repair",
 		"target": 1,
-		"reward_items": {"gasoline": 3, "repair_kit": 1},
+		"reward_items": {"gasoline": 3},
 		"reward_skill": "mechanics",
 		"reward_xp": 20
 	},
