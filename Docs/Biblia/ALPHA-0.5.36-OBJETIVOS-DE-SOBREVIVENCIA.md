@@ -33,10 +33,10 @@ A recompensa de uma missão pode conceder itens e XP, porém XP de recompensa us
 - Rota de Suprimentos: água, bandagem e XP de Vasculhamento;
 - Do Chão à Mesa: sementes das três culturas e XP de Agricultura;
 - Primeiros Socorros: bandagens, antisséptico e XP de Medicina;
-- De Volta à Estrada: gasolina, kit de reparo e XP de Mecânica;
+- De Volta à Estrada: gasolina e XP de Mecânica;
 - Limpeza da Área: munição 9 mm, cartuchos e XP de Combate.
 
-Toda recompensa é entregue automaticamente uma única vez quando o objetivo chega ao alvo.
+O reparo continua consumindo normalmente o kit usado; a missão não devolve esse recurso, preservando a economia e a regra validada dos veículos. Toda recompensa é entregue automaticamente uma única vez quando o objetivo chega ao alvo.
 
 ## Interface mobile
 
