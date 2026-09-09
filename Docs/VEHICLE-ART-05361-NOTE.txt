@@ -1,0 +1,1 @@
+Atlas 0.5.36.1 será consolidado em assets/vehicles/fdc_vehicle_atlas_05361_8dir.png com 27 variantes e 8 direções.
