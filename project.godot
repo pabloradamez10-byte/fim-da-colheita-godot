@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.34 - Fim da Colheita / loot especializado por localização
+; Alpha 0.5.35 - Fim da Colheita / progressão do sobrevivente
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.34"
-config/version="0.5.34-alpha"
+config/name="Fim da Colheita - Alpha 0.5.35"
+config/version="0.5.35-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
