@@ -2,9 +2,19 @@ extends "res://scripts/world/city_chunk_streamer_3d_v0534.gd"
 
 const VehicleV05361Script = preload("res://scripts/entities/vehicle_3d_v05361.gd")
 
-const CITY_VEHICLE_VARIANTS_05361 := [0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-const RURAL_VEHICLE_VARIANTS_05361 := [3, 6, 7, 12, 14, 20, 21, 22, 23]
-const SERVICE_VARIANTS_05361 := {"hospital": 18, "police": 17, "farm": 20, "workshop": 11}
+const CITY_VEHICLE_VARIANTS_05361 := [
+	0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14,
+	18, 19, 20, 22, 23, 24, 25, 26
+]
+const RURAL_VEHICLE_VARIANTS_05361 := [
+	3, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26
+]
+const SERVICE_VARIANTS_05361 := {
+	"hospital": [13, 4],
+	"police": [12, 0],
+	"farm": [7, 15, 17, 21],
+	"workshop": [3, 22, 23, 25, 26]
+}
 
 func _build_vehicle(parent: Node3D, pos: Vector3, yaw: float, _variant: int, key: String) -> void:
 	var marker := int(abs(hash("vehicle05361:%s:%d" % [key, world_seed])))
@@ -30,7 +40,13 @@ func _build_rural_garage(parent: Node3D, pos: Vector3, coord: Vector2i) -> void:
 	if marker % 3 != 0:
 		return
 	var variant := int(RURAL_VEHICLE_VARIANTS_05361[int(marker / 3) % RURAL_VEHICLE_VARIANTS_05361.size()])
-	_build_vehicle_sprite_0517(parent, pos + Vector3(-5.4, 0.28, 1.4), PI * 0.5, variant, "rural05361:%d:%d" % [coord.x, coord.y])
+	_build_vehicle_sprite_0517(
+		parent,
+		pos + Vector3(-5.4, 0.28, 1.4),
+		PI * 0.5,
+		variant,
+		"rural05361:%d:%d" % [coord.x, coord.y]
+	)
 
 func _decorate_location_0534(root: Node3D, role: String, key_base: String) -> void:
 	super._decorate_location_0534(root, role, key_base)
@@ -39,7 +55,10 @@ func _decorate_location_0534(root: Node3D, role: String, key_base: String) -> vo
 	var marker := int(abs(hash("service_vehicle05361:%s:%d" % [key_base, world_seed])))
 	if marker % 2 != 0:
 		return
-	var variant := int(SERVICE_VARIANTS_05361[role])
+	var candidates: Array = SERVICE_VARIANTS_05361[role] as Array
+	if candidates.is_empty():
+		return
+	var variant := int(candidates[int(marker / 2) % candidates.size()])
 	var offset := Vector3(7.3, 0.28, 4.8)
 	if role == "farm":
 		offset = Vector3(6.4, 0.28, -5.0)
@@ -49,7 +68,8 @@ func _decorate_location_0534(root: Node3D, role: String, key_base: String) -> vo
 
 func get_vehicle_catalog_05361() -> Dictionary:
 	return {
-		"variant_count": 24,
+		"variant_count": 27,
+		"drivable_variants": 25,
 		"directions": 8,
 		"city_variants": CITY_VEHICLE_VARIANTS_05361.duplicate(),
 		"rural_variants": RURAL_VEHICLE_VARIANTS_05361.duplicate(),
@@ -60,6 +80,6 @@ func get_city_debug_metrics() -> Dictionary:
 	var result := super.get_city_debug_metrics()
 	result["vehicle_art_05361"] = get_tree().get_nodes_in_group("vehicle_art_05361").size()
 	result["vehicle_sprite_8dir_05361"] = get_tree().get_nodes_in_group("vehicle_sprite_8dir_05361").size()
-	result["vehicle_variant_count_05361"] = 24
+	result["vehicle_variant_count_05361"] = 27
 	result["vehicle_direction_count_05361"] = 8
 	return result
