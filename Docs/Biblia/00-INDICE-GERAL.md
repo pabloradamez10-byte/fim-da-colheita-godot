@@ -31,7 +31,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 
 ## Parte III — Personagens
 
-- 12 — Personagens, Atributos e Evolução — **EM DESENVOLVIMENTO**
+- 12 — Personagens, Atributos e Evolução — **IMPLEMENTADO / EM EXPANSÃO**
 - 13 — Saúde — **IMPLEMENTADO / EM EXPANSÃO**
 - 14 — Necessidades Humanas — **IMPLEMENTADO / EM EXPANSÃO**
 - 15 — Relacionamentos — **PLANEJADO**
@@ -90,7 +90,8 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.32 — agricultura e alimentação 2.0;
 - 0.5.32.1 — estabilização de tela ultrawide, HUD e interações mobile;
 - 0.5.33 — vestuário, slots corporais, proteção, clima e peso;
-- 0.5.34 — pontos de interesse e loot especializado por localização.
+- 0.5.34 — pontos de interesse e loot especializado por localização;
+- 0.5.35 — progressão do sobrevivente, atributos e perícias integradas às ações reais.
 
 ## Documentação técnica associada
 
