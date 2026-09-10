@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3]
 
-[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0536.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v0537.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/ui/hud_3d.gd" id="2_hud"]
 [ext_resource type="Script" path="res://scripts/ui/mobile_controls.gd" id="3_mobile"]
 [ext_resource type="Script" path="res://scripts/camera/camera_rig_3d.gd" id="4_camera"]
@@ -46,7 +46,7 @@ offset_right = 1064.0
 offset_bottom = 24.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 17
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.36.2"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.37"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 14.0
@@ -55,7 +55,7 @@ offset_right = 1064.0
 offset_bottom = 43.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 11
-text = "40 veículos • 8 direções • frota urbana, rural, serviço e logística"
+text = "ZUMBIS 2.0 • 4 hordas • migração • ruído • pressão em portas, janelas e base"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 14.0
@@ -91,7 +91,7 @@ offset_right = 1262.0
 offset_bottom = 141.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.56)
 theme_override_font_sizes/font_size = 10
-text = "Frota 0.5.36.2: 40 modelos com 8 vistas • combustível, dano, porta-malas, colisão e direção preservados"
+text = "Barulho de tiros e veículos pode puxar hordas • portas/janelas cedem sob pressão • 5 perfis visuais de infectados"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
