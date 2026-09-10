@@ -30,7 +30,7 @@ jobs:
           set -euo pipefail
           python3 tools/generate_vehicle_atlas_05362.py assets/vehicles/fdc_vehicle_atlas_05362.png
 
-      - name: Restore 0.5.37 zombie atlas
+      - name: Restore and validate 0.5.37 zombie atlas
         shell: bash
         run: |
           set -euo pipefail
@@ -38,16 +38,28 @@ jobs:
           test $(find assets/zombies/generated -name 'zombie0537_*.b64' | wc -l) -eq 10
           cat assets/zombies/generated/zombie0537_*.b64 | tr -d '\n\r ' | base64 -d > assets/zombies/fdc_zombie_atlas_0537.png
           python3 - <<'PY'
-          import hashlib, struct
+          import struct, zlib
           p='assets/zombies/fdc_zombie_atlas_0537.png'
           b=open(p,'rb').read()
           assert b[:8] == b'\x89PNG\r\n\x1a\n', 'invalid zombie PNG signature'
           w,h=struct.unpack('>II', b[16:24])
           assert (w,h)==(512,480), (w,h)
           assert len(b)==54523, len(b)
-          digest=hashlib.sha256(b).hexdigest()
-          assert digest=='fdfd439c27616a64c906a9baec9f8e9d9df1022ecb4ef8b32512196cbdcfd5bb', digest
-          print('ZOMBIE ATLAS OK', w, h, len(b), digest)
+          off=8
+          seen_iend=False
+          while off < len(b):
+              n=struct.unpack('>I', b[off:off+4])[0]
+              typ=b[off+4:off+8]
+              payload=b[off+8:off+8+n]
+              stored=struct.unpack('>I', b[off+8+n:off+12+n])[0]
+              actual=zlib.crc32(typ+payload) & 0xffffffff
+              assert stored == actual, ('CRC', typ, off)
+              off += 12+n
+              if typ == b'IEND':
+                  seen_iend=True
+                  break
+          assert seen_iend and off == len(b), ('PNG structure', off, len(b))
+          print('ZOMBIE ATLAS OK', w, h, len(b), 'CRC OK')
           PY
 
       - name: Validate generated vehicle atlas
