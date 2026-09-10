@@ -1,0 +1,160 @@
+name: Build Android Alpha 0.5.37
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/android-alpha-0.5.37-zombies-2
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install asset runtime
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y python3
+
+      - name: Generate 40x8 vehicle atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/generate_vehicle_atlas_05362.py assets/vehicles/fdc_vehicle_atlas_05362.png
+
+      - name: Restore 0.5.37 zombie atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/zombies
+          test $(find assets/zombies/generated -name 'zombie0537_*.b64' | wc -l) -eq 10
+          cat assets/zombies/generated/zombie0537_*.b64 | tr -d '\n\r ' | base64 -d > assets/zombies/fdc_zombie_atlas_0537.png
+          python3 - <<'PY'
+          import hashlib, struct
+          p='assets/zombies/fdc_zombie_atlas_0537.png'
+          b=open(p,'rb').read()
+          assert b[:8] == b'\x89PNG\r\n\x1a\n', 'invalid zombie PNG signature'
+          w,h=struct.unpack('>II', b[16:24])
+          assert (w,h)==(512,480), (w,h)
+          assert len(b)==54523, len(b)
+          digest=hashlib.sha256(b).hexdigest()
+          assert digest=='fdfd439c27616a64c906a9baec9f8e9d9df1022ecb4ef8b32512196cbdcfd5bb', digest
+          print('ZOMBIE ATLAS OK', w, h, len(b), digest)
+          PY
+
+      - name: Validate generated vehicle atlas
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import struct
+          p='assets/vehicles/fdc_vehicle_atlas_05362.png'
+          b=open(p,'rb').read()
+          assert b[:8] == b'\x89PNG\r\n\x1a\n', 'invalid vehicle PNG signature'
+          w,h=struct.unpack('>II', b[16:24])
+          assert (w,h)==(512,1920), (w,h)
+          assert len(b)>10000, len(b)
+          print('VEHICLE ATLAS OK', w, h, len(b))
+          PY
+
+      - name: Prepare Godot Android environment
+        shell: bash
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates ~/.config
+          if [ -d /root/.config/godot ]; then
+            rm -rf ~/.config/godot
+            cp -R /root/.config/godot ~/.config/godot
+          fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then
+            rm -rf ~/.local/share/godot/export_templates/4.3.stable
+            cp -R /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable
+          fi
+          SETTINGS=$(find ~/.config/godot -name 'editor_settings-4*.tres' | head -n 1)
+          test -n "$SETTINGS"
+          SIGN_PASS=$(openssl rand -hex 18)
+          KEYSTORE="$RUNNER_TEMP/fdc-debug.keystore"
+          keytool -genkeypair -noprompt -keystore "$KEYSTORE" -alias fdcdebug -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=FimDaColheita,O=Atlas,C=BR" -storepass "$SIGN_PASS" -keypass "$SIGN_PASS"
+          echo "FDC_KEYSTORE=$KEYSTORE" >> "$GITHUB_ENV"
+          echo "FDC_SIGN_PASS=$SIGN_PASS" >> "$GITHUB_ENV"
+          cat >> "$SETTINGS" <<EOF
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "$KEYSTORE"
+          export/android/debug_keystore_user = "fdcdebug"
+          export/android/debug_keystore_pass = "$SIGN_PASS"
+          EOF
+
+      - name: Import project and reject parser errors
+        shell: bash
+        run: |
+          set -o pipefail
+          godot --headless --editor --quit 2>&1 | tee /tmp/godot-import.log
+          ! grep -q "SCRIPT ERROR" /tmp/godot-import.log
+          ! grep -q "Parse Error" /tmp/godot-import.log
+          ! grep -q "ERR_FILE_CORRUPT" /tmp/godot-import.log
+
+      - name: Validate 0.5.16 house entry regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_16_smoke_test.gd
+
+      - name: Validate 0.5.18 vehicle orientation regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_18_smoke_test.gd
+
+      - name: Validate 0.5.19 zombie senses injuries regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_19_smoke_test.gd
+
+      - name: Validate 0.5.26 construction storage regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_26_smoke_test.gd
+
+      - name: Validate 0.5.29 water survival regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_29_smoke_test.gd
+
+      - name: Validate 0.5.30 drivable vehicles regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_30_smoke_test.gd
+
+      - name: Validate 0.5.32.1 mobile UI interaction regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_32_1_smoke_test.gd
+
+      - name: Validate 0.5.36 survival missions regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_36_smoke_test_v2.gd
+
+      - name: Validate 0.5.36.2 40 vehicle fleet regression
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_36_2_smoke_test.gd
+
+      - name: Validate 0.5.37 Zombies 2.0
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_37_smoke_test.gd
+
+      - name: Export debug APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ env.FDC_KEYSTORE }}
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: fdcdebug
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: ${{ env.FDC_SIGN_PASS }}
+        run: |
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.37-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.5.37-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.37-debug.apk) -gt 10000000
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FimDaColheita-Alpha-0.5.37-Android
+          path: build/android/FimDaColheita-Alpha-0.5.37-debug.apk
+          if-no-files-found: error
