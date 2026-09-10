@@ -100,7 +100,6 @@ func _run() -> void:
 		_fail(16, "recompensa de combate não foi entregue")
 		return
 
-	# Evento posterior à conclusão não pode recompensar de novo.
 	var water_rewarded := int(combat_reward.get("water", 0))
 	player.call("award_skill_xp_0535", "scavenging", 8, "loot_poi_police")
 	if int((player.call("get_inventory_snapshot") as Dictionary).get("water", 0)) != water_rewarded:
@@ -115,15 +114,16 @@ func _run() -> void:
 	scene.call("save_game")
 	var file := FileAccess.open(SAVE_PATH_0536, FileAccess.READ)
 	if file == null:
-		_fail(19, "save 0.5.36 não foi gravado")
+		_fail(19, "save da linha 0.5.36+ não foi gravado")
 		return
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if not (parsed is Dictionary):
 		_fail(20, "save inválido")
 		return
 	var payload := parsed as Dictionary
-	if str(payload.get("version", "")) != "0.5.36-alpha":
-		_fail(21, "versão do save não é 0.5.36")
+	var saved_version := str(payload.get("version", ""))
+	if saved_version not in ["0.5.36-alpha", "0.5.37-alpha"]:
+		_fail(21, "versão do save não é compatível com 0.5.36+")
 		return
 	var world_state := payload.get("world", {}) as Dictionary
 	if int(world_state.get("mission_completions_0536", 0)) != 5 or not (world_state.get("mission_state_0536", {}) is Dictionary):
