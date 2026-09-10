@@ -22,7 +22,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 ## Parte II — Mundo e Sociedade
 
 - 05 — O Mundo — **DEFINIDO**
-- 06 — Ecossistema Vivo — **EM DESENVOLVIMENTO**
+- 06 — Ecossistema Vivo — **IMPLEMENTADO / EM EXPANSÃO**
 - 07 — World Simulator — **EM DESENVOLVIMENTO**
 - 08 — Mundo Físico — **IMPLEMENTADO / EM EXPANSÃO**
 - 09 — Sociedade Humana — **PLANEJADO**
@@ -92,7 +92,9 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.33 — vestuário, slots corporais, proteção, clima e peso;
 - 0.5.34 — pontos de interesse e loot especializado por localização;
 - 0.5.35 — progressão do sobrevivente, atributos e perícias integradas às ações reais;
-- 0.5.36 — objetivos de sobrevivência, recompensas e diário de missões integrado à mochila.
+- 0.5.36 — objetivos de sobrevivência, recompensas e diário de missões integrado à mochila;
+- 0.5.36.2 — frota expandida para 40 veículos com oito direções e distribuição urbana, rural e de serviço;
+- 0.5.37 — Zumbis 2.0: quatro hordas, migração, atração por ruído, pressão sobre portas/janelas/base e cinco perfis visuais de infectados.
 
 ## Documentação técnica associada
 
