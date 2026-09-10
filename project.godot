@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.36.1 - Fim da Colheita / upgrade visual de veículos 8-direções
+; Alpha 0.5.36.2 - Fim da Colheita / frota 40 veículos e 8 direções
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.36.1"
-config/version="0.5.36.1-alpha"
+config/name="Fim da Colheita - Alpha 0.5.36.2"
+config/version="0.5.36.2-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
