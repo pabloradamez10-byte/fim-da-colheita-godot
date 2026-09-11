@@ -41,7 +41,8 @@ func _run() -> void:
 	scene.add_child(test_root)
 	var coord := Vector2i(999, 999)
 	streamer.call("_build_large_house_0511", test_root, Vector3(0.0, 0.0, 0.0), coord, 0, 12345, 0.0)
-	streamer.call("_build_city_sidewalks", test_root, Vector3(320.0, 0.0, 320.0), Vector2i.ZERO)
+	# 352 / 32 = chunk 11,11: sub-bloco 1,1, portanto exercita as duas vias periféricas.
+	streamer.call("_build_city_sidewalks", test_root, Vector3(352.0, 0.0, 352.0), Vector2i.ZERO)
 	streamer.call("_decorate_residential_yard_0511", test_root, Vector3(360.0, 0.0, 360.0), Vector2i.ZERO, 24680)
 	for _i in range(12):
 		await process_frame
@@ -109,11 +110,11 @@ func _run() -> void:
 		_fail(21, "flag persistente do World Rework ausente")
 		return
 
-	print("SMOKE 0.5.40.3 OK | houses=%d street=%d roadwear=%d props=%d meshes=%d playerHD=true zombies=5x8 items=16 vehicles=40x8 animals=4x8") % [
+	print("SMOKE 0.5.40.3 OK | houses=%d street=%d roadwear=%d props=%d meshes=%d playerHD=true zombies=5x8 items=16 vehicles=40x8 animals=4x8" % [
 		int(env.get("houses", 0)),
 		int(env.get("street", 0)),
 		int(env.get("roadwear", 0)),
 		int(env.get("props", 0)),
 		int(env.get("meshes", 0))
-	]
+	])
 	quit(0)
