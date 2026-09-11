@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://scripts/ui/hotbar_ui_v0523.gd" id="7_hotbar"]
 [ext_resource type="Script" path="res://scripts/ui/build_ui_v0529.gd" id="8_build"]
 [ext_resource type="Script" path="res://scripts/ui/storage_ui_v0526.gd" id="9_storage"]
-[ext_resource type="Script" path="res://scripts/ui/campfire_ui_v0532.gd" id="10_campfire"]
+[ext_resource type="Script" path="res://scripts/ui/campfire_ui_v0538.gd" id="10_campfire"]
 [ext_resource type="Script" path="res://scripts/ui/water_ui_v0529.gd" id="11_water"]
 [ext_resource type="Script" path="res://scripts/ui/vehicle_ui_v0530.gd" id="12_vehicle"]
 
