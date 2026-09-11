@@ -60,10 +60,10 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 
 - 30 — Arquitetura da Atlas World Engine — **EM DESENVOLVIMENTO**
 - 31 — Atlas DataCore — **EM DESENVOLVIMENTO**
-- 32 — Decision Engine — **PLANEJADO**
-- 33 — World Simulator — **PLANEJADO**
+- 32 — Decision Engine — **IMPLEMENTADO / EM EXPANSÃO**
+- 33 — World Simulator — **EM DESENVOLVIMENTO**
 - 34 — World Generator — **IMPLEMENTADO / EM EXPANSÃO**
-- 35 — Simulation Scheduler — **PLANEJADO**
+- 35 — Simulation Scheduler — **IMPLEMENTADO / EM EXPANSÃO**
 
 ## Parte VII — Produção e Ferramentas
 
@@ -96,7 +96,8 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.36.2 — frota expandida para 40 veículos com oito direções e distribuição urbana, rural e de serviço;
 - 0.5.37 — Zumbis 2.0: quatro hordas, migração, atração por ruído, pressão sobre portas/janelas/base e cinco perfis visuais de infectados;
 - 0.5.38 — Animais & Caça: quatro espécies, fauna persistente, fuga por ameaça/ruído, carcaças, carne, couro, penas e alimentação de caça;
-- 0.5.39 — Sociedade Humana Inicial: três sobreviventes persistentes, papéis, necessidades, confiança, ajuda material, resposta social, fuga por ruído e vulnerabilidade a zumbis.
+- 0.5.39 — Sociedade Humana Inicial: três sobreviventes persistentes, papéis, necessidades, confiança, ajuda material, resposta social, fuga por ruído e vulnerabilidade a zumbis;
+- 0.5.40 — Atlas Decision Engine Inicial: percepção de contexto, sete prioridades, scheduler local, destinos autônomos, busca de ajuda e persistência das decisões.
 
 ## Documentação técnica associada
 
