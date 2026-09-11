@@ -120,7 +120,7 @@ jobs:
           p=Path('scripts/core/alpha_0_5_29_smoke_test.gd')
           s=p.read_text()
           needle='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
-          repl='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tvar city_streamer_0529 := scene.get_node_or_null("ChunkStreamer")\n\tif city_streamer_0529 != null:\n\t\tcity_streamer_0529.process_mode = Node.PROCESS_MODE_DISABLED\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
+          repl='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tvar city_streamer_0529 := scene.get_node_or_null("ChunkStreamer")\n\tif city_streamer_0529 != null:\n\t\tcity_streamer_0529.process_mode = Node.PROCESS_MODE_DISABLED\n\tscene.call("set_weather_override_0522", 0)\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
           if needle in s:
               s=s.replace(needle,repl,1)
           p.write_text(s)
