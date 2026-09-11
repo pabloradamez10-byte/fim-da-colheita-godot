@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.37 - Fim da Colheita / Zumbis 2.0: hordas, migração, ruído e pressão no mundo
+; Alpha 0.5.40.1 - Fim da Colheita / Visual Rework: veículos e fauna em alta definição
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.37"
-config/version="0.5.37-alpha"
+config/name="Fim da Colheita - Alpha 0.5.40.1"
+config/version="0.5.40.1-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
