@@ -122,7 +122,7 @@ func _run() -> void:
 		return
 	var payload := parsed as Dictionary
 	var saved_version := str(payload.get("version", ""))
-	if saved_version not in ["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha"]:
+	if saved_version not in ["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]:
 		_fail(21, "versão do save não é compatível com 0.5.36+")
 		return
 	var world_state := payload.get("world", {}) as Dictionary
