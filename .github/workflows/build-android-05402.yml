@@ -29,22 +29,14 @@ jobs:
           fi
           python3 --version
 
-      - name: Generate base 40x8 vehicle atlas
-        shell: bash
-        run: python3 tools/generate_vehicle_atlas_05362.py assets/vehicles/fdc_vehicle_atlas_05362.png
-
-      - name: Restore legacy zombie atlas
+      - name: Generate required visual atlases
         shell: bash
         run: |
           set -euo pipefail
+          python3 tools/generate_vehicle_atlas_05362.py assets/vehicles/fdc_vehicle_atlas_05362.png
           mkdir -p assets/zombies
           test $(find assets/zombies/generated -name 'zombie0537_*.b64' | wc -l) -eq 10
           cat assets/zombies/generated/zombie0537_*.b64 | tr -d '\n\r ' | base64 -d > assets/zombies/fdc_zombie_atlas_0537.png
-
-      - name: Generate 0.5.40.1 and 0.5.40.2 visual assets
-        shell: bash
-        run: |
-          set -euo pipefail
           python3 tools/generate_visual_assets_05401.py
           python3 tools/generate_visual_assets_05402.py
           test -s assets/visual_rework/fdc_vehicle_atlas_05401.svg
@@ -55,14 +47,12 @@ jobs:
           grep -q 'width="768" height="384"' assets/visual_rework/fdc_animal_atlas_05401.svg
           grep -q 'width="768" height="640"' assets/visual_rework/fdc_zombie_atlas_05402.svg
           grep -q 'width="256" height="256"' assets/visual_rework/fdc_item_atlas_05402.svg
-          test -s web/assets/characters/CHR_M_SURVIVOR_0001_N.png
-          test -s web/assets/characters/CHR_M_SURVIVOR_0001_E.png
-          test -s web/assets/characters/CHR_M_SURVIVOR_0001_S.png
-          test -s web/assets/characters/CHR_M_SURVIVOR_0001_W.png
+          for d in N E S W; do test -s "web/assets/characters/CHR_M_SURVIVOR_0001_${d}.png"; done
 
       - name: Prepare Godot Android environment
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p ~/.local/share/godot/export_templates ~/.config
           if [ -d /root/.config/godot ]; then rm -rf ~/.config/godot; cp -R /root/.config/godot ~/.config/godot; fi
           if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then rm -rf ~/.local/share/godot/export_templates/4.3.stable; cp -R /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable; fi
@@ -91,46 +81,50 @@ jobs:
           ! grep -q "ERR_FILE_CORRUPT" /tmp/godot-import.log
           ! grep -q "Error loading resource" /tmp/godot-import.log
 
-      - name: Make legacy tests forward compatible and deterministic
+      - name: Make historical smoke tests forward compatible
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          replacements = {
+
+          patches = {
             'scripts/core/alpha_0_5_36_smoke_test_v2.gd': [
-              ('["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]', '["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
+              ('["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]',
+               '["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
             'scripts/core/alpha_0_5_37_smoke_test.gd': [
-              ('["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]', '["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
+              ('["0.5.37-alpha", "0.5.38-alpha"]',
+               '["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
             'scripts/core/alpha_0_5_38_smoke_test.gd': [
-              ('["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]', '["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
+              ('!= "0.5.38-alpha"',
+               'not in ["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
             'scripts/core/alpha_0_5_39_smoke_test.gd': [
-              ('["0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]', '["0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
+              ('!= "0.5.39-alpha"',
+               'not in ["0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
             'scripts/core/alpha_0_5_40_smoke_test.gd': [
-              ('!= "0.5.40-alpha"', 'not in ["0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
+              ('!= "0.5.40-alpha"',
+               'not in ["0.5.40-alpha", "0.5.40.1-alpha", "0.5.40.2-alpha"]')],
             'scripts/core/alpha_0_5_40_1_smoke_test.gd': [
-              ('!= "0.5.40.1-alpha"', 'not in ["0.5.40.1-alpha", "0.5.40.2-alpha"]')]
+              ('!= "0.5.40.1-alpha"',
+               'not in ["0.5.40.1-alpha", "0.5.40.2-alpha"]')]
           }
-          for fn, pairs in replacements.items():
-              p=Path(fn)
-              if not p.exists(): continue
-              s=p.read_text()
-              for old,new in pairs: s=s.replace(old,new)
-              p.write_text(s)
-          # Older branch snapshots may not yet contain the expanded arrays. Add 0.5.40.2 to any version allow-list that already reaches 0.5.40.1.
-          for fn in ['scripts/core/alpha_0_5_36_smoke_test_v2.gd','scripts/core/alpha_0_5_37_smoke_test.gd','scripts/core/alpha_0_5_38_smoke_test.gd','scripts/core/alpha_0_5_39_smoke_test.gd']:
-              p=Path(fn)
-              if not p.exists(): continue
-              s=p.read_text()
-              s=s.replace('"0.5.40.1-alpha"]', '"0.5.40.1-alpha", "0.5.40.2-alpha"]')
-              p.write_text(s)
-          # Keep 0.5.29 isolated from asynchronous city streaming.
+          for filename, pairs in patches.items():
+              p = Path(filename)
+              if not p.exists():
+                  continue
+              text = p.read_text()
+              for old, new in pairs:
+                  text = text.replace(old, new)
+              p.write_text(text)
+
+          # Keep the water regression isolated from asynchronous city streaming.
           p=Path('scripts/core/alpha_0_5_29_smoke_test.gd')
           if p.exists():
-              s=p.read_text()
+              text=p.read_text()
               needle='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
               repl='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tvar city_streamer_0529 := scene.get_node_or_null("ChunkStreamer")\n\tif city_streamer_0529 != null:\n\t\tcity_streamer_0529.process_mode = Node.PROCESS_MODE_DISABLED\n\tscene.call("set_weather_override_0522", 0)\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
-              if needle in s: s=s.replace(needle,repl,1)
-              p.write_text(s)
+              if needle in text:
+                  text=text.replace(needle,repl,1)
+              p.write_text(text)
           PY
 
       - name: Validate regression suite
