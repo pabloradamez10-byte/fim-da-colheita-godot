@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.40.3 - Fim da Colheita / World Rework: casas, ruas, POIs e zona rural
+; Alpha 0.5.40.4 - Fim da Colheita / Feedback & Audio: respostas visuais, sons locais e vibração mobile
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.40.3"
-config/version="0.5.40.3-alpha"
+config/name="Fim da Colheita - Alpha 0.5.40.4"
+config/version="0.5.40.4-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
