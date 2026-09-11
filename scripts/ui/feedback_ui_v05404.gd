@@ -18,10 +18,10 @@ func _ready() -> void:
 func _build_overlay_05404() -> void:
 	flash_05404 = ColorRect.new()
 	flash_05404.name = "FeedbackFlash05404"
-	flash_05404.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	flash_05404.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	flash_05404.color = Color(1, 1, 1, 0)
 	add_child(flash_05404)
+	flash_05404.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	label_05404 = Label.new()
 	label_05404.name = "FeedbackLabel05404"
@@ -94,7 +94,9 @@ func _process(delta: float) -> void:
 	text_color.a = clampf(ratio * 1.25, 0.0, 0.94) if label_05404.text != "" else 0.0
 	label_05404.add_theme_color_override("font_color", text_color)
 	if feedback_timer_05404 <= 0.0:
-		flash_05404.color.a = 0.0
+		var clear_color := flash_05404.color
+		clear_color.a = 0.0
+		flash_05404.color = clear_color
 		label_05404.text = ""
 
 func get_feedback_ui_debug_05404() -> Dictionary:
