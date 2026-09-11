@@ -38,7 +38,7 @@ func _run() -> void:
 		return
 	var debug := scene.call("get_mission_debug_0536") as Dictionary
 	if not bool(debug.get("player_0536", false)):
-		_fail(4, "runtime não usa PlayerV0536")
+		_fail(4, "runtime não preserva compatibilidade PlayerV0536")
 		return
 	if get_nodes_in_group("inventory_ui_0536").is_empty():
 		_fail(5, "diário de objetivos não está na mochila")
@@ -122,7 +122,7 @@ func _run() -> void:
 		return
 	var payload := parsed as Dictionary
 	var saved_version := str(payload.get("version", ""))
-	if saved_version not in ["0.5.36-alpha", "0.5.37-alpha"]:
+	if saved_version not in ["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha"]:
 		_fail(21, "versão do save não é compatível com 0.5.36+")
 		return
 	var world_state := payload.get("world", {}) as Dictionary
