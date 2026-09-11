@@ -60,7 +60,7 @@ func _refresh_slots_0523() -> void:
 		atlas.atlas = ITEM_ATLAS_05402
 		atlas.region = Rect2(
 			float((index % 4) * ITEM_TILE_05402.x),
-			float((index / 4) * ITEM_TILE_05402.y),
+			float(int(index / 4) * ITEM_TILE_05402.y),
 			float(ITEM_TILE_05402.x),
 			float(ITEM_TILE_05402.y)
 		)
