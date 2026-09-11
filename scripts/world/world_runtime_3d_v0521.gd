@@ -187,7 +187,9 @@ func _nearest_bed_interaction_0521(pos: Vector3) -> int:
 		if str(data.get("type", "")) != "sleep_bed_0521":
 			continue
 		var node_value: Variant = data.get("node")
-		if node_value is Node3D and not is_instance_valid(node_value as Node3D):
+		# Pode existir referência antiga de uma cama que já foi removida do chunk.
+		# Validar a instância antes do operador `is` evita interromper toda a prioridade de interação.
+		if node_value != null and typeof(node_value) == TYPE_OBJECT and not is_instance_valid(node_value):
 			continue
 		var target_pos := data.get("position", Vector3.ZERO) as Vector3
 		var distance := Vector2(pos.x - target_pos.x, pos.z - target_pos.z).length()
