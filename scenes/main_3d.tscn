@@ -1,8 +1,8 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=15 format=3]
 
-[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v05403.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/world_runtime_3d_v05404.gd" id="1_world"]
 [ext_resource type="Script" path="res://scripts/ui/hud_3d_v05401.gd" id="2_hud"]
-[ext_resource type="Script" path="res://scripts/ui/mobile_controls_v05401.gd" id="3_mobile"]
+[ext_resource type="Script" path="res://scripts/ui/mobile_controls_v05404.gd" id="3_mobile"]
 [ext_resource type="Script" path="res://scripts/camera/camera_rig_3d.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/world/city_chunk_streamer_3d_v05403.gd" id="5_chunks"]
 [ext_resource type="Script" path="res://scripts/ui/inventory_ui_v0536.gd" id="6_inventory"]
@@ -12,9 +12,17 @@
 [ext_resource type="Script" path="res://scripts/ui/campfire_ui_v0538.gd" id="10_campfire"]
 [ext_resource type="Script" path="res://scripts/ui/water_ui_v0529.gd" id="11_water"]
 [ext_resource type="Script" path="res://scripts/ui/vehicle_ui_v0530.gd" id="12_vehicle"]
+[ext_resource type="Script" path="res://scripts/audio/audio_feedback_v05404.gd" id="13_audio"]
+[ext_resource type="Script" path="res://scripts/ui/feedback_ui_v05404.gd" id="14_feedback"]
 
 [node name="FimDaColheita3D" type="Node3D"]
 script = ExtResource("1_world")
+
+[node name="AudioFeedback" type="Node" parent="."]
+script = ExtResource("13_audio")
+
+[node name="FeedbackUI" type="CanvasLayer" parent="."]
+script = ExtResource("14_feedback")
 
 [node name="ChunkStreamer" type="Node3D" parent="."]
 script = ExtResource("5_chunks")
@@ -46,7 +54,7 @@ offset_right = 1064.0
 offset_bottom = 24.0
 theme_override_colors/font_color = Color(0.86, 0.65, 0.27, 1)
 theme_override_font_sizes/font_size = 17
-text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.40.3"
+text = "FIM DA COLHEITA — ALPHA ANDROID 0.5.40.4"
 
 [node name="WorldStatus" type="Label" parent="HUD/TopPanel"]
 offset_left = 14.0
@@ -55,7 +63,7 @@ offset_right = 1064.0
 offset_bottom = 43.0
 theme_override_colors/font_color = Color(0.82, 0.85, 0.76, 1)
 theme_override_font_sizes/font_size = 11
-text = "WORLD REWORK • casas detalhadas • ruas degradadas • POIs reforçados • zona rural viva"
+text = "FEEDBACK & ÁUDIO • respostas visuais • sons locais • vibração mobile • World Rework preservado"
 
 [node name="Vitals" type="Label" parent="HUD/TopPanel"]
 offset_left = 14.0
@@ -91,7 +99,7 @@ offset_right = 1262.0
 offset_bottom = 141.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 0.56)
 theme_override_font_sizes/font_size = 10
-text = "Fachadas, drenagem, desgaste urbano, props e detalhes rurais novos • gameplay e assets 0.5.40.2 preservados"
+text = "Ataque, ação, coleta, troca de arma e corrida agora respondem com áudio/flash; Android também usa vibração curta"
 
 [node name="MobileLayer" type="CanvasLayer" parent="."]
 layer = 10
