@@ -1,8 +1,8 @@
 extends "res://scripts/entities/vehicle_3d_v05362.gd"
 
 const VEHICLE_ATLAS_05401: Texture2D = preload("res://assets/visual_rework/fdc_vehicle_atlas_05401.png")
-const VEHICLE_TILE_05401 := Vector2i(88, 66)
-const VEHICLE_PIXEL_SCALE_05401 := 64.0 / 88.0
+const VEHICLE_TILE_05401 := Vector2i(40, 30)
+const VEHICLE_PIXEL_SCALE_05401 := 64.0 / 40.0
 
 func _build_vehicle_0530() -> void:
 	super._build_vehicle_0530()
@@ -29,7 +29,6 @@ func _refresh_sprite_orientation_0530() -> void:
 		float(VEHICLE_TILE_05401.y)
 	)
 	# Compatibilidade com o teste histórico de orientação da 0.5.18.
-	# As vistas frontais/traseiras são quase simétricas no atlas novo.
 	sprite_0530.flip_h = absf(sin(rotation.y)) <= 0.55
 	set_meta("vehicle_direction_05362", direction)
 	set_meta("vehicle_art_row_05362", row)
