@@ -57,7 +57,6 @@ func _run() -> void:
 			_fail(10, "sprite 0.5.37 ausente em um zumbi")
 			return
 
-	# Migração de horda altera o destino coletivo e mantém o grupo íntegro.
 	var target_before := scene.call("get_horde_target_0537", 0) as Vector3
 	var migrations_before := int(ecology.get("migrations", 0))
 	if not bool(scene.call("force_horde_migration_0537", 0)):
@@ -72,7 +71,6 @@ func _run() -> void:
 		_fail(13, "contador de migração não avançou")
 		return
 
-	# Tiro de alto ruído deve alertar hordas, usando o sistema de som legado como base.
 	var zombies := get_nodes_in_group("zombie_0537")
 	if zombies.is_empty() or not (zombies[0] is Node3D):
 		_fail(14, "nenhum zumbi disponível para teste de ruído")
@@ -90,7 +88,6 @@ func _run() -> void:
 		_fail(16, "barulho não atualizou o destino de nenhuma horda")
 		return
 
-	# Portas/janelas do mundo têm integridade e podem ser arrombadas permanentemente.
 	var hinge: Node3D = HingeScript.new()
 	hinge.name = "SmokeDoor0537"
 	hinge.set("interaction_kind", "door")
@@ -119,7 +116,6 @@ func _run() -> void:
 		_fail(21, "chave persistente da porta arrombada ausente")
 		return
 
-	# Sistemas imediatamente anteriores devem continuar presentes.
 	var streamer := scene.get_node_or_null("ChunkStreamer")
 	if streamer == null or not streamer.has_method("get_vehicle_catalog_05362"):
 		_fail(22, "frota 0.5.36.2 foi perdida")
@@ -132,19 +128,19 @@ func _run() -> void:
 		_fail(24, "missões 0.5.36 foram perdidas")
 		return
 
-	# Save precisa registrar a ecologia e os arrombamentos da 0.5.37.
 	scene.call("save_game")
 	var file := FileAccess.open(SAVE_PATH_0537, FileAccess.READ)
 	if file == null:
-		_fail(25, "save 0.5.37 não foi gravado")
+		_fail(25, "save da linha 0.5.37+ não foi gravado")
 		return
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if not (parsed is Dictionary):
-		_fail(26, "save 0.5.37 inválido")
+		_fail(26, "save 0.5.37+ inválido")
 		return
 	var payload := parsed as Dictionary
-	if str(payload.get("version", "")) != "0.5.37-alpha":
-		_fail(27, "versão do save não é 0.5.37-alpha")
+	var saved_version := str(payload.get("version", ""))
+	if saved_version not in ["0.5.37-alpha", "0.5.38-alpha"]:
+		_fail(27, "versão do save não é compatível com 0.5.37+")
 		return
 	var world_state := payload.get("world", {}) as Dictionary
 	var saved_hordes := world_state.get("horde_records_0537", {}) as Dictionary
