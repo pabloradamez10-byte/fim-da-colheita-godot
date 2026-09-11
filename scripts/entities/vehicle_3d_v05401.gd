@@ -1,8 +1,8 @@
 extends "res://scripts/entities/vehicle_3d_v05362.gd"
 
-const VEHICLE_ATLAS_05401: Texture2D = preload("res://assets/visual_rework/fdc_vehicle_atlas_05401.png")
-const VEHICLE_TILE_05401 := Vector2i(40, 30)
-const VEHICLE_PIXEL_SCALE_05401 := 64.0 / 40.0
+const VEHICLE_ATLAS_05401: Texture2D = preload("res://assets/visual_rework/fdc_vehicle_atlas_05401.svg")
+const VEHICLE_TILE_05401 := Vector2i(96, 72)
+const VEHICLE_PIXEL_SCALE_05401 := 64.0 / 96.0
 
 func _build_vehicle_0530() -> void:
 	super._build_vehicle_0530()
@@ -22,24 +22,11 @@ func _refresh_sprite_orientation_0530() -> void:
 		return
 	var direction := _direction_index_05362(rotation.y)
 	var row := clampi(atlas_index_0530, 0, VEHICLE_VARIANT_COUNT_05362 - 1)
-	sprite_0530.region_rect = Rect2(
-		float(direction * VEHICLE_TILE_05401.x),
-		float(row * VEHICLE_TILE_05401.y),
-		float(VEHICLE_TILE_05401.x),
-		float(VEHICLE_TILE_05401.y)
-	)
-	# Compatibilidade com o teste histórico de orientação da 0.5.18.
+	sprite_0530.region_rect = Rect2(float(direction * VEHICLE_TILE_05401.x), float(row * VEHICLE_TILE_05401.y), float(VEHICLE_TILE_05401.x), float(VEHICLE_TILE_05401.y))
 	sprite_0530.flip_h = absf(sin(rotation.y)) <= 0.55
 	set_meta("vehicle_direction_05362", direction)
 	set_meta("vehicle_art_row_05362", row)
 	set_meta("vehicle_art_tile_05401", VEHICLE_TILE_05401)
 
 func get_visual_rework_debug_05401() -> Dictionary:
-	return {
-		"atlas": "fdc_vehicle_atlas_05401.png",
-		"tile_width": VEHICLE_TILE_05401.x,
-		"tile_height": VEHICLE_TILE_05401.y,
-		"directions": VEHICLE_DIRECTION_COUNT_05362,
-		"variants": VEHICLE_VARIANT_COUNT_05362,
-		"high_detail": true
-	}
+	return {"atlas":"fdc_vehicle_atlas_05401.svg","tile_width":VEHICLE_TILE_05401.x,"tile_height":VEHICLE_TILE_05401.y,"directions":VEHICLE_DIRECTION_COUNT_05362,"variants":VEHICLE_VARIANT_COUNT_05362,"high_detail":true}
