@@ -30,7 +30,10 @@ func _pick_special_interactable_0513(pos: Vector3, target_player: Node) -> int:
 			if category == "loot" and not kind.begins_with("loot_"):
 				continue
 			var node_value: Variant = data.get("node")
-			if node_value is Node3D and not is_instance_valid(node_value as Node3D):
+			# Interactables são persistidos em uma lista compartilhada por muitas versões.
+			# Alguns nós podem ter sido queue_free entre um painel/POI e a próxima interação.
+			# Testar `is Node3D` diretamente em uma referência já liberada gera erro no Godot.
+			if node_value != null and typeof(node_value) == TYPE_OBJECT and not is_instance_valid(node_value):
 				continue
 			var target_pos := data.get("position", Vector3.ZERO) as Vector3
 			var delta := target_pos - pos
