@@ -3,6 +3,8 @@ extends "res://scripts/world/world_runtime_3d_v05401.gd"
 const PlayerV05402Script = preload("res://scripts/player/player_3d_v05402.gd")
 const ZombieV05402Script = preload("res://scripts/entities/zombie_3d_v05402.gd")
 const SAVE_VERSION_05402 := "0.5.40.2-alpha"
+const ZOMBIE_PROFILE_COUNT_05402 := 5
+const ZOMBIE_FRAME_COUNT_05402 := 8
 
 func _spawn_player() -> void:
 	actors_root = Node3D.new()
@@ -36,7 +38,7 @@ func _spawn_zombies(count: int) -> void:
 		spawn_pos.y = 0.20
 		var zombie: CharacterBody3D = ZombieV05402Script.new()
 		zombie.name = zombie_name
-		zombie.call("configure_horde_0537", horde_id, member_index, (i + horde_id * 2) % 5)
+		zombie.call("configure_horde_0537", horde_id, member_index, (i + horde_id * 2) % ZOMBIE_PROFILE_COUNT_05402)
 		zombie.position = spawn_pos
 		actors_root.add_child(zombie)
 
@@ -74,8 +76,8 @@ func get_asset_rework_debug_05402() -> Dictionary:
 		"version": SAVE_VERSION_05402,
 		"player": player_debug,
 		"zombie_sprites": zombie_nodes.size(),
-		"zombie_profiles": ZOMBIE_PROFILE_COUNT_0537,
-		"zombie_frames": ZOMBIE_FRAME_COUNT_0537,
+		"zombie_profiles": ZOMBIE_PROFILE_COUNT_05402,
+		"zombie_frames": ZOMBIE_FRAME_COUNT_05402,
 		"zombie_tile": "96x128",
 		"items": item_debug,
 		"vehicle_variants": int(previous.get("vehicle_variants", 0)),
