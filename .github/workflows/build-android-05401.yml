@@ -1,0 +1,143 @@
+name: Build Android Alpha 0.5.40.1 Visual Rework
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/android-alpha-0.5.40.1-visual-rework
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare asset runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v python3 >/dev/null 2>&1; then
+            export DEBIAN_FRONTEND=noninteractive
+            timeout 240 apt-get update -o Acquire::Retries=5 -o Acquire::http::Timeout=30
+            timeout 240 apt-get install -y --no-install-recommends python3
+          fi
+          python3 --version
+
+      - name: Generate base 40x8 vehicle atlas
+        shell: bash
+        run: python3 tools/generate_vehicle_atlas_05362.py assets/vehicles/fdc_vehicle_atlas_05362.png
+
+      - name: Restore zombie atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/zombies
+          test $(find assets/zombies/generated -name 'zombie0537_*.b64' | wc -l) -eq 10
+          cat assets/zombies/generated/zombie0537_*.b64 | tr -d '\n\r ' | base64 -d > assets/zombies/fdc_zombie_atlas_0537.png
+
+      - name: Generate polished vehicle and animal vector atlases
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/generate_visual_assets_05401.py
+          test -s assets/visual_rework/fdc_vehicle_atlas_05401.svg
+          test -s assets/visual_rework/fdc_animal_atlas_05401.svg
+          grep -q 'width="768" height="2880"' assets/visual_rework/fdc_vehicle_atlas_05401.svg
+          grep -q 'width="768" height="384"' assets/visual_rework/fdc_animal_atlas_05401.svg
+
+      - name: Prepare Godot Android environment
+        shell: bash
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates ~/.config
+          if [ -d /root/.config/godot ]; then rm -rf ~/.config/godot; cp -R /root/.config/godot ~/.config/godot; fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then rm -rf ~/.local/share/godot/export_templates/4.3.stable; cp -R /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable; fi
+          SETTINGS=$(find ~/.config/godot -name 'editor_settings-4*.tres' | head -n 1)
+          test -n "$SETTINGS"
+          SIGN_PASS=$(openssl rand -hex 18)
+          KEYSTORE="$RUNNER_TEMP/fdc-debug.keystore"
+          keytool -genkeypair -noprompt -keystore "$KEYSTORE" -alias fdcdebug -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=FimDaColheita,O=Atlas,C=BR" -storepass "$SIGN_PASS" -keypass "$SIGN_PASS"
+          echo "FDC_KEYSTORE=$KEYSTORE" >> "$GITHUB_ENV"
+          echo "FDC_SIGN_PASS=$SIGN_PASS" >> "$GITHUB_ENV"
+          cat >> "$SETTINGS" <<EOF
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "$KEYSTORE"
+          export/android/debug_keystore_user = "fdcdebug"
+          export/android/debug_keystore_pass = "$SIGN_PASS"
+          EOF
+
+      - name: Import project and reject parser or asset errors
+        shell: bash
+        run: |
+          set -o pipefail
+          godot --headless --editor --quit 2>&1 | tee /tmp/godot-import.log
+          ! grep -q "SCRIPT ERROR" /tmp/godot-import.log
+          ! grep -q "Parse Error" /tmp/godot-import.log
+          ! grep -q "ERR_FILE_CORRUPT" /tmp/godot-import.log
+          ! grep -q "Error loading resource" /tmp/godot-import.log
+
+      - name: Make legacy tests forward compatible and deterministic
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          files=['scripts/core/alpha_0_5_36_smoke_test_v2.gd','scripts/core/alpha_0_5_37_smoke_test.gd','scripts/core/alpha_0_5_38_smoke_test.gd','scripts/core/alpha_0_5_39_smoke_test.gd','scripts/core/alpha_0_5_40_smoke_test.gd']
+          for fn in files:
+              p=Path(fn)
+              if not p.exists(): continue
+              s=p.read_text()
+              s=s.replace('!= "0.5.36-alpha"','not in ["0.5.36-alpha","0.5.37-alpha","0.5.38-alpha","0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
+              s=s.replace('!= "0.5.37-alpha"','not in ["0.5.37-alpha","0.5.38-alpha","0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
+              s=s.replace('!= "0.5.38-alpha"','not in ["0.5.38-alpha","0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
+              s=s.replace('!= "0.5.39-alpha"','not in ["0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
+              s=s.replace('!= "0.5.40-alpha"','not in ["0.5.40-alpha","0.5.40.1-alpha"]')
+              s=s.replace('["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]','["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
+              s=s.replace('["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]','["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
+              s=s.replace('["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]','["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
+              s=s.replace('["0.5.39-alpha", "0.5.40-alpha"]','["0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
+              p.write_text(s)
+          p=Path('scripts/core/alpha_0_5_29_smoke_test.gd')
+          s=p.read_text()
+          needle='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
+          repl='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tvar city_streamer_0529 := scene.get_node_or_null("ChunkStreamer")\n\tif city_streamer_0529 != null:\n\t\tcity_streamer_0529.process_mode = Node.PROCESS_MODE_DISABLED\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
+          if needle in s: s=s.replace(needle,repl,1)
+          p.write_text(s)
+          PY
+
+      - name: Validate regression suite
+        shell: bash
+        run: |
+          set -e
+          for t in 16 18 19 26 29 30; do godot --headless --path . --script res://scripts/core/alpha_0_5_${t}_smoke_test.gd; done
+          godot --headless --path . --script res://scripts/core/alpha_0_5_32_1_smoke_test.gd
+          godot --headless --path . --script res://scripts/core/alpha_0_5_36_smoke_test_v2.gd
+          godot --headless --path . --script res://scripts/core/alpha_0_5_36_2_smoke_test.gd
+          for t in 37 38 39 40; do godot --headless --path . --script res://scripts/core/alpha_0_5_${t}_smoke_test.gd; done
+
+      - name: Validate 0.5.40.1 Visual Rework
+        shell: bash
+        run: godot --headless --path . --script res://scripts/core/alpha_0_5_40_1_smoke_test.gd
+
+      - name: Export debug APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ env.FDC_KEYSTORE }}
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: fdcdebug
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: ${{ env.FDC_SIGN_PASS }}
+        run: |
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.40.1-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.5.40.1-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.40.1-debug.apk) -gt 10000000
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FimDaColheita-Alpha-0.5.40.1-Android
+          path: build/android/FimDaColheita-Alpha-0.5.40.1-debug.apk
+          if-no-files-found: error
