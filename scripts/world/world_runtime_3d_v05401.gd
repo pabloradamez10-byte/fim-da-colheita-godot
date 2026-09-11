@@ -33,8 +33,8 @@ func save_game() -> void:
 	payload["version"] = SAVE_VERSION_05401
 	var world_state := payload.get("world", {}) as Dictionary
 	world_state["visual_rework_05401"] = true
-	world_state["vehicle_atlas_05401"] = "88x66x40x8"
-	world_state["animal_atlas_05401"] = "128x128x4x8"
+	world_state["vehicle_atlas_05401"] = "96x72x40x8-vector"
+	world_state["animal_atlas_05401"] = "96x96x4x8-vector"
 	payload["world"] = world_state
 	var write_file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if write_file != null:
@@ -43,14 +43,4 @@ func save_game() -> void:
 func get_visual_rework_debug_05401() -> Dictionary:
 	var animal_nodes := get_tree().get_nodes_in_group("animal_high_detail_05401")
 	var vehicle_nodes := get_tree().get_nodes_in_group("vehicle_high_detail_05401")
-	return {
-		"save_version": SAVE_VERSION_05401,
-		"animal_sprites": animal_nodes.size(),
-		"vehicle_sprites": vehicle_nodes.size(),
-		"animal_species": 4,
-		"animal_directions": 8,
-		"vehicle_variants": 40,
-		"vehicle_directions": 8,
-		"decision_engine_0540": has_method("get_decision_engine_debug_0540") or has_method("get_atlas_decision_debug_0540"),
-		"high_detail": true
-	}
+	return {"save_version":SAVE_VERSION_05401,"animal_sprites":animal_nodes.size(),"vehicle_sprites":vehicle_nodes.size(),"animal_species":4,"animal_directions":8,"animal_tile":"96x96","vehicle_variants":40,"vehicle_directions":8,"vehicle_tile":"96x72","decision_engine_0540":has_method("get_decision_engine_debug_0540") or has_method("get_atlas_decision_debug_0540"),"high_detail":true,"vector_art":true}
