@@ -12,7 +12,9 @@ func _build_sprite_0537() -> void:
 	if sprite_0537 != null and is_instance_valid(sprite_0537):
 		sprite_0537.queue_free()
 	sprite_0537 = Sprite3D.new()
-	sprite_0537.name = "ZombieSprite05402"
+	# Keep the historical node contract so 0.5.37 ecology/debug and all later
+	# systems still recognize one visual sprite per infected.
+	sprite_0537.name = "ZombieSprite0537"
 	sprite_0537.texture = ZOMBIE_ATLAS_05402
 	sprite_0537.region_enabled = true
 	sprite_0537.region_rect = Rect2(0.0, float(profile_0537 * ZOMBIE_CELL_05402.y), float(ZOMBIE_CELL_05402.x), float(ZOMBIE_CELL_05402.y))
