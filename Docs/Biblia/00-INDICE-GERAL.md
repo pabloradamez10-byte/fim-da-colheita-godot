@@ -25,7 +25,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 06 — Ecossistema Vivo — **IMPLEMENTADO / EM EXPANSÃO**
 - 07 — World Simulator — **EM DESENVOLVIMENTO**
 - 08 — Mundo Físico — **IMPLEMENTADO / EM EXPANSÃO**
-- 09 — Sociedade Humana — **PLANEJADO**
+- 09 — Sociedade Humana — **IMPLEMENTADO / EM EXPANSÃO**
 - 10 — Facções — **PLANEJADO**
 - 11 — Economia Mundial — **PLANEJADO**
 
@@ -34,7 +34,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 12 — Personagens, Atributos e Evolução — **IMPLEMENTADO / EM EXPANSÃO**
 - 13 — Saúde — **IMPLEMENTADO / EM EXPANSÃO**
 - 14 — Necessidades Humanas — **IMPLEMENTADO / EM EXPANSÃO**
-- 15 — Relacionamentos — **PLANEJADO**
+- 15 — Relacionamentos — **EM DESENVOLVIMENTO**
 - 16 — Sucessão e Legado — **PLANEJADO**
 - 17 — Personalidade e Memória — **PLANEJADO**
 
@@ -95,7 +95,8 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.36 — objetivos de sobrevivência, recompensas e diário de missões integrado à mochila;
 - 0.5.36.2 — frota expandida para 40 veículos com oito direções e distribuição urbana, rural e de serviço;
 - 0.5.37 — Zumbis 2.0: quatro hordas, migração, atração por ruído, pressão sobre portas/janelas/base e cinco perfis visuais de infectados;
-- 0.5.38 — Animais & Caça: quatro espécies, fauna persistente, fuga por ameaça/ruído, carcaças, carne, couro, penas e alimentação de caça.
+- 0.5.38 — Animais & Caça: quatro espécies, fauna persistente, fuga por ameaça/ruído, carcaças, carne, couro, penas e alimentação de caça;
+- 0.5.39 — Sociedade Humana Inicial: três sobreviventes persistentes, papéis, necessidades, confiança, ajuda material, resposta social, fuga por ruído e vulnerabilidade a zumbis.
 
 ## Documentação técnica associada
 
