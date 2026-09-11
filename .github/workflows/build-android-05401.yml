@@ -86,26 +86,43 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          files=['scripts/core/alpha_0_5_36_smoke_test_v2.gd','scripts/core/alpha_0_5_37_smoke_test.gd','scripts/core/alpha_0_5_38_smoke_test.gd','scripts/core/alpha_0_5_39_smoke_test.gd','scripts/core/alpha_0_5_40_smoke_test.gd']
+          allowed='["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]'
+          files=[
+              'scripts/core/alpha_0_5_36_smoke_test_v2.gd',
+              'scripts/core/alpha_0_5_37_smoke_test.gd',
+              'scripts/core/alpha_0_5_38_smoke_test.gd',
+              'scripts/core/alpha_0_5_39_smoke_test.gd',
+              'scripts/core/alpha_0_5_40_smoke_test.gd'
+          ]
           for fn in files:
               p=Path(fn)
-              if not p.exists(): continue
+              if not p.exists():
+                  continue
               s=p.read_text()
-              s=s.replace('!= "0.5.36-alpha"','not in ["0.5.36-alpha","0.5.37-alpha","0.5.38-alpha","0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
-              s=s.replace('!= "0.5.37-alpha"','not in ["0.5.37-alpha","0.5.38-alpha","0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
-              s=s.replace('!= "0.5.38-alpha"','not in ["0.5.38-alpha","0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
-              s=s.replace('!= "0.5.39-alpha"','not in ["0.5.39-alpha","0.5.40-alpha","0.5.40.1-alpha"]')
-              s=s.replace('!= "0.5.40-alpha"','not in ["0.5.40-alpha","0.5.40.1-alpha"]')
-              s=s.replace('["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]','["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
-              s=s.replace('["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]','["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
-              s=s.replace('["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]','["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
-              s=s.replace('["0.5.39-alpha", "0.5.40-alpha"]','["0.5.39-alpha", "0.5.40-alpha", "0.5.40.1-alpha"]')
+              for old in [
+                  '["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha"]',
+                  '["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha"]',
+                  '["0.5.36-alpha", "0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]',
+                  '["0.5.37-alpha", "0.5.38-alpha"]',
+                  '["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha"]',
+                  '["0.5.37-alpha", "0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]',
+                  '["0.5.38-alpha", "0.5.39-alpha"]',
+                  '["0.5.38-alpha", "0.5.39-alpha", "0.5.40-alpha"]',
+                  '["0.5.39-alpha", "0.5.40-alpha"]'
+              ]:
+                  s=s.replace(old,allowed)
+              s=s.replace('!= "0.5.36-alpha"',f'not in {allowed}')
+              s=s.replace('!= "0.5.37-alpha"',f'not in {allowed}')
+              s=s.replace('!= "0.5.38-alpha"',f'not in {allowed}')
+              s=s.replace('!= "0.5.39-alpha"',f'not in {allowed}')
+              s=s.replace('!= "0.5.40-alpha"',f'not in {allowed}')
               p.write_text(s)
           p=Path('scripts/core/alpha_0_5_29_smoke_test.gd')
           s=p.read_text()
           needle='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
           repl='\t# Coletor: construção física e reservatório inicialmente vazio.\n\tvar city_streamer_0529 := scene.get_node_or_null("ChunkStreamer")\n\tif city_streamer_0529 != null:\n\t\tcity_streamer_0529.process_mode = Node.PROCESS_MODE_DISABLED\n\tplayer.global_position = Vector3(104.0, 0.20, 86.0)'
-          if needle in s: s=s.replace(needle,repl,1)
+          if needle in s:
+              s=s.replace(needle,repl,1)
           p.write_text(s)
           PY
 
