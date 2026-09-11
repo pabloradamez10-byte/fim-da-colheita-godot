@@ -1,7 +1,7 @@
 extends "res://scripts/entities/animal_3d_v0538.gd"
 
 const ANIMAL_ATLAS_05401: Texture2D = preload("res://assets/visual_rework/fdc_animal_atlas_05401.png")
-const ANIMAL_TILE_05401 := Vector2i(128, 128)
+const ANIMAL_TILE_05401 := Vector2i(64, 64)
 const ANIMAL_DIRECTION_COUNT_05401 := 8
 const ANIMAL_ROWS_05401 := {"rabbit": 0, "deer": 1, "boar": 2, "chicken": 3}
 
@@ -46,12 +46,13 @@ func _refresh_animal_sprite_05401() -> void:
 	set_meta("animal_art_row_05401", row)
 
 func _animal_pixel_size_05401() -> float:
+	# 64px tiles keep the same world-space silhouette that the 128px prototype target used.
 	match species_id_0538:
-		"rabbit": return 0.0070
-		"deer": return 0.0132
-		"boar": return 0.0104
-		"chicken": return 0.0066
-		_: return 0.0080
+		"rabbit": return 0.0140
+		"deer": return 0.0264
+		"boar": return 0.0208
+		"chicken": return 0.0132
+		_: return 0.0160
 
 func _animal_sprite_height_05401() -> float:
 	match species_id_0538:
@@ -62,7 +63,6 @@ func _animal_sprite_height_05401() -> float:
 		_: return 0.65
 
 func _apply_dead_pose_0538() -> void:
-	# Preserve the original collision/death semantics, but pose the billboard itself.
 	global_position.y = 0.27
 	if collision_0538 != null:
 		collision_0538.set_deferred("disabled", true)
