@@ -74,12 +74,12 @@ jobs:
       - name: Import project and reject parser or asset errors
         shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
           godot --headless --editor --quit 2>&1 | tee /tmp/godot-import.log
-          ! grep -q "SCRIPT ERROR" /tmp/godot-import.log
-          ! grep -q "Parse Error" /tmp/godot-import.log
-          ! grep -q "ERR_FILE_CORRUPT" /tmp/godot-import.log
-          ! grep -q "Error loading resource" /tmp/godot-import.log
+          if grep -Eq "SCRIPT ERROR|Parse Error|ERR_FILE_CORRUPT|Error loading resource" /tmp/godot-import.log; then
+            echo "Godot import reported a parser/resource error"
+            exit 1
+          fi
 
       - name: Make historical smoke tests forward compatible
         shell: bash
@@ -119,7 +119,6 @@ jobs:
                   text = text.replace(old, new)
               p.write_text(text)
 
-          # Mantém o teste hídrico isolado do streaming assíncrono da cidade.
           p = Path('scripts/core/alpha_0_5_29_smoke_test.gd')
           if p.exists():
               text = p.read_text()
