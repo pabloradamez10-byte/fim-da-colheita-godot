@@ -40,7 +40,7 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 
 ## Parte IV — Natureza e Estruturas
 
-- 18 — Animais — **PLANEJADO**
+- 18 — Animais — **IMPLEMENTADO / EM EXPANSÃO**
 - 19 — Agricultura — **IMPLEMENTADO / EM EXPANSÃO**
 - 20 — Clima e Estações — **EM DESENVOLVIMENTO**
 - 21 — Estruturas e Pontos de Interesse — **IMPLEMENTADO / EM EXPANSÃO**
@@ -94,7 +94,8 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.35 — progressão do sobrevivente, atributos e perícias integradas às ações reais;
 - 0.5.36 — objetivos de sobrevivência, recompensas e diário de missões integrado à mochila;
 - 0.5.36.2 — frota expandida para 40 veículos com oito direções e distribuição urbana, rural e de serviço;
-- 0.5.37 — Zumbis 2.0: quatro hordas, migração, atração por ruído, pressão sobre portas/janelas/base e cinco perfis visuais de infectados.
+- 0.5.37 — Zumbis 2.0: quatro hordas, migração, atração por ruído, pressão sobre portas/janelas/base e cinco perfis visuais de infectados;
+- 0.5.38 — Animais & Caça: quatro espécies, fauna persistente, fuga por ameaça/ruído, carcaças, carne, couro, penas e alimentação de caça.
 
 ## Documentação técnica associada
 
