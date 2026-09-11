@@ -100,7 +100,8 @@ Este diretório é a fonte oficial de verdade do projeto **Fim da Colheita**. El
 - 0.5.40 — Atlas Decision Engine Inicial: percepção de contexto, sete prioridades, scheduler local, destinos autônomos, busca de ajuda e persistência das decisões;
 - 0.5.40.1 — HUD/UI Rework e visual polish: barra superior compacta, cinco cartões de status, alertas contextuais, controles mobile refinados, hotbar revisada e pipeline de atlases vetoriais para veículos e fauna;
 - 0.5.40.2 — Asset Rework: jogador com arte detalhada em quatro direções, zumbis vetoriais 96×128 preservando cinco perfis × oito frames e atlas ilustrado de 16 itens integrado à hotbar;
-- 0.5.40.3 — World Rework: fachadas residenciais detalhadas, drenagem e desgaste urbano, props de lote, identidade visual adicional dos POIs e detalhes rurais preservando toda a lógica anterior.
+- 0.5.40.3 — World Rework: fachadas residenciais detalhadas, drenagem e desgaste urbano, props de lote, identidade visual adicional dos POIs e detalhes rurais preservando toda a lógica anterior;
+- 0.5.40.4 — Feedback & Áudio: sete cues procedurais offline, flash contextual, confirmação visual, vibração mobile e integração com ataque, interação, coleta, arma, corrida e veículo.
 
 ## Documentação técnica associada
 
