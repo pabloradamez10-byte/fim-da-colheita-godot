@@ -18,11 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install asset runtime
+      - name: Validate asset runtime
         shell: bash
         run: |
-          apt-get update
-          apt-get install -y python3
+          set -euo pipefail
+          python3 --version
 
       - name: Generate 40x8 vehicle atlas
         shell: bash
