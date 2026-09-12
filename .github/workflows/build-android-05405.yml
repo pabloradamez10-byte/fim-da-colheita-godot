@@ -43,9 +43,10 @@ jobs:
           done
           python3 - <<'PY'
           from pathlib import Path
-          from PIL import Image
+          from PIL import Image, ImageFile
           import struct, zlib
 
+          ImageFile.LOAD_TRUNCATED_IMAGES = True
           root = Path("assets/characters/player/sprite_pack_05405")
           expected = {
               "idle_8dir.png": (192, 34),
@@ -80,6 +81,8 @@ jobs:
               path = root / name
               with Image.open(path) as source:
                   rgba = source.convert("RGBA")
+              if rgba.size != dimensions:
+                  raise SystemExit(f"{name}: decoded size expected {dimensions}, got {rgba.size}")
               tmp = path.with_suffix(".normalized.png")
               rgba.save(tmp, format="PNG", optimize=False, compress_level=9)
               tmp.replace(path)
