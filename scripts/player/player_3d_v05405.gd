@@ -13,6 +13,8 @@ const WALK_FRAMES_05405 := 6
 const ACTION_FRAMES_05405 := 5
 const DIRECTION_COUNT_05405 := 8
 const WALK_FPS_05405 := 9.0
+const SPRITE_PIXEL_SIZE_05405 := 0.05
+const SPRITE_CENTER_Y_05405 := 0.85
 
 var animation_clock_05405 := 0.0
 var action_clock_05405 := 0.0
@@ -36,8 +38,8 @@ func _install_character_art_05402() -> void:
 	character_sprite_05402.shaded = false
 	character_sprite_05402.transparent = true
 	character_sprite_05402.double_sided = true
-	character_sprite_05402.pixel_size = 0.0145
-	character_sprite_05402.position = Vector3(0.0, 1.02, 0.0)
+	character_sprite_05402.pixel_size = SPRITE_PIXEL_SIZE_05405
+	character_sprite_05402.position = Vector3(0.0, SPRITE_CENTER_Y_05405, 0.0)
 	character_sprite_05402.add_to_group("player_high_detail_05402")
 	character_sprite_05402.add_to_group("player_sprite_pack_05405")
 	add_child(character_sprite_05402)
@@ -75,7 +77,7 @@ func _refresh_character_art_05402(delta: float) -> void:
 		character_sprite_05402.vframes = 1
 		character_sprite_05402.frame = direction_05405
 
-	character_sprite_05402.position.y = 1.02
+	character_sprite_05402.position.y = SPRITE_CENTER_Y_05405
 	character_sprite_05402.scale = Vector3.ONE
 	set_meta("player_direction_05402", direction_05405)
 	set_meta("player_visual_state_05405", visual_state_05405)
@@ -135,6 +137,7 @@ func get_player_visual_debug_05405() -> Dictionary:
 		"source": "assets/characters/player/sprite_pack_05405",
 		"walk_frames": WALK_FRAMES_05405,
 		"action_frames": ACTION_FRAMES_05405,
+		"pixel_size": SPRITE_PIXEL_SIZE_05405,
 		"procedural_body_hidden": visual_root != null and not visual_root.visible,
 		"high_detail": true
 	}

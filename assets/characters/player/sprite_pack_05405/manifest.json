@@ -1,0 +1,17 @@
+{
+  "version": "0.5.40.5",
+  "directions": 8,
+  "cell": [24, 34],
+  "layout": "rows=direction, columns=animation_frame",
+  "idle": {"frames": 1, "sheet": [192, 34]},
+  "walk": {"frames": 6, "sheet": [144, 272]},
+  "actions": {"frames": 5, "sheet": [120, 272]},
+  "actions_available": [
+    "melee_1h",
+    "melee_2h",
+    "firearm_1h",
+    "firearm_2h",
+    "bow",
+    "harvest_animal"
+  ]
+}

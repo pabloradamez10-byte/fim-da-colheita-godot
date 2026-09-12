@@ -29,14 +29,38 @@ jobs:
           fi
           python3 --version
 
-      - name: Restore 0.5.40.5 character sprite pack
+      - name: Verify 0.5.40.5 character sprite pack
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/restore_character_sprite_pack_05405.py
+          ROOT="assets/characters/player/sprite_pack_05405"
           for f in idle_8dir.png walk_8dir.png melee_1h_8dir.png melee_2h_8dir.png firearm_1h_8dir.png firearm_2h_8dir.png bow_8dir.png harvest_animal_8dir.png manifest.json; do
-            test -s "assets/characters/player/sprite_pack_05405/$f"
+            test -s "$ROOT/$f"
           done
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+
+          root = Path("assets/characters/player/sprite_pack_05405")
+          expected = {
+              "idle_8dir.png": (192, 34),
+              "walk_8dir.png": (144, 272),
+              "melee_1h_8dir.png": (120, 272),
+              "melee_2h_8dir.png": (120, 272),
+              "firearm_1h_8dir.png": (120, 272),
+              "firearm_2h_8dir.png": (120, 272),
+              "bow_8dir.png": (120, 272),
+              "harvest_animal_8dir.png": (120, 272),
+          }
+          for name, dimensions in expected.items():
+              data = (root / name).read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f"{name}: invalid PNG signature")
+              width, height = struct.unpack(">II", data[16:24])
+              if (width, height) != dimensions:
+                  raise SystemExit(f"{name}: expected {dimensions}, got {(width, height)}")
+              print(f"validated {name}: {width}x{height}")
+          PY
 
       - name: Generate required visual atlases
         shell: bash
@@ -103,6 +127,9 @@ jobs:
           godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.5.40.5-debug.apk"
           test -f build/android/FimDaColheita-Alpha-0.5.40.5-debug.apk
           test $(stat -c%s build/android/FimDaColheita-Alpha-0.5.40.5-debug.apk) -gt 10000000
+          unzip -t build/android/FimDaColheita-Alpha-0.5.40.5-debug.apk >/tmp/apk-zip-test.log
+          tail -n 3 /tmp/apk-zip-test.log
+          sha256sum build/android/FimDaColheita-Alpha-0.5.40.5-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
