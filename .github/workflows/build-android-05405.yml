@@ -18,36 +18,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare Python and Pillow
+      - name: Prepare Python
         shell: bash
         run: |
           set -euo pipefail
-          NEED_PACKAGES=0
-          if ! command -v python3 >/dev/null 2>&1; then NEED_PACKAGES=1; fi
-          if command -v python3 >/dev/null 2>&1 && ! python3 -c 'from PIL import Image' >/dev/null 2>&1; then NEED_PACKAGES=1; fi
-          if [ "$NEED_PACKAGES" -eq 1 ]; then
+          if ! command -v python3 >/dev/null 2>&1; then
             export DEBIAN_FRONTEND=noninteractive
             timeout 240 apt-get update -o Acquire::Retries=5 -o Acquire::http::Timeout=30
-            timeout 240 apt-get install -y --no-install-recommends python3 python3-pil
+            timeout 240 apt-get install -y --no-install-recommends python3
           fi
           python3 --version
-          python3 -c 'from PIL import Image; print("Pillow", Image.__version__)'
 
-      - name: Normalize and verify 0.5.40.5 character sprite pack
+      - name: Restore and verify 0.5.40.5 character sprite pack
         shell: bash
         run: |
           set -euo pipefail
-          ROOT="assets/characters/player/sprite_pack_05405"
-          for f in idle_8dir.png walk_8dir.png melee_1h_8dir.png melee_2h_8dir.png firearm_1h_8dir.png firearm_2h_8dir.png bow_8dir.png harvest_animal_8dir.png manifest.json; do
-            test -s "$ROOT/$f"
-          done
           python3 - <<'PY'
           from pathlib import Path
-          from PIL import Image, ImageFile
-          import struct, zlib
+          import base64
+          import hashlib
+          import io
+          import struct
+          import zipfile
+          import zlib
 
-          ImageFile.LOAD_TRUNCATED_IMAGES = True
+          source = Path("assets/characters/player/sprite_pack_05405_source")
           root = Path("assets/characters/player/sprite_pack_05405")
+          parts = sorted(source.glob("part*.b64"))
+          if len(parts) != 13:
+              raise SystemExit(f"sprite source: expected 13 parts, got {len(parts)}")
+
+          encoded = "".join(part.read_text(encoding="utf-8").strip() for part in parts)
+          try:
+              archive = base64.b64decode(encoded, validate=True)
+          except Exception as exc:
+              raise SystemExit(f"sprite source: invalid base64: {exc}")
+
+          expected_sha = "c5b3bb2d22cfd31cbbc98a7ef198f91c5a2eb42b5075c157412702b3f1755a14"
+          actual_sha = hashlib.sha256(archive).hexdigest()
+          if actual_sha != expected_sha:
+              raise SystemExit(f"sprite source SHA-256 mismatch: {actual_sha}")
+          print(f"sprite source ZIP SHA-256 OK: {actual_sha}")
+
           expected = {
               "idle_8dir.png": (192, 34),
               "walk_8dir.png": (144, 272),
@@ -60,39 +72,41 @@ jobs:
           }
 
           def crc_ok(data: bytes) -> bool:
-              if data[:8] != b'\x89PNG\r\n\x1a\n':
+              if data[:8] != b"\x89PNG\r\n\x1a\n":
                   return False
               pos = 8
               while pos + 12 <= len(data):
-                  length = struct.unpack(">I", data[pos:pos+4])[0]
-                  kind = data[pos+4:pos+8]
-                  payload = data[pos+8:pos+8+length]
-                  stored = struct.unpack(">I", data[pos+8+length:pos+12+length])[0]
-                  calc = zlib.crc32(kind)
-                  calc = zlib.crc32(payload, calc) & 0xffffffff
+                  length = struct.unpack(">I", data[pos:pos + 4])[0]
+                  end = pos + 12 + length
+                  if end > len(data):
+                      return False
+                  kind = data[pos + 4:pos + 8]
+                  payload = data[pos + 8:pos + 8 + length]
+                  stored = struct.unpack(">I", data[pos + 8 + length:end])[0]
+                  calc = zlib.crc32(payload, zlib.crc32(kind)) & 0xffffffff
                   if stored != calc:
                       return False
-                  pos += 12 + length
+                  pos = end
                   if kind == b"IEND":
-                      return True
+                      return pos == len(data)
               return False
 
-          for name, dimensions in expected.items():
-              path = root / name
-              with Image.open(path) as source:
-                  rgba = source.convert("RGBA")
-              if rgba.size != dimensions:
-                  raise SystemExit(f"{name}: decoded size expected {dimensions}, got {rgba.size}")
-              tmp = path.with_suffix(".normalized.png")
-              rgba.save(tmp, format="PNG", optimize=False, compress_level=9)
-              tmp.replace(path)
-              data = path.read_bytes()
-              width, height = struct.unpack(">II", data[16:24])
-              if (width, height) != dimensions:
-                  raise SystemExit(f"{name}: expected {dimensions}, got {(width, height)}")
-              if not crc_ok(data):
-                  raise SystemExit(f"{name}: PNG CRC validation failed after normalization")
-              print(f"normalized+validated {name}: {width}x{height} CRC=OK")
+          root.mkdir(parents=True, exist_ok=True)
+          with zipfile.ZipFile(io.BytesIO(archive), "r") as zf:
+              if zf.testzip() is not None:
+                  raise SystemExit(f"sprite source ZIP CRC failed at {zf.testzip()}")
+              names = set(zf.namelist())
+              if names != set(expected):
+                  raise SystemExit(f"sprite source files mismatch: {sorted(names)}")
+              for name, dimensions in expected.items():
+                  data = zf.read(name)
+                  (root / name).write_bytes(data)
+                  width, height = struct.unpack(">II", data[16:24])
+                  if (width, height) != dimensions:
+                      raise SystemExit(f"{name}: expected {dimensions}, got {(width, height)}")
+                  if not crc_ok(data):
+                      raise SystemExit(f"{name}: PNG CRC validation failed")
+                  print(f"validated {name}: {width}x{height} CRC=OK sha256={hashlib.sha256(data).hexdigest()}")
           PY
 
       - name: Generate required visual atlases
