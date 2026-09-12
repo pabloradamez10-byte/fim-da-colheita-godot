@@ -1,0 +1,10 @@
+{
+  "version": "0.5.40.5-alpha",
+  "archive": "assets/characters/generated/fdc_character_pack_05405.zip",
+  "runtime_path": "assets/characters/player/sprite_pack_05405",
+  "directions": 8,
+  "walk_frames": 6,
+  "action_frames": 5,
+  "actions": ["idle", "walk", "melee_1h", "melee_2h", "firearm_1h", "firearm_2h", "bow", "harvest_animal"],
+  "restore": "python3 tools/restore_character_sprite_pack_05405.py"
+}
