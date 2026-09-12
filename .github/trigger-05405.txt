@@ -1,0 +1,1 @@
+0.5.40.5 build trigger after PNG CRC normalization
