@@ -129,7 +129,7 @@ jobs:
         run: |
           set -euo pipefail
           grep -F 'config/version="0.6.1-alpha"' project.godot
-          grep -F 'version/code=600' export_presets.cfg
+          grep -F 'version/code=601' export_presets.cfg
           grep -F 'version/name="0.6.1-alpha"' export_presets.cfg
           grep -F 'package/unique_name="com.atlas.fimdacolheita.alpha0601"' export_presets.cfg
           grep -F 'export_path="build/android/FimDaColheita-Alpha-0.6.1-debug.apk"' export_presets.cfg
