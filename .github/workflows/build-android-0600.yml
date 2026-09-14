@@ -173,13 +173,19 @@ jobs:
           export/android/debug_keystore_pass = "$KEY_PASS"
           EOF
 
-      - name: Import project and reject parser or asset errors
+      - name: Import generated assets deterministically
         shell: bash
         run: |
           set -euo pipefail
-          godot --headless --editor --quit 2>&1 | tee /tmp/godot-import.log
-          if grep -Eq "SCRIPT ERROR|Parse Error|ERR_FILE_CORRUPT|Error loading resource" /tmp/godot-import.log; then
-            cat /tmp/godot-import.log
+          godot --headless --path . --import 2>&1 | tee /tmp/godot-import.log
+
+      - name: Validate project after import
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --editor --path . --quit 2>&1 | tee /tmp/godot-validate.log
+          if grep -Eq "SCRIPT ERROR|Parse Error|ERR_FILE_CORRUPT|Error loading resource" /tmp/godot-validate.log; then
+            cat /tmp/godot-validate.log
             exit 1
           fi
 
