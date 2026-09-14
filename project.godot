@@ -1,12 +1,13 @@
 ; Engine configuration file.
-; Alpha 0.6.0 - estabilização Android, combate e salvamento protegido
+; Alpha 0.6.1 - estabilização Android, combate e salvamento protegido
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.6.0"
-config/version="0.6.0-alpha"
+config/name="Fim da Colheita - Alpha 0.6.1 — Jogabilidade Fluida"
+config/version="0.6.1-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
+run/max_fps=60
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
 [display]
@@ -16,6 +17,12 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[physics]
+
+common/physics_ticks_per_second=60
+common/max_physics_steps_per_frame=4
+common/physics_interpolation=true
 
 [rendering]
 renderer/rendering_method="gl_compatibility"
