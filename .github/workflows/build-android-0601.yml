@@ -193,7 +193,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          godot --headless --path . --script res://scripts/core/alpha_0_6_0_smoke_test.gd
+          godot --headless --path . --script res://scripts/core/alpha_0_6_1_fluidity_smoke_test.gd
 
       - name: Export debug APK
         shell: bash
