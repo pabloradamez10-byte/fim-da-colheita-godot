@@ -24,3 +24,7 @@ A leitura dos saves anteriores continua usando o carregamento herdado da 0.5.40.
 ## Limite conhecido
 
 A cadeia histórica de runtimes e jogadores ainda existe. A consolidação arquitetural será feita de forma gradual depois que esta versão passar no aparelho real, para evitar perda de sistemas e saves.
+
+## Instalação paralela segura
+
+Como as Alphas anteriores eram assinadas com chaves temporárias, a 0.6.0 usa o identificador `com.atlas.fimdacolheita.alpha0600`. Ela pode ser instalada ao lado da versão antiga, evitando desinstalação e perda do save durante a transição. Depois da validação em aparelho real, a identidade definitiva e a estratégia de migração serão fechadas antes do merge na `main`.

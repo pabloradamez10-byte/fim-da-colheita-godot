@@ -131,6 +131,7 @@ jobs:
           grep -F 'config/version="0.6.0-alpha"' project.godot
           grep -F 'version/code=600' export_presets.cfg
           grep -F 'version/name="0.6.0-alpha"' export_presets.cfg
+          grep -F 'package/unique_name="com.atlas.fimdacolheita.alpha0600"' export_presets.cfg
           grep -F 'export_path="build/android/FimDaColheita-Alpha-0.6.0-debug.apk"' export_presets.cfg
 
       - name: Prepare Godot Android environment
