@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.5.40.5 - Fim da Colheita / Character Sprite Pack: 8 direções, caminhada e ações armadas
+; Alpha 0.6.0 - estabilização Android, combate e salvamento protegido
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.5.40.5"
-config/version="0.5.40.5-alpha"
+config/name="Fim da Colheita - Alpha 0.6.0"
+config/version="0.6.0-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
