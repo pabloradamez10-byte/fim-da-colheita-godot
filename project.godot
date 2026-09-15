@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.6.1 - estabilização Android, combate e salvamento protegido
+; Alpha 0.6.2 - primeiros assets autorais de natureza integrados
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.6.1 — Jogabilidade Fluida"
-config/version="0.6.1-alpha"
+config/name="Fim da Colheita - Alpha 0.6.2 — Natureza Renovada"
+config/version="0.6.2-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 run/max_fps=60
 config/features=PackedStringArray("4.3", "GL Compatibility")
