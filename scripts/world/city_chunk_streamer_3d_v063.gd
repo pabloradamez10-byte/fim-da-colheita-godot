@@ -27,7 +27,7 @@ func _build_city_lot(parent: Node3D, origin: Vector3, coord: Vector2i, local: Ve
 		return
 	var role_slot := posmod(coord.x + coord.y * 5, 16)
 	if inherited_role.is_empty() and role_slot < EXTRA_ROLES_063.size():
-		var role := EXTRA_ROLES_063[role_slot]
+		var role: String = str(EXTRA_ROLES_063[role_slot])
 		_apply_building_role_063(root, role, coord, marker)
 		return
 	if root.is_in_group("residential_house_0511"):
