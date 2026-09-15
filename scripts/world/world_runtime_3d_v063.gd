@@ -92,9 +92,18 @@ func try_interact_near(pos: Vector3, target_player: Node) -> bool:
 			var target: Variant = (node_value as Node3D).get_meta("stair_target_063", null)
 			if target is Vector3:
 				(target_player as Node3D).global_position = target as Vector3
+				_refresh_stair_cutaway_063(node_value as Node3D, target_player as Node3D)
 				save_game()
 				return true
 	return super.try_interact_near(pos, target_player)
+
+func _refresh_stair_cutaway_063(stair_node: Node3D, target_player: Node3D) -> void:
+	var cursor: Node = stair_node
+	while cursor != null:
+		if cursor.has_method("refresh_cutaway_063"):
+			cursor.call("refresh_cutaway_063", target_player)
+			return
+		cursor = cursor.get_parent()
 
 func _nearest_stair_interaction_063(pos: Vector3) -> int:
 	var nearest := -1
