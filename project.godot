@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.6.3 - construções completas, sobrados exploráveis e loot interno
+; Alpha 0.6.4 - protagonista com idle, caminhada e corrida em 8 direções
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.6.3 — Sobrados, Loot e Estabelecimentos"
-config/version="0.6.3-alpha"
+config/name="Fim da Colheita - Alpha 0.6.4 — Protagonista em Movimento"
+config/version="0.6.4-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 run/max_fps=60
 config/features=PackedStringArray("4.3", "GL Compatibility")
