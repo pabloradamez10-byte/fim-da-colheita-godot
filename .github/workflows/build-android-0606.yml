@@ -264,16 +264,16 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/android
-          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.6.5-debug.apk"
-          test -f build/android/FimDaColheita-Alpha-0.6.5-debug.apk
-          test $(stat -c%s build/android/FimDaColheita-Alpha-0.6.5-debug.apk) -gt 10000000
-          unzip -t build/android/FimDaColheita-Alpha-0.6.5-debug.apk >/tmp/apk-zip-test.log
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.6.6-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.6.6-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.6.6-debug.apk) -gt 10000000
+          unzip -t build/android/FimDaColheita-Alpha-0.6.6-debug.apk >/tmp/apk-zip-test.log
           tail -n 3 /tmp/apk-zip-test.log
-          sha256sum build/android/FimDaColheita-Alpha-0.6.5-debug.apk
+          sha256sum build/android/FimDaColheita-Alpha-0.6.6-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FimDaColheita-Alpha-0.6.6-Android
-          path: build/android/FimDaColheita-Alpha-0.6.5-debug.apk
+          path: build/android/FimDaColheita-Alpha-0.6.6-debug.apk
           if-no-files-found: error
