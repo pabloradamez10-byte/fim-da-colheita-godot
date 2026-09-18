@@ -18,15 +18,15 @@ const WEAPON_PROFILES_065 := {
 	},
 	"pistol": {
 		"name": "PISTOLA 9MM", "class": "firearm_1h", "damage": 46.0, "range": 21.0,
-		"cooldown": 0.32, "assist": 56.0, "spread": 2.4, "ammo": "ammo_9mm", "noise": 25.0
+		"cooldown": 0.32, "assist": 180.0, "spread": 2.4, "ammo": "ammo_9mm", "noise": 25.0
 	},
 	"shotgun": {
 		"name": "ESPINGARDA 12", "class": "firearm_2h", "damage": 14.0, "range": 13.0,
-		"cooldown": 0.88, "assist": 68.0, "pellets": 7, "spread": 13.0, "ammo": "shells", "noise": 34.0
+		"cooldown": 0.88, "assist": 180.0, "pellets": 7, "spread": 13.0, "ammo": "shells", "noise": 34.0
 	},
 	"bow": {
 		"name": "ARCO", "class": "bow", "damage": 62.0, "range": 18.0,
-		"cooldown": 0.76, "assist": 52.0, "ammo": "arrows", "noise": 4.5
+		"cooldown": 0.76, "assist": 180.0, "ammo": "arrows", "noise": 4.5
 	}
 }
 
@@ -108,8 +108,6 @@ func _attack() -> void:
 		combat_attacks_065 += 1
 		last_weapon_065 = weapon
 		_consume_weapon_durability_0523(weapon)
-		if has_method("_request_save_0524"):
-			call_deferred("_request_save_0524")
 
 func _perform_melee_065(weapon: String, profile: Dictionary) -> bool:
 	var stamina_cost := float(profile.get("stamina", 7.0))
@@ -342,6 +340,11 @@ func _face_target_065(target: Node3D) -> void:
 	if direction.length() <= 0.01:
 		return
 	rotation.y = atan2(direction.x, direction.z) + PI
+	var yaw := fposmod(rotation.y, TAU)
+	direction_05405 = posmod(int(round(yaw / (PI * 0.25))), DIRECTION_COUNT_05405)
+	character_direction_05402 = direction_05405
+	sprite_direction_064 = direction_05405
+	set_meta("player_direction_05402", direction_05405)
 
 func _aim_direction_065(target: Node3D) -> Vector3:
 	if target == null or not is_instance_valid(target):
