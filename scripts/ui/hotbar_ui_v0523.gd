@@ -11,6 +11,7 @@ const NAMES_0523 := {
 	"spear": "LANÇA",
 	"pistol": "9MM",
 	"shotgun": "12GA",
+	"bow": "ARCO",
 	"bandage": "BANDAGEM",
 	"water": "ÁGUA",
 	"food": "COMIDA",
