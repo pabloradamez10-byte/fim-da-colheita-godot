@@ -259,7 +259,16 @@ func _perform_bow_065(_weapon: String, profile: Dictionary) -> bool:
 	_play_spatial_attack_animation_065("bow")
 	var direction := _aim_direction_065(target)
 	var arrow := ArrowProjectile065Script.new()
-	get_tree().current_scene.add_child(arrow)
+	var projectile_parent: Node = get_tree().current_scene
+	if projectile_parent == null and world != null and is_instance_valid(world):
+		projectile_parent = world
+	if projectile_parent == null:
+		projectile_parent = get_parent()
+	if projectile_parent == null:
+		last_attack_result_065 = "projectile_parent_missing"
+		arrow.queue_free()
+		return false
+	projectile_parent.add_child(arrow)
 	arrow.global_position = global_position + Vector3(0.0, 0.88, 0.0) + direction * 0.65
 	arrow.call("setup_065", self, direction, float(profile.get("damage", 62.0)), max_range)
 	arrows_fired_065 += 1
