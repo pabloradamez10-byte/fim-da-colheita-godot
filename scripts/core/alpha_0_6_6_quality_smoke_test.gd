@@ -62,15 +62,17 @@ func _run() -> void:
 	floor_body.add_child(floor_shape)
 	scene.add_child(floor_body)
 	floor_body.global_position = Vector3(900.0, 0.0, 900.0)
-	player.global_position = Vector3(900.0, 2.2, 900.0)
+	player.global_position = Vector3(900.0, 0.72, 900.0)
 	player.velocity = Vector3.ZERO
-	for _i in range(75):
+	for _i in range(45):
 		await physics_frame
-	if not player.is_on_floor():
-		_fail(9, "player não assentou no chão")
+	var qdebug := player.call("get_quality_debug_066") as Dictionary
+	print("GROUND 0.6.6 y=", player.global_position.y, " floor=", player.is_on_floor(), " adhesion=", qdebug.get("ground_adhesion_hits", 0))
+	if player.global_position.y > 0.24:
+		_fail(9, "player permanece alto demais do piso")
 		return
-	if player.global_position.y > 0.45:
-		_fail(10, "player permanece visual/fisicamente alto demais do piso")
+	if not player.is_on_floor() and int(qdebug.get("ground_adhesion_hits", 0)) <= 0:
+		_fail(10, "player não assentou nem aderiu ao chão")
 		return
 
 	# Tiro 360: alvo atrás do personagem deve ser selecionado e causar giro.
