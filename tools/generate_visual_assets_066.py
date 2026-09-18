@@ -3,6 +3,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 import math, random
 
+RESAMPLE_LANCZOS = getattr(Image, "Resampling", Image).LANCZOS
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "visual_rework_066"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -57,11 +59,11 @@ def vehicle_cell(row,direction):
     if cat=="bicycle":
         for lx in (-L*.32,L*.32): circ(lx,0,5,(29,31,32,255),(12,14,15,255))
         line((-L*.32,0),(0,-B*.22),(*base,255),2); line((0,-B*.22),(L*.30,0),(*base,255),2); line((-L*.1,B*.1),(L*.12,-B*.15),(*base,255),2)
-        return im.resize((VW,VH),Image.Resampling.LANCZOS)
+        return im.resize((VW,VH),RESAMPLE_LANCZOS)
     if cat in ("motorcycle","scooter"):
         for lx in (-L*.35,L*.35): circ(lx,0,5.5,(28,29,30,255),(9,10,11,255))
         rect(L*.56,B*.46,(*base,255),outline=(35,38,39,255)); rect(L*.26,B*.54,(*light(base,.15),255),L*.05,-B*.03)
-        return im.resize((VW,VH),Image.Resampling.LANCZOS)
+        return im.resize((VW,VH),RESAMPLE_LANCZOS)
     wr=5.5*S if cat not in ("tractor","harvester") else 7.5*S
     for lx,ly in [(-L*.30,-B*.48),(-L*.30,B*.48),(L*.30,-B*.48),(L*.30,B*.48)]:
         x,y=tp([(lx,ly)],cx,cy,ang)[0]; dr.ellipse((x-wr,y-wr,x+wr,y+wr),fill=(28,29,29,255),outline=(9,10,10,255),width=3)
@@ -105,7 +107,7 @@ def vehicle_cell(row,direction):
     if cat not in ("police","ambulance"):
         for _ in range(7): circ(rng.uniform(-L*.35,L*.35),rng.uniform(-B*.28,B*.28),rng.uniform(.6,1.8),(112,69,45,120))
     line((-L*.25,-B*.34),(L*.25,-B*.34),(248,239,219,95))
-    return im.resize((VW,VH),Image.Resampling.LANCZOS)
+    return im.resize((VW,VH),RESAMPLE_LANCZOS)
 
 def write_vehicles():
     atlas=Image.new("RGBA",(VW*8,VH*40),(0,0,0,0))
@@ -162,7 +164,7 @@ def zombie_cell(pi,direction,frame):
     elif pi==2:
         dr.ellipse((cx-sho-6*S,sh-2*S,cx-sho+7*S,sh+13*S),fill=(58,71,66,255)); dr.ellipse((cx+sho-7*S,sh-2*S,cx+sho+6*S,sh+13*S),fill=(58,71,66,255))
     elif pi==1: dr.line([(cx-6*S,sh+3*S),(cx-4*S,hip-3*S)],fill=(188,145,113,210),width=3*S)
-    return im.resize((ZW,ZH),Image.Resampling.LANCZOS)
+    return im.resize((ZW,ZH),RESAMPLE_LANCZOS)
 
 def write_zombies():
     atlas=Image.new("RGBA",(ZW*4,ZH*40),(0,0,0,0))
