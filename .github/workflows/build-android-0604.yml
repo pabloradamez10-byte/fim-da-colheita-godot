@@ -1,0 +1,270 @@
+# Build trigger: Alpha 0.6.4 protagonist movement package
+name: Build Android Alpha 0.6.4 Protagonist Movement
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/android-alpha-0.6.4-protagonist-movement
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Python
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v python3 >/dev/null 2>&1; then
+            export DEBIAN_FRONTEND=noninteractive
+            timeout 240 apt-get update -o Acquire::Retries=5 -o Acquire::http::Timeout=30
+            timeout 240 apt-get install -y --no-install-recommends python3
+          fi
+          python3 --version
+
+      - name: Restore and verify 0.5.40.5 character sprite pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import io
+          import struct
+          import zipfile
+          import zlib
+
+          source = Path("assets/characters/player/sprite_pack_05405_source")
+          root = Path("assets/characters/player/sprite_pack_05405")
+          parts = sorted(source.glob("part*.b64"))
+          if len(parts) != 13:
+              raise SystemExit(f"sprite source: expected 13 parts, got {len(parts)}")
+
+          encoded = "".join(part.read_text(encoding="utf-8").strip() for part in parts)
+          try:
+              archive = base64.b64decode(encoded, validate=True)
+          except Exception as exc:
+              raise SystemExit(f"sprite source: invalid base64: {exc}")
+
+          expected_sha = "c5b3bb2d22cfd31cbbc98a7ef198f91c5a2eb42b5075c157412702b3f1755a14"
+          actual_sha = hashlib.sha256(archive).hexdigest()
+          if actual_sha != expected_sha:
+              raise SystemExit(f"sprite source SHA-256 mismatch: {actual_sha}")
+          print(f"sprite source ZIP SHA-256 OK: {actual_sha}")
+
+          expected = {
+              "idle_8dir.png": (192, 34),
+              "walk_8dir.png": (144, 272),
+              "melee_1h_8dir.png": (120, 272),
+              "melee_2h_8dir.png": (120, 272),
+              "firearm_1h_8dir.png": (120, 272),
+              "firearm_2h_8dir.png": (120, 272),
+              "bow_8dir.png": (120, 272),
+              "harvest_animal_8dir.png": (120, 272),
+          }
+
+          def crc_ok(data: bytes) -> bool:
+              if data[:8] != b"\x89PNG\r\n\x1a\n":
+                  return False
+              pos = 8
+              while pos + 12 <= len(data):
+                  length = struct.unpack(">I", data[pos:pos + 4])[0]
+                  end = pos + 12 + length
+                  if end > len(data):
+                      return False
+                  kind = data[pos + 4:pos + 8]
+                  payload = data[pos + 8:pos + 8 + length]
+                  stored = struct.unpack(">I", data[pos + 8 + length:end])[0]
+                  calc = zlib.crc32(payload, zlib.crc32(kind)) & 0xffffffff
+                  if stored != calc:
+                      return False
+                  pos = end
+                  if kind == b"IEND":
+                      return pos == len(data)
+              return False
+
+          root.mkdir(parents=True, exist_ok=True)
+          with zipfile.ZipFile(io.BytesIO(archive), "r") as zf:
+              if zf.testzip() is not None:
+                  raise SystemExit(f"sprite source ZIP CRC failed at {zf.testzip()}")
+              names = set(zf.namelist())
+              if names != set(expected):
+                  raise SystemExit(f"sprite source files mismatch: {sorted(names)}")
+              for name, dimensions in expected.items():
+                  data = zf.read(name)
+                  (root / name).write_bytes(data)
+                  width, height = struct.unpack(">II", data[16:24])
+                  if (width, height) != dimensions:
+                      raise SystemExit(f"{name}: expected {dimensions}, got {(width, height)}")
+                  if not crc_ok(data):
+                      raise SystemExit(f"{name}: PNG CRC validation failed")
+                  print(f"validated {name}: {width}x{height} CRC=OK sha256={hashlib.sha256(data).hexdigest()}")
+          PY
+
+      - name: Generate required visual atlases
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/generate_vehicle_atlas_05362.py assets/vehicles/fdc_vehicle_atlas_05362.png
+          mkdir -p assets/zombies
+          test $(find assets/zombies/generated -name 'zombie0537_*.b64' | wc -l) -eq 10
+          cat assets/zombies/generated/zombie0537_*.b64 | tr -d '\n\r ' | base64 -d > assets/zombies/fdc_zombie_atlas_0537.png
+          python3 tools/generate_visual_assets_05401.py
+          python3 tools/generate_visual_assets_05402.py
+          test -s assets/visual_rework/fdc_vehicle_atlas_05401.svg
+          test -s assets/visual_rework/fdc_animal_atlas_05401.svg
+          test -s assets/visual_rework/fdc_zombie_atlas_05402.svg
+          test -s assets/visual_rework/fdc_item_atlas_05402.svg
+
+      - name: Validate Android 0.6.4 package metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'config/version="0.6.4-alpha"' project.godot
+          grep -F 'version/code=604' export_presets.cfg
+          grep -F 'version/name="0.6.4-alpha"' export_presets.cfg
+          grep -F 'package/unique_name="com.atlas.fimdacolheita.alpha0604"' export_presets.cfg
+          grep -F 'export_path="build/android/FimDaColheita-Alpha-0.6.4-debug.apk"' export_presets.cfg
+
+      - name: Validate Alpha 0.6.2 nature source assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+
+          expected = [
+              Path("assets/nature/fdc_tree_pinus_adult_062.png"),
+              Path("assets/nature/fdc_bush_dense_062.png"),
+              Path("assets/nature/fdc_rock_mossy_062.png"),
+          ]
+          for path in expected:
+              data = path.read_bytes()
+              if data[:8] != b"\x89PNG\r\n\x1a\n":
+                  raise SystemExit(f"{path}: invalid PNG signature")
+              width, height, bit_depth, color_type = struct.unpack(">IIBB", data[16:26])
+              if (width, height, bit_depth, color_type) != (512, 512, 8, 6):
+                  raise SystemExit(
+                      f"{path}: expected 512x512 RGBA8, got "
+                      f"{width}x{height} depth={bit_depth} color={color_type}"
+                  )
+              print(f"validated {path}: 512x512 RGBA8")
+          PY
+
+      - name: Validate Alpha 0.6.3 building source assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+
+          expected = sorted(Path("assets/buildings/full").glob("fdc_building_*_063.png"))
+          if len(expected) != 10:
+              raise SystemExit(f"expected 10 full building assets, got {len(expected)}")
+          for path in expected:
+              data = path.read_bytes()
+              if data[:8] != b"\x89PNG\r\n\x1a\n":
+                  raise SystemExit(f"{path}: invalid PNG signature")
+              width, height, bit_depth, color_type = struct.unpack(">IIBB", data[16:26])
+              if (width, height, bit_depth, color_type) != (1024, 1024, 8, 6):
+                  raise SystemExit(
+                      f"{path}: expected 1024x1024 RGBA8, got "
+                      f"{width}x{height} depth={bit_depth} color={color_type}"
+                  )
+              print(f"validated {path}: 1024x1024 RGBA8")
+          PY
+
+      - name: Prepare Godot Android environment
+        shell: bash
+        env:
+          FDC_KEYSTORE_B64: ${{ secrets.FDC_ANDROID_KEYSTORE_B64 }}
+          FDC_KEY_ALIAS: ${{ secrets.FDC_ANDROID_KEY_ALIAS }}
+          FDC_KEY_PASS: ${{ secrets.FDC_ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.local/share/godot/export_templates ~/.config
+          if [ -d /root/.config/godot ]; then rm -rf ~/.config/godot; cp -R /root/.config/godot ~/.config/godot; fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then rm -rf ~/.local/share/godot/export_templates/4.3.stable; cp -R /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable; fi
+          SETTINGS=$(find ~/.config/godot -name 'editor_settings-4*.tres' | head -n 1)
+          test -n "$SETTINGS"
+          KEYSTORE="$RUNNER_TEMP/fdc-stable.keystore"
+          KEY_ALIAS="${FDC_KEY_ALIAS:-fdcdebug}"
+          KEY_PASS="${FDC_KEY_PASS:-}"
+          if [ -n "${FDC_KEYSTORE_B64:-}" ] && [ -n "$KEY_PASS" ]; then
+            printf '%s' "$FDC_KEYSTORE_B64" | base64 -d > "$KEYSTORE"
+          else
+            DEFAULT_KEYSTORE=$(find /root -type f -name 'debug.keystore' 2>/dev/null | head -n 1)
+            test -n "$DEFAULT_KEYSTORE"
+            cp "$DEFAULT_KEYSTORE" "$KEYSTORE"
+            KEY_ALIAS="androiddebugkey"
+            KEY_PASS="android"
+            echo "::warning::Using stable Godot CI debug keystore. Configure FDC_ANDROID_KEYSTORE_B64, FDC_ANDROID_KEY_ALIAS and FDC_ANDROID_KEY_PASSWORD before public release."
+          fi
+          test -s "$KEYSTORE"
+          echo "::add-mask::$KEY_PASS"
+          echo "FDC_KEYSTORE=$KEYSTORE" >> "$GITHUB_ENV"
+          echo "FDC_KEY_ALIAS=$KEY_ALIAS" >> "$GITHUB_ENV"
+          echo "FDC_KEY_PASS=$KEY_PASS" >> "$GITHUB_ENV"
+          cat >> "$SETTINGS" <<EOF
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "$KEYSTORE"
+          export/android/debug_keystore_user = "$KEY_ALIAS"
+          export/android/debug_keystore_pass = "$KEY_PASS"
+          EOF
+
+      - name: Import generated assets deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/godot-import.log
+
+      - name: Validate project after import
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --editor --path . --quit 2>&1 | tee /tmp/godot-validate.log
+          if grep -Eq "SCRIPT ERROR|Parse Error|ERR_FILE_CORRUPT|Error loading resource" /tmp/godot-validate.log; then
+            cat /tmp/godot-validate.log
+            exit 1
+          fi
+
+      - name: Validate Alpha 0.6.4 protagonist movement and regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script res://scripts/core/alpha_0_6_4_protagonist_smoke_test.gd
+
+      - name: Export debug APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ env.FDC_KEYSTORE }}
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: ${{ env.FDC_KEY_ALIAS }}
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: ${{ env.FDC_KEY_PASS }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/android
+          godot --headless --verbose --export-debug "Android Debug" "build/android/FimDaColheita-Alpha-0.6.4-debug.apk"
+          test -f build/android/FimDaColheita-Alpha-0.6.4-debug.apk
+          test $(stat -c%s build/android/FimDaColheita-Alpha-0.6.4-debug.apk) -gt 10000000
+          unzip -t build/android/FimDaColheita-Alpha-0.6.4-debug.apk >/tmp/apk-zip-test.log
+          tail -n 3 /tmp/apk-zip-test.log
+          sha256sum build/android/FimDaColheita-Alpha-0.6.4-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FimDaColheita-Alpha-0.6.4-Android
+          path: build/android/FimDaColheita-Alpha-0.6.4-debug.apk
+          if-no-files-found: error
