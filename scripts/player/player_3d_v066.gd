@@ -4,12 +4,46 @@ const QUALITY_VERSION_066 := "0.6.6-alpha"
 
 var last_firearm_target_066 := 0
 var firearm_target_switches_066 := 0
+var ground_adhesion_hits_066 := 0
+const GROUND_ADHESION_RANGE_066 := 0.90
+const FOOT_OFFSET_066 := 0.028
 
 func _ready() -> void:
 	super._ready()
 	add_to_group("quality_fix_066")
 	set_meta("quality_version", QUALITY_VERSION_066)
 	set_meta("firearm_autoaim_360_066", true)
+
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
+	_apply_ground_adhesion_066()
+
+func _apply_ground_adhesion_066() -> void:
+	if has_method("is_in_vehicle_0530") and bool(call("is_in_vehicle_0530")):
+		return
+	if velocity.y > 0.05:
+		return
+	var origin := global_position + Vector3(0.0, 0.18, 0.0)
+	var endpoint := global_position - Vector3(0.0, GROUND_ADHESION_RANGE_066, 0.0)
+	var query := PhysicsRayQueryParameters3D.create(origin, endpoint)
+	query.exclude = [get_rid()]
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var normal := hit.get("normal", Vector3.UP) as Vector3
+	if normal.y < 0.55:
+		return
+	var point := hit.get("position", global_position) as Vector3
+	var desired_y := point.y + FOOT_OFFSET_066
+	var gap := global_position.y - desired_y
+	if gap < -0.08 or gap > GROUND_ADHESION_RANGE_066:
+		return
+	if absf(gap) > 0.004:
+		global_position.y = desired_y
+		ground_adhesion_hits_066 += 1
+	velocity.y = minf(velocity.y, 0.0)
 
 func _perform_firearm_065(weapon: String, profile: Dictionary) -> bool:
 	var ammo_id := str(profile.get("ammo", ""))
@@ -87,4 +121,6 @@ func get_quality_debug_066() -> Dictionary:
 	combat["firearm_target_switches"] = firearm_target_switches_066
 	combat["grounding"] = bool(get_meta("grounding_066", false))
 	combat["floor_snap_length"] = floor_snap_length
+	combat["ground_adhesion_range"] = GROUND_ADHESION_RANGE_066
+	combat["ground_adhesion_hits"] = ground_adhesion_hits_066
 	return combat
