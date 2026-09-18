@@ -1,11 +1,11 @@
 ; Engine configuration file.
-; Alpha 0.6.5 - combate espacial estilo survival mobile
+; Alpha 0.6.6 - quality fix movement combat vehicles zombies
 
 config_version=5
 
 [application]
-config/name="Fim da Colheita - Alpha 0.6.5 — Combate Espacial"
-config/version="0.6.5-alpha"
+config/name="Fim da Colheita - Alpha 0.6.6 — Quality Fix"
+config/version="0.6.6-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 run/max_fps=60
 config/features=PackedStringArray("4.3", "GL Compatibility")
