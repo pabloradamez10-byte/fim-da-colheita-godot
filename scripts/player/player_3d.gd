@@ -26,9 +26,15 @@ var bob_time := 0.0
 
 const WALK_SPEED := 5.0
 const RUN_SPEED := 7.4
+const GROUND_GRAVITY_066 := 18.0
 
 func _ready() -> void:
 	add_to_group("player")
+	motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED
+	up_direction = Vector3.UP
+	floor_snap_length = 0.62
+	floor_stop_on_slope = true
+	safe_margin = 0.045
 	_build_collision()
 	_build_visual()
 
@@ -66,7 +72,13 @@ func _physics_process(delta: float) -> void:
 		rotation.y = lerp_angle(rotation.y, target_yaw, minf(1.0, delta * 12.0))
 	velocity.x = dir.x * (RUN_SPEED if running else WALK_SPEED)
 	velocity.z = dir.z * (RUN_SPEED if running else WALK_SPEED)
-	velocity.y = 0.0
+	var driving := has_method("is_in_vehicle_0530") and bool(call("is_in_vehicle_0530"))
+	if driving:
+		velocity.y = 0.0
+	elif is_on_floor():
+		velocity.y = -0.65
+	else:
+		velocity.y -= GROUND_GRAVITY_066 * delta
 	move_and_slide()
 
 	if visual_root != null:
@@ -197,7 +209,7 @@ func _respawn() -> void:
 	stamina = 100.0
 	hunger = 72.0
 	thirst = 72.0
-	global_position = Vector3(0, 0.75, 3.5)
+	global_position = Vector3(0, 0.10, 3.5)
 
 func reset_for_new_world() -> void:
 	health = 100.0
@@ -230,7 +242,7 @@ func export_save_state() -> Dictionary:
 
 func import_save_state(state: Dictionary) -> void:
 	var p: Dictionary = state.get("position", {}) as Dictionary
-	global_position = Vector3(float(p.get("x",0)), float(p.get("y",0.75)), float(p.get("z",3.5)))
+	global_position = Vector3(float(p.get("x",0)), float(p.get("y",0.10)), float(p.get("z",3.5)))
 	health = float(state.get("health",100.0))
 	stamina = float(state.get("stamina",100.0))
 	hunger = float(state.get("hunger",100.0))
