@@ -51,7 +51,7 @@ func _process(delta: float) -> void:
 	if perf_sample_timer_067 < 0.50:
 		return
 	perf_sample_timer_067 = 0.0
-	fps_067 = Engine.get_frames_per_second()
+	fps_067 = roundi(Engine.get_frames_per_second())
 	fps_low_067 = mini(fps_low_067, fps_067)
 	fps_high_067 = maxi(fps_high_067, fps_067)
 	zombie_full_067 = 0
