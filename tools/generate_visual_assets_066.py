@@ -128,8 +128,8 @@ def vehicles():
     for row,(cat,col) in enumerate(zip(CATS,COLORS)):
         base=vehicle_base(row,cat,col)
         for direction in range(8):
-            rot=base.rotate(direction*45.0,resample=Image.Resampling.BICUBIC,expand=False,center=(128,128))
-            cell=rot.resize((VCELL,VCELL),Image.Resampling.LANCZOS)
+            rot=base.rotate(direction*45.0,resample=getattr(Image, "Resampling", Image).BICUBIC,expand=False,center=(128,128))
+            cell=rot.resize((VCELL,VCELL),getattr(Image, "Resampling", Image).LANCZOS)
             atlas.alpha_composite(cell,(direction*VCELL,row*VCELL))
     VEH_OUT.parent.mkdir(parents=True,exist_ok=True)
     atlas.save(VEH_OUT,optimize=True)
@@ -205,7 +205,7 @@ def zombie(profile,frame):
     for _ in range(12):
         x=rng.uniform(cx-18*build,cx+18*build); y=rng.uniform(60+bob,96+bob); rr=rng.uniform(.7,1.8)
         d.ellipse((int((x-rr)*sc),int((y-rr)*sc),int((x+rr)*sc),int((y+rr)*sc)),fill=(39,43,39,95))
-    return im.resize((128,160),Image.Resampling.LANCZOS)
+    return im.resize((128,160),getattr(Image, "Resampling", Image).LANCZOS)
 
 def zombies():
     atlas=Image.new("RGBA",(128*8,160*5),(0,0,0,0))
