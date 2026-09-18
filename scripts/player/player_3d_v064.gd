@@ -85,12 +85,10 @@ func _refresh_character_art_05402(delta: float) -> void:
 		var fps := RUN_FPS_064 if movement_state_064 == "run" else WALK_FPS_064
 		var move_frame := int(floor(movement_clock_064 * fps)) % WALK_FRAMES_064
 		character_sprite_05402.frame = sprite_direction_064 * WALK_FRAMES_064 + move_frame
+		character_sprite_05402.position.y = SPRITE_CENTER_Y_064
 		if movement_state_064 == "run":
 			var run_phase := absf(sin(movement_clock_064 * RUN_FPS_064))
-			character_sprite_05402.position.y = SPRITE_CENTER_Y_064 + run_phase * 0.035
-			character_sprite_05402.scale = Vector3(1.0 + run_phase * 0.018, 1.0 - run_phase * 0.014, 1.0)
-		else:
-			character_sprite_05402.position.y = SPRITE_CENTER_Y_064
+			character_sprite_05402.scale = Vector3(1.0 + run_phase * 0.008, 1.0 - run_phase * 0.006, 1.0)
 
 	set_meta("player_direction_05402", sprite_direction_064)
 	set_meta("player_visual_state_05405", visual_state_05405)
