@@ -26,11 +26,19 @@ var bob_time := 0.0
 
 const WALK_SPEED := 5.0
 const RUN_SPEED := 7.4
+const GRAVITY_066 := 24.0
+const FLOOR_STICK_SPEED_066 := 1.35
+const TERMINAL_FALL_SPEED_066 := 30.0
 
 func _ready() -> void:
 	add_to_group("player")
+	floor_snap_length = 0.62
+	floor_max_angle = deg_to_rad(50.0)
+	floor_stop_on_slope = true
+	safe_margin = 0.055
 	_build_collision()
 	_build_visual()
+	set_meta("grounding_066", true)
 
 func _physics_process(delta: float) -> void:
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
@@ -66,8 +74,13 @@ func _physics_process(delta: float) -> void:
 		rotation.y = lerp_angle(rotation.y, target_yaw, minf(1.0, delta * 12.0))
 	velocity.x = dir.x * (RUN_SPEED if running else WALK_SPEED)
 	velocity.z = dir.z * (RUN_SPEED if running else WALK_SPEED)
-	velocity.y = 0.0
+	if is_on_floor():
+		velocity.y = -FLOOR_STICK_SPEED_066
+	else:
+		velocity.y = maxf(velocity.y - GRAVITY_066 * delta, -TERMINAL_FALL_SPEED_066)
 	move_and_slide()
+	if is_on_floor():
+		apply_floor_snap()
 
 	if visual_root != null:
 		if dir.length() > 0.05:
