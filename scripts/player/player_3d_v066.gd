@@ -19,6 +19,8 @@ func _physics_process(delta: float) -> void:
 	_apply_ground_adhesion_066()
 
 func _apply_ground_adhesion_066() -> void:
+	if bool(get_meta("survival_motion_068", false)):
+		return
 	if has_method("is_in_vehicle_0530") and bool(call("is_in_vehicle_0530")):
 		return
 	if velocity.y > 0.05:

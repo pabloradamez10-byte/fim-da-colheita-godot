@@ -5,7 +5,7 @@ config_version=5
 
 [application]
 config/name="Fim da Colheita - Alpha 0.6.7 — Performance"
-config/version="0.6.7-alpha"
+config/version="0.6.8-alpha"
 run/main_scene="res://scenes/main_3d.tscn"
 run/max_fps=60
 config/features=PackedStringArray("4.3", "GL Compatibility")

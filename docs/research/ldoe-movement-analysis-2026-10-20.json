@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-20",
+  "source": "https://last-day-client.kefirgames.com/build_kefir-last-day.apk",
+  "rea_source_commit": "1629266e3c08c90fed6bba5383528af7986a12b7",
+  "workflow": "REA readIl2cppMetadataForLinking + linkIl2cppBinary invoked from source through tsx; targeted ARM64 disassembly with Capstone/pyelftools",
+  "artifact_identity": {
+    "last-day-official.apk": {
+      "bytes": 1204558851,
+      "sha256": "42f899421f1b3765b0d68ab576a9a68665ebde200fac0984638495eecb1d04cb"
+    },
+    "extracted/assets/bin/Data/Managed/Metadata/global-metadata.dat": {
+      "bytes": 32401120,
+      "sha256": "251dc78399165d2af4cb7498fab5d76af1c00dbf23f7ff29a1a27574b4f3a216"
+    },
+    "extracted/lib/arm64-v8a/libil2cpp.so": {
+      "bytes": 178271480,
+      "sha256": "bec7b09b669e1d52cf915b92cee1d8ff55d2f2ec5eac6bf4b702569d1c059d8b"
+    }
+  },
+  "metadata_version": 39,
+  "types": 38926,
+  "methods": 255431,
+  "executed_target": false,
+  "game_modified": false
+}
