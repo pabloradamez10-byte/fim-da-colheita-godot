@@ -112,7 +112,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		stamina = minf(100.0, stamina + 12.5 * delta)
 
-	var dir := Vector3(input_vec.x + input_vec.y, 0.0, -input_vec.x + input_vec.y)
+	var dir := _motion_direction_058(input_vec)
 	if dir.length() > 0.01:
 		dir = dir.normalized()
 		last_move_dir = dir
@@ -122,11 +122,7 @@ func _physics_process(delta: float) -> void:
 	var base_speed: float = RUN_SPEED_058 if running else WALK_SPEED_058
 	var analog_speed: float = base_speed * input_strength
 	var desired: Vector3 = dir * analog_speed
-	var accel: float = ACCEL_058 if input_strength > 0.02 else DECEL_058
-	velocity.x = move_toward(velocity.x, desired.x, accel * delta)
-	velocity.z = move_toward(velocity.z, desired.z, accel * delta)
-	velocity.y = 0.0
-	move_and_slide()
+	_apply_motion_058(desired, delta)
 
 	movement_amount = Vector2(velocity.x, velocity.z).length() / RUN_SPEED_058
 	_update_character_animation(delta, running)
@@ -150,6 +146,16 @@ func _physics_process(delta: float) -> void:
 		cycle = cycle or bool(mobile_controls.call("consume_cycle_weapon"))
 	if cycle:
 		cycle_weapon()
+
+func _motion_direction_058(input_vec: Vector2) -> Vector3:
+	return Vector3(input_vec.x + input_vec.y, 0.0, -input_vec.x + input_vec.y)
+
+func _apply_motion_058(desired: Vector3, delta: float) -> void:
+	var accel: float = ACCEL_058 if desired.length_squared() > 0.0001 else DECEL_058
+	velocity.x = move_toward(velocity.x, desired.x, accel * delta)
+	velocity.z = move_toward(velocity.z, desired.z, accel * delta)
+	velocity.y = 0.0
+	move_and_slide()
 
 func _update_character_animation(delta: float, running: bool) -> void:
 	if visual_root == null or left_leg_pivot == null:

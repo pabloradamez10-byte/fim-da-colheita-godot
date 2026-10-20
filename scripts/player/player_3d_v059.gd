@@ -75,7 +75,8 @@ func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	# A cena 3D antiga nascia em Y=0.75 sem gravidade, fazendo o personagem flutuar.
 	# O capsule collider tem a base junto da origem, então mantemos a raiz na superfície.
-	global_position.y = GROUND_Y_059
+	if not bool(get_meta("survival_motion_068", false)):
+		global_position.y = GROUND_Y_059
 	if visual_root != null:
 		visual_root.position.y = 0.0
 
